@@ -1,8 +1,5 @@
-/// Support for doing something awesome.
-///
-/// More dartdocs go here.
+/// Parsing bbcode in pure dart.
 library;
 
-export 'src/dart_bbcode_parser_base.dart';
-
-// TODO: Export any libraries intended for clients of this package.
+export 'src/chunk.dart';
+export 'src/context.dart';
