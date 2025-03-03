@@ -114,6 +114,10 @@ final class Lexer {
         _appendHead(nameBuffer, null);
         currTagStartPos = _scanner.position;
         return true;
+      } else if (next.isOpen) {
+        // Invalid tag head, fallback to plain text.
+        _appendConsumedText('[');
+        return false;
       }
 
       nameBuffer.writeCharCode(next);
@@ -146,6 +150,13 @@ final class Lexer {
       return;
     }
     _tokens.add(Text(start: currTagStartPos, end: _scanner.position, data: buffer.toString()));
+  }
+
+  void _appendConsumedText(String text) {
+    if (text.isEmpty) {
+      return;
+    }
+    _tokens.add(Text(start: currTagStartPos, end: _scanner.position, data: text));
   }
 
   void _appendHead(StringBuffer nameBuffer, StringBuffer? attrBuffer) {
