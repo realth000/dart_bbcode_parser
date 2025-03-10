@@ -10,6 +10,10 @@ environment:
 
 dependencies:
   collection: ^1.19.1
+  # TODO: Separate quill related dependency to another package.
+  dart_quill_delta: ^10.8.3
+  dart_quill_delta_simplify: ^10.8.7
+  meta: ^1.16.0
   string_scanner: ^1.4.1
 
 dev_dependencies:

@@ -31,7 +31,8 @@ custom_lint:
     - always_put_doc_comments_before_annotations
     - always_specify_parameter_names
     - avoid_abbreviations_in_doc_comments
-    - avoid_dynamic
+    # Do not check dynamic types as quill delta attribute value is it.
+    # - avoid_dynamic
     - avoid_empty_blocks
     - avoid_inverted_boolean_expressions
     - avoid_mutable_global_variables

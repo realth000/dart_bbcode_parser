@@ -1,9 +1,18 @@
+import 'package:dart_bbcode_parser/src/quill/attr_context.dart';
+import 'package:dart_bbcode_parser/src/quill/convertible.dart';
 import 'package:dart_bbcode_parser/src/utils.dart';
+import 'package:dart_quill_delta/dart_quill_delta.dart';
 
 /// The basic class describes common feature and shape on all kinds of tags.
-abstract interface class BBCodeTag {
+abstract class BBCodeTag implements QuillConvertible {
   /// Constructor.
-  BBCodeTag({required this.attributeParser, required this.childrenValidator, this.attribute});
+  const BBCodeTag({required this.attributeParser, required this.childrenValidator, this.children, this.attribute});
+
+  /// Is plain text or not.
+  bool get hasPlainText;
+
+  /// Extra plain text data.
+  String? get data;
 
   /// The tag name.
   String get name;
@@ -24,7 +33,7 @@ abstract interface class BBCodeTag {
   final AttributeValidator? attributeParser;
 
   /// Attribute in the open tag.
-  String? attribute;
+  final String? attribute;
 
   /// Optional validator on children tags.
   ///
@@ -36,4 +45,49 @@ abstract interface class BBCodeTag {
 
   // /// Contains a list of tags that are not allowed in children context.
   // final List<BBCodeTag> disallowedChildren;
+
+  /// All childrens
+  final List<BBCodeTag>? children;
+
+  /// Function converts current tag into bbcode text.
+  ///
+  /// ## CAUTION
+  ///
+  /// Recursing may cause stack overflow.
+  StringBuffer toBBCode(StringBuffer buffer) {
+    buffer.write('[$name]');
+    children?.forEach((e) => e.toBBCode(buffer));
+    buffer.write('[/$name]');
+    return buffer;
+  }
+
+  /// Convert contents to single.
+  ///
+  /// ## CAUTION
+  ///
+  /// Recurse stack overflow.
+  AttrContext toQuilDelta(AttrContext attrContext);
+
+  /// Transform current bbcode tag into quill delta operation and insert the operation into [queryDelta] so that once
+  /// the insertion is finished,
+  ///
+  /// ## CAUTION
+  ///
+  /// Recursing may cause stack overflow.
+  // void buildQueryDelta(QueryDelta queryDelta) {
+  //   queryDelta.insert(insert: Operation.insert().input?, insertAtLastOperation: true, target: null);
+  // }
+}
+
+List<Operation> visitText(AttrContext attrContext, List<Operation> result, String text) {
+  result.add(Operation.insert(text, attrContext.attrMap));
+  return result;
+}
+
+void enterTagScope(BBCodeTag tag, AttrContext attrContext) {
+  attrContext.save(tag);
+}
+
+void leaveTagScope(BBCodeTag tag, AttrContext attrContext) {
+  attrContext.restore(tag);
 }
