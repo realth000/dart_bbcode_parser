@@ -19,6 +19,9 @@ final class Lexer {
 
   final StringScanner _scanner;
 
+  /// Get scanned tokens.
+  List<Token> get tokens => _tokens;
+
   /// Print all bbcode tokens.
   String toBBCode() {
     final buffer = StringBuffer();

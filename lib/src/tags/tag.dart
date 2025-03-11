@@ -1,5 +1,6 @@
 import 'package:dart_bbcode_parser/src/quill/attr_context.dart';
 import 'package:dart_bbcode_parser/src/quill/convertible.dart';
+import 'package:dart_bbcode_parser/src/token.dart';
 import 'package:dart_bbcode_parser/src/utils.dart';
 import 'package:dart_quill_delta/dart_quill_delta.dart';
 
@@ -77,6 +78,9 @@ abstract class BBCodeTag implements QuillConvertible {
   // void buildQueryDelta(QueryDelta queryDelta) {
   //   queryDelta.insert(insert: Operation.insert().input?, insertAtLastOperation: true, target: null);
   // }
+
+  /// Build one from token.
+  BBCodeTag fromToken(TagHead head, TagTail tail, List<BBCodeTag> children);
 }
 
 List<Operation> visitText(AttrContext attrContext, List<Operation> result, String text) {

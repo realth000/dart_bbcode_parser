@@ -1,4 +1,6 @@
 import 'package:dart_bbcode_parser/src/tags/common_tag.dart';
+import 'package:dart_bbcode_parser/src/tags/tag.dart';
+import 'package:dart_bbcode_parser/src/token.dart';
 import 'package:dart_bbcode_parser/src/utils.dart';
 
 /// Url tag holds a content and link to it.
@@ -8,7 +10,7 @@ import 'package:dart_bbcode_parser/src/utils.dart';
 /// ```
 class UrlTag extends CommonTag {
   /// Constructor.
-  const UrlTag({super.children});
+  const UrlTag({super.attribute, super.children});
 
   /// Url shall not be empty.
   @override
@@ -25,4 +27,11 @@ class UrlTag extends CommonTag {
 
   @override
   String get quillAttrValue => attribute!;
+
+  @override
+  UrlTag fromToken(TagHead head, TagTail tail, List<BBCodeTag> children) =>
+      UrlTag(
+        attribute: head.attribute,
+        children: children,
+      );
 }

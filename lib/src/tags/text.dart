@@ -1,5 +1,6 @@
 import 'package:dart_bbcode_parser/src/quill/attr_context.dart';
 import 'package:dart_bbcode_parser/src/tags/tag.dart';
+import 'package:dart_bbcode_parser/src/token.dart';
 import 'package:dart_bbcode_parser/src/utils.dart';
 import 'package:dart_quill_delta/dart_quill_delta.dart';
 import 'package:meta/meta.dart';
@@ -69,4 +70,11 @@ class TextContent implements BBCodeTag {
 
   @override
   bool operator ==(Object other) => identical(this, other) || (other is TextContent && other.data == data );
+
+  @override
+  String toString() => 'TextContent { data=$_data }';
+
+  @override
+  BBCodeTag fromToken(TagHead head, TagTail tail, List<BBCodeTag> children) =>
+      throw Exception('can not build text content from tokens');
 }

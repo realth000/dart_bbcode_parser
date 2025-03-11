@@ -36,6 +36,16 @@ abstract class CommonTag extends BBCodeTag {
     attrContext.restore(this);
     return attrContext;
   }
+
+  @override
+  String toString() => '''
+$runtimeType {
+    open="$open",
+    close="$close",
+    selfClosed=$selfClosed,
+    attr=${attribute != null ? "$attribute" : null}
+    children = ${ children?.map((e) => e.toString()).join('\n')}
+}''';
 }
 
 /// Tag with no attribute.

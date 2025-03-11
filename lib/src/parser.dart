@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:dart_bbcode_parser/src/tags/tag.dart';
 import 'package:dart_bbcode_parser/src/tags/text.dart';
 import 'package:dart_bbcode_parser/src/token.dart';
@@ -5,37 +6,82 @@ import 'package:dart_bbcode_parser/src/token.dart';
 /// The parser for bbcode text.
 final class Parser {
   /// Constructor.
-  const Parser({required List<Token> tokens,required List<BBCodeTag> supportedTags}) :_tokens = tokens, _tags = supportedTags;
+  Parser({required List<Token> tokens, required List<BBCodeTag> supportedTags})
+    : _tokens = tokens,
+      _tags = supportedTags,
+      _ast = [];
 
   final List<Token> _tokens;
 
   /// All supported tags.
   final List<BBCodeTag> _tags;
 
+  /// Parse result.
+  List<BBCodeTag> _ast;
+
   /// Parse and return the generated bbcode tag.
-  List<BBCodeTag> parse() {
+  void parse() {
+    // Recognized tag.
+    // b color url /url /color /b
+    //
+    // b color url </url> </color> b [/color]
     final context = _ParseContext();
     for (final token in _tokens) {
       if (token is Text) {
         context.saveText(TextContent(token.data));
-        continue;
-      }
-      if (token is TagHead) {
-        context.enterScope(token);
-        continue;
-      }
-      if(token is TagTail) {
-        if (context.inScope(token)) {
-          // Safely leave the scope and produce a parsed BBCode tag according to supported tags.
-          throw UnimplementedError('leave scope and produce tag');
+      } else if (token is TagHead) {
+        if (_isSupported(token.name)) {
+          context
+            ..enterScope(token)
+            ..composeTags();
         } else {
-          // Out of scope, or tag not supported, fallback to plain text.
-          throw UnimplementedError('out of scope, fallback to plain text');
+          // Unrecognized tag.
+          context.saveText(TextContent('[${token.name}]'));
+        }
+      } else if (token is TagTail) {
+        if (_isSupported(token.name) && context.inScope(token)) {
+          // Safely leave the scope and produce a parsed BBCode tag according to supported tags.
+          final tagHead = context.leaveScope(token);
+          final children = context.popParsed();
+          final tag = _buildTag(tagHead, token, children);
+          context.saveTag(tag);
+        } else {
+          // Unrecognized tag or crossed tag, fallback to text.
+          context.saveText(TextContent('[/${token.name}]'));
         }
       }
     }
-    return context.parsedTags;
+    context.composeTags();
+    _ast = context.ast;
   }
+
+  bool _isSupported(String name) {
+    return _tags.firstWhereOrNull((e) => e.name == name) != null;
+  }
+
+  /// Construct the tag from [head] and [tail].
+  ///
+  /// The caller must ensure [head] and [tail] have the same name.
+  BBCodeTag _buildTag(TagHead head, TagTail tail, List<BBCodeTag> children) {
+    if (head.name != tail.name) {
+      throw Exception('can not build tag from head(${head.name}) and tail(${tail.name})');
+    }
+
+    final target = _tags.firstWhere((e) => e.name == head.name);
+    return target.fromToken(head, tail, children);
+  }
+
+  @override
+  String toString() => '''
+Parser {
+  tags {
+${_tags.map((e) => "    $e").join('\n')}
+  },
+  ast {
+${_ast.map((e) => "    $e").join('\n')}
+  },
+}
+''';
 }
 
 final class _ParseContext {
@@ -80,21 +126,32 @@ final class _ParseContext {
   ///
   /// This is some server side behavior processed by `bbcode2html`, but it shall not be encouraged to this stuff, nether
   /// the quill delta format. In a far away future we may implement it, but now we consider it as **INVALID**.
-  final List<TagHead> _scope = const [];
+  final List<TagHead> _scope = [];
 
   /// Save successfully parsed tags.
-  List<BBCodeTag> parsedTags = const [];
+  ///
+  /// A temporary list of tags that recognized but not composed together.
+  List<BBCodeTag> parsedTags = [];
+
+  /// Final result.
+  List<BBCodeTag> ast = [];
 
   void enterScope(TagHead head) {
     _scope.add(head);
   }
 
-  void leaveScope(TagTail tail) {
+  TagHead leaveScope(TagTail tail) {
     final s = _scope.lastOrNull;
     if (s != null && s.name == tail.name) {
-      _scope.removeLast();
+      return _scope.removeLast();
     }
     throw Exception('calling leaveScope outside of scope $tail');
+  }
+
+  List<BBCodeTag> popParsed() {
+    final popped = parsedTags;
+    parsedTags.clear();
+    return popped;
   }
 
   /// Is the last memorized scope is [tag].
@@ -113,7 +170,12 @@ final class _ParseContext {
     // if (head is! TagHead || tail is! TagTail || head.name != tail.name) {
     //   throw Exception('calling saveTag on incorrect head $head and tail $tail');
     // }
-    parsedTags.add(tag);
+    ast.add(tag);
+  }
+
+  void composeTags() {
+    ast.addAll(parsedTags);
+    parsedTags.clear();
   }
 }
 
