@@ -149,7 +149,7 @@ final class _ParseContext {
   }
 
   List<BBCodeTag> popParsed() {
-    final popped = parsedTags;
+    final popped = List<BBCodeTag>.from(parsedTags);
     parsedTags.clear();
     return popped;
   }
