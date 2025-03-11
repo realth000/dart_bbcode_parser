@@ -2,4 +2,4 @@
 library;
 
 // For test.
-export 'src/lexer.dart' show Lexer;
+export 'src/dart_bbcode_parser.dart' show parseBBCodeTextToDelta;

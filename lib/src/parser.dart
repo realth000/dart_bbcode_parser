@@ -19,6 +19,9 @@ final class Parser {
   /// Parse result.
   List<BBCodeTag> _ast;
 
+  /// Get the parsed result.
+  List<BBCodeTag> get ast => _ast;
+
   /// Parse and return the generated bbcode tag.
   void parse() {
     // Recognized tag.
@@ -36,7 +39,7 @@ final class Parser {
             ..composeTags();
         } else {
           // Unrecognized tag.
-          context.saveText(TextContent('[${token.name}]'));
+          context.saveText(TextContent('[${token.name}${token.attribute != null ? "=${token.attribute}" : ""}]'));
         }
       } else if (token is TagTail) {
         if (_isSupported(token.name) && context.inScope(token)) {

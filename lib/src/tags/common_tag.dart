@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:dart_bbcode_parser/src/quill/attr_context.dart';
 import 'package:dart_bbcode_parser/src/tags/tag.dart';
 
@@ -28,13 +29,14 @@ abstract class CommonTag extends BBCodeTag {
 
   @override
   AttrContext toQuilDelta(AttrContext attrContext) {
-    attrContext.save(this);
+    var ac = AttrContext();
     for (final child in (children ?? const <BBCodeTag>[])) {
-      final ac = child.toQuilDelta(attrContext);
-      attrContext.operation.addAll(ac.operation);
+      attrContext.save(this);
+      ac = child
+          .toQuilDelta(attrContext)
+        ..restore(this);
     }
-    attrContext.restore(this);
-    return attrContext;
+    return ac;
   }
 
   @override

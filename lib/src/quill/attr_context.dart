@@ -5,7 +5,7 @@ import 'package:dart_quill_delta/dart_quill_delta.dart';
 /// The attributes context go through conversion.
 class AttrContext {
   /// Constructor.
-  AttrContext({this.attrs = const [], this.operation = const []});
+  AttrContext() : attrs = [], operation = [];
 
   /// All attrs.
   List<QuillAttribute> attrs;
@@ -27,7 +27,9 @@ class AttrContext {
   /// Forget last attribute from context.
   void _forget() {
     // Shall not throw empty element exception.
-    assert(attrs.isNotEmpty, 'did you forget to save tags?');
+    if (attrs.isEmpty) {
+      throw Exception('did you forget to save tags?');
+    }
     attrs.removeLast();
   }
 
