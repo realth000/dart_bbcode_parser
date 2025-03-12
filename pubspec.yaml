@@ -10,6 +10,8 @@ environment:
 
 dependencies:
   collection: ^1.19.1
+  dart_bbcode_web_colors:
+    path: ../dart_bbcode_web_colors
   # TODO: Separate quill related dependency to another package.
   dart_quill_delta: ^10.8.3
   dart_quill_delta_simplify: ^10.8.7

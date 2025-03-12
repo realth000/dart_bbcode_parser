@@ -47,7 +47,19 @@ final class Parser {
           final tagHead = context.leaveScope(token);
           final children = context.popParsed();
           final tag = _buildTag(tagHead, token, children);
-          context.saveTag(tag);
+
+          // Validate attribute, if any.
+          if (tag.attributeValidator != null && !tag.attributeValidator!.call(tagHead.attribute)) {
+            // Fallback current tag to common tags.
+            context.saveTextToAST(
+                TextContent('[${tagHead.name}${tagHead.attribute != null ? "=${tagHead.attribute}" : ""}]'));
+            for (final child in children) {
+              context.saveTagToAST(child);
+            }
+            context.saveText(TextContent('[/${token.name}]'));
+            continue;
+          }
+          context.saveTagToAST(tag);
         } else {
           // Unrecognized tag or crossed tag, fallback to text.
           context.saveText(TextContent('[/${token.name}]'));
@@ -168,8 +180,16 @@ final class _ParseContext {
     parsedTags.add(text);
   }
 
+  /// Save the [text].
+  void saveTextToAST(TextContent text) {
+    // if (token is! Text) {
+    //   throw Exception('calling saveText on non text token type $token');
+    // }
+    ast.add(text);
+  }
+
   /// Save a named tag.
-  void saveTag(BBCodeTag tag) {
+  void saveTagToAST(BBCodeTag tag) {
     // if (head is! TagHead || tail is! TagTail || head.name != tail.name) {
     //   throw Exception('calling saveTag on incorrect head $head and tail $tail');
     // }

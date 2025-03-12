@@ -14,7 +14,7 @@ class UrlTag extends CommonTag {
 
   /// Url shall not be empty.
   @override
-  AttributeValidator get attributeParser => (input) => input.isNotEmpty;
+  AttributeValidator get attributeValidator => (input) => input != null && input.isNotEmpty;
 
   @override
   String get name => 'url';

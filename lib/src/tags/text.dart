@@ -24,13 +24,15 @@ class TextContent implements BBCodeTag {
   String get attribute => throw Exception('shall not call named tag related method on plain text tag');
 
   @override
-  AttributeValidator get attributeParser => throw Exception('shall not call named tag related method on plain text tag');
+  AttributeValidator get attributeValidator =>
+      throw Exception('shall not call named tag related method on plain text tag');
 
   @override
   List<BBCodeTag> get children => throw Exception('shall not call named tag related method on plain text tag');
 
   @override
-  ChildrenValidator get childrenValidator => throw Exception('shall not call named tag related method on plain text tag');
+  ChildrenValidator get childrenValidator =>
+      throw Exception('shall not call named tag related method on plain text tag');
 
   @override
   String get open => throw Exception('shall not call named tag related method on plain text tag');
@@ -51,6 +53,15 @@ class TextContent implements BBCodeTag {
   String get quillAttrValue => throw Exception('shall not call quill attr related method on plain text tag');
 
   @override
+  bool get hasQuillEmbed => false;
+
+  @override
+  String get quillEmbedName => throw UnsupportedError('shall not call quill embed related method on plain text tag');
+
+  @override
+  String get quillEmbedValue => throw UnsupportedError('shall not call quill embed related method on plain text tag');
+
+  @override
   bool get selfClosed => true;
 
   @override
@@ -69,7 +80,7 @@ class TextContent implements BBCodeTag {
   int get hashCode => data.hashCode;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || (other is TextContent && other.data == data );
+  bool operator ==(Object other) => identical(this, other) || (other is TextContent && other.data == data);
 
   @override
   String toString() => 'TextContent { data=$_data }';

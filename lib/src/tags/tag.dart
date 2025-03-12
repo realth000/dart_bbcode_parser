@@ -7,7 +7,7 @@ import 'package:dart_quill_delta/dart_quill_delta.dart';
 /// The basic class describes common feature and shape on all kinds of tags.
 abstract class BBCodeTag implements QuillConvertible {
   /// Constructor.
-  const BBCodeTag({required this.attributeParser, required this.childrenValidator, this.children, this.attribute});
+  const BBCodeTag({required this.attributeValidator, required this.childrenValidator, this.children, this.attribute});
 
   /// Is plain text or not.
   bool get hasPlainText;
@@ -31,7 +31,7 @@ abstract class BBCodeTag implements QuillConvertible {
   bool get selfClosed;
 
   /// Function to validate a attribute.
-  final AttributeValidator? attributeParser;
+  final AttributeValidator? attributeValidator;
 
   /// Attribute in the open tag.
   final String? attribute;

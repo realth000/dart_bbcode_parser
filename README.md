@@ -9,19 +9,19 @@ BBCode parser written in pure dart.
 ## Features
 
 * [ ] Tags
-  * [ ] Font size `[size=$size]`
-  * [ ] Font color `[color=$color]`
-  * [ ] Bold `[b]`
-  * [ ] Italic `[i]`
-  * [ ] Underline `[u]`
-  * [ ] Background color `[backcolor=$color]`
-  * [ ] Strikethrough `[s]`
-  * [ ] Superscript `[sup]`
+  * [x] Font size `[size=$size]`
+  * [x] Font color `[color=$color]`
+  * [x] Bold `[b]`
+  * [x] Italic `[i]`
+  * [x] Underline `[u]`
+  * [x] Background color `[backcolor=$color]`
+  * [x] Strikethrough `[s]`
+  * [x] Superscript `[sup]`
   * [ ] Alignment
     * [ ] Align left `[align=left]`
     * [ ] Align center `[align=center]`
     * [ ] Align right `[align=right]`
-  * [ ] Url `[url]`
+  * [x] Url `[url]`
   * [ ] Image `[img=$width,$height]$image_url[/img]`
   * [ ] Spoiler `[spoiler]`
   * [ ] Mention user with `[@]$user_name[/@]`

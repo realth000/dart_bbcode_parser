@@ -17,33 +17,40 @@ final class QuillAttribute {
 
   /// Only distinguish attributes on their names.
   @override
-  bool operator == (Object other) => identical(this, other) || (other is QuillAttribute && other.name != name);
+  bool operator ==(Object other) => identical(this, other) || (other is QuillAttribute && other.name != name);
 
   @override
   int get hashCode => name.hashCode;
-
 }
-
 
 /// Interface requires the conversion between bbcode and quill delta.
 abstract interface class QuillConvertible {
   /// Whether current tag has attribute or not.
- bool get hasQuillAttr;
+  bool get hasQuillAttr;
 
- /// Get the attribute name on current bbcode tag.
+  /// Get the attribute name on current bbcode tag.
   ///
   /// Caller MUST ensure a non-null return value if [hasQuillAttr] is `true`.
- String? get quillAttrName;
+  String? get quillAttrName;
 
   /// Get the attribute value on current bbcode tag.
   ///
   /// Caller MUST ensure a non-null return value if [hasQuillAttr] is `true`.
   // It is the dynamic type.
   // ignore: avoid_dynamic
- dynamic get quillAttrValue;
+  dynamic get quillAttrValue;
 
+  /// Using quill embed in quill delta.
+  ///
+  /// Note that this type of tag is heavily coupled with the implementation of quill delta layer.
+  bool get hasQuillEmbed;
+
+  /// The name of embed in delta json.
+  String get quillEmbedName;
+
+  /// Embed data.
+  String get quillEmbedValue;
 }
-
 
 /// Extension on quill delta operations.
 extension OperationExt on Operation? {
@@ -53,5 +60,8 @@ extension OperationExt on Operation? {
   /// Compose two operation together.
   ///
   /// The [other] operation will be append after current one.
-  Operation compose(Operation other) => Operation.insert((this!.data! as String) + (other.data! as String), (this!.attributes ?? {})..addAll(other.attributes ?? {}));
+  Operation compose(Operation other) => Operation.insert(
+    (this!.data! as String) + (other.data! as String),
+    (this!.attributes ?? {})..addAll(other.attributes ?? {}),
+  );
 }

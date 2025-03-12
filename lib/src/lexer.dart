@@ -170,7 +170,7 @@ final class Lexer {
     _tokens.add(
       TagHead(
         name: nameBuffer.toString(),
-        attribute: attrBuffer == null || attrBuffer.isEmpty ? null : attrBuffer.toString(),
+        attribute: (attrBuffer == null || attrBuffer.isEmpty) ? null : attrBuffer.toString(),
         start: currTagStartPos,
         end: _scanner.position,
       ),
