@@ -99,7 +99,7 @@ abstract class EmbedTag extends BBCodeTag {
   String? get quillAttrName => null;
 
   @override
-  Map<String, dynamic> get quillAttrValue => {};
+  String get quillAttrValue => throw UnsupportedError('embed has no attr value');
 
   @override
   bool get hasQuillEmbed => true;
