@@ -48,8 +48,18 @@ final class Parser {
           final children = context.popParsed();
           final tag = _buildTag(tagHead, token, children);
 
+          if (
           // Validate attribute, if any.
-          if (tag.attributeValidator != null && !tag.attributeValidator!.call(tagHead.attribute)) {
+          (tag.attributeValidator != null && !tag.attributeValidator!.call(tagHead.attribute)) ||
+              // Validate children, if any.
+              (tag.childrenValidator != null && !tag.childrenValidator!.call(children))) {
+            if (tag.name == 'img') {
+              print(
+                  '>>> img passed attr: ${tag.attributeValidator!.call(tagHead.attribute)}, attr="${tagHead
+                      .attribute}"');
+              print('>>> img passed children: ${tag.childrenValidator!.call(children)}, children=${children}');
+            }
+
             // Fallback current tag to common tags.
             context.saveTextToAST(
                 TextContent('[${tagHead.name}${tagHead.attribute != null ? "=${tagHead.attribute}" : ""}]'));

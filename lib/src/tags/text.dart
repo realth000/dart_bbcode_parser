@@ -15,7 +15,7 @@ class TextContent implements BBCodeTag {
   final String _data;
 
   @override
-  bool get hasPlainText => true;
+  bool get isPlainText => true;
 
   @override
   String get data => _data;

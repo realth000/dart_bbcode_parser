@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:dart_bbcode_parser/src/quill/attr_context.dart';
 import 'package:dart_bbcode_parser/src/tags/tag.dart';
 import 'package:dart_bbcode_parser/src/utils.dart';
+import 'package:dart_quill_delta/dart_quill_delta.dart';
 
 /// Common common and base tags.
 ///
@@ -10,7 +13,7 @@ abstract class CommonTag extends BBCodeTag {
   const CommonTag({super.attribute, super.children, super.attributeValidator, super.childrenValidator});
 
   @override
-  bool get hasPlainText => false;
+  bool get isPlainText => false;
 
   @override
   String get data => throw Exception('shall not calling data on non-plain-text tag');
@@ -34,7 +37,7 @@ abstract class CommonTag extends BBCodeTag {
   String get quillEmbedValue => throw UnsupportedError('common tag has no quill embed');
 
   @override
-  bool Function(String? input)? get childrenValidator => null;
+  ChildrenValidator? get childrenValidator => null;
 
   @override
   AttrContext toQuilDelta(AttrContext attrContext) {
@@ -75,7 +78,7 @@ abstract class EmbedTag extends BBCodeTag {
   const EmbedTag({super.attribute, super.children, super.attributeValidator, super.childrenValidator});
 
   @override
-  bool get hasPlainText => false;
+  bool get isPlainText => false;
 
   @override
   String get data => throw Exception('shall not calling data on non-plain-text tag');
@@ -93,10 +96,10 @@ abstract class EmbedTag extends BBCodeTag {
   bool get hasQuillAttr => false;
 
   @override
-  String get quillAttrName => throw UnsupportedError('embed tag has no quill attr');
+  String? get quillAttrName => null;
 
   @override
-  String get quillAttrValue => throw UnsupportedError('embed tag has no quill attr');
+  Map<String, dynamic> get quillAttrValue => {};
 
   @override
   bool get hasQuillEmbed => true;
@@ -106,12 +109,8 @@ abstract class EmbedTag extends BBCodeTag {
 
   @override
   AttrContext toQuilDelta(AttrContext attrContext) {
-    var ac = AttrContext();
-    for (final child in (children ?? const <BBCodeTag>[])) {
-      attrContext.save(this);
-      ac = child.toQuilDelta(attrContext)..restore(this);
-    }
-    return ac;
+    attrContext.operation.add(Operation.insert({quillEmbedName: quillEmbedValue}, attrContext.attrMap));
+    return attrContext;
   }
 
   @override

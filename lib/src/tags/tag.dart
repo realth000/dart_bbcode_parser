@@ -10,7 +10,7 @@ abstract class BBCodeTag implements QuillConvertible {
   const BBCodeTag({required this.attributeValidator, required this.childrenValidator, this.children, this.attribute});
 
   /// Is plain text or not.
-  bool get hasPlainText;
+  bool get isPlainText;
 
   /// Extra plain text data.
   String? get data;
@@ -81,17 +81,4 @@ abstract class BBCodeTag implements QuillConvertible {
 
   /// Build one from token.
   BBCodeTag fromToken(TagHead head, TagTail tail, List<BBCodeTag> children);
-}
-
-List<Operation> visitText(AttrContext attrContext, List<Operation> result, String text) {
-  result.add(Operation.insert(text, attrContext.attrMap));
-  return result;
-}
-
-void enterTagScope(BBCodeTag tag, AttrContext attrContext) {
-  attrContext.save(tag);
-}
-
-void leaveTagScope(BBCodeTag tag, AttrContext attrContext) {
-  attrContext.restore(tag);
 }
