@@ -20,6 +20,6 @@ class FontSizeTag extends CommonTag {
   dynamic get quillAttrValue => true;
 
   @override
-  FontSizeTag fromToken(TagHead head, TagTail tail, List<BBCodeTag> children) =>
+  FontSizeTag fromToken(TagHead head, TagTail? tail, List<BBCodeTag> children) =>
       FontSizeTag(attribute: head.attribute!, children: children);
 }

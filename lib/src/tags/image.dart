@@ -40,6 +40,6 @@ class ImageTag extends EmbedTag {
   ChildrenValidator get childrenValidator => (children) => children.every((e) => e.isPlainText);
 
   @override
-  ImageTag fromToken(TagHead head, TagTail tail, List<BBCodeTag> children) =>
+  ImageTag fromToken(TagHead head, TagTail? tail, List<BBCodeTag> children) =>
       ImageTag(attribute: head.attribute!, children: children);
 }

@@ -20,5 +20,5 @@ class UnderlineTag extends NoAttrTag {
   bool get quillAttrValue => true;
 
   @override
-  UnderlineTag fromToken(TagHead head, TagTail tail, List<BBCodeTag> children) => UnderlineTag(children: children);
+  UnderlineTag fromToken(TagHead head, TagTail? tail, List<BBCodeTag> children) => UnderlineTag(children: children);
 }

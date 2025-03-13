@@ -26,5 +26,5 @@ class UserMentionTag extends EmbedTag {
     });
 
   @override
-  UserMentionTag fromToken(TagHead head, TagTail tail, List<BBCodeTag> children) => UserMentionTag(children: children);
+  UserMentionTag fromToken(TagHead head, TagTail? tail, List<BBCodeTag> children) => UserMentionTag(children: children);
 }

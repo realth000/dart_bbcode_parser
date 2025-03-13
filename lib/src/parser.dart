@@ -34,6 +34,22 @@ final class Parser {
         context.saveText(TextContent(token.data));
       } else if (token is TagHead) {
         if (_isSupported(token.name)) {
+          // Try check for self closed tags.
+          final tag = _tags.firstWhere((e) => e.name == token.name);
+          if (tag.selfClosed) {
+            // Save self closed tag.
+            if (tag.attributeValidator != null && !tag.attributeValidator!.call(token.attribute)) {
+              // Tag has invalid attribute.
+              context.saveTextToAST(
+                  TextContent('[${token.name}${token.attribute != null ? "=${token.attribute}" : ""}]'));
+              continue;
+            }
+
+            // Valid self closed tag.
+            context.saveTagToAST(tag.fromToken(token, null, []));
+            continue;
+          }
+
           context
             ..enterScope(token)
             ..composeTags();
@@ -53,13 +69,6 @@ final class Parser {
           (tag.attributeValidator != null && !tag.attributeValidator!.call(tagHead.attribute)) ||
               // Validate children, if any.
               (tag.childrenValidator != null && !tag.childrenValidator!.call(children))) {
-            if (tag.name == 'img') {
-              print(
-                  '>>> img passed attr: ${tag.attributeValidator!.call(tagHead.attribute)}, attr="${tagHead
-                      .attribute}"');
-              print('>>> img passed children: ${tag.childrenValidator!.call(children)}, children=${children}');
-            }
-
             // Fallback current tag to common tags.
             context.saveTextToAST(
                 TextContent('[${tagHead.name}${tagHead.attribute != null ? "=${tagHead.attribute}" : ""}]'));

@@ -20,6 +20,6 @@ class SuperscriptTag extends NoAttrTag {
   String get quillAttrValue => 'super';
 
   @override
-  SuperscriptTag fromToken(TagHead head, TagTail tail, List<BBCodeTag> children) => SuperscriptTag(children: children);
+  SuperscriptTag fromToken(TagHead head, TagTail? tail, List<BBCodeTag> children) => SuperscriptTag(children: children);
 }
 

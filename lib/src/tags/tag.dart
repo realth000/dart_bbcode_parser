@@ -80,5 +80,5 @@ abstract class BBCodeTag implements QuillConvertible {
   // }
 
   /// Build one from token.
-  BBCodeTag fromToken(TagHead head, TagTail tail, List<BBCodeTag> children);
+  BBCodeTag fromToken(TagHead head, TagTail? tail, List<BBCodeTag> children);
 }

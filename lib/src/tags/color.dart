@@ -25,6 +25,6 @@ class ColorTag extends CommonTag {
   AttributeValidator get attributeValidator => (input) => input.toColor() != null;
 
   @override
-  ColorTag fromToken(TagHead head, TagTail tail, List<BBCodeTag> children) =>
+  ColorTag fromToken(TagHead head, TagTail? tail, List<BBCodeTag> children) =>
       ColorTag(attribute: head.attribute!, children: children);
 }

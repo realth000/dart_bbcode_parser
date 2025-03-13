@@ -4,6 +4,7 @@ import 'package:dart_bbcode_parser/src/quill/delta.dart';
 import 'package:dart_bbcode_parser/src/tags/backgroud_color.dart';
 import 'package:dart_bbcode_parser/src/tags/bold.dart';
 import 'package:dart_bbcode_parser/src/tags/color.dart';
+import 'package:dart_bbcode_parser/src/tags/divider.dart';
 import 'package:dart_bbcode_parser/src/tags/font_size.dart';
 import 'package:dart_bbcode_parser/src/tags/image.dart';
 import 'package:dart_bbcode_parser/src/tags/italic.dart';
@@ -25,6 +26,7 @@ const defaultSupportedTags = [
   BackgroundColorTag(attribute: ''),
   SuperscriptTag(),
   ImageTag(attribute: ''),
+  DividerTag(),
 ];
 
 /// Parse plain [bbcode] text into quill [Delta].
