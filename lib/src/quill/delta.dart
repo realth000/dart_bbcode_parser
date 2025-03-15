@@ -8,5 +8,5 @@ Delta buildDelta(List<BBCodeTag> tags) {
   for (final tag in tags) {
     attrContext = tag.toQuilDelta(attrContext);
   }
-  return Delta.fromOperations(attrContext.operation);
+  return Delta.fromOperations([...attrContext.operation, Operation.insert('\n')]);
 }
