@@ -7,7 +7,11 @@ import 'package:dart_bbcode_web_colors/dart_bbcode_web_colors.dart';
 /// Tag name.
 class BackgroundColorTag extends CommonTag {
   /// Constructor.
-  const BackgroundColorTag({required String attribute, super.children}) : super(attribute: attribute);
+  const BackgroundColorTag({required super.start, required super.end, required String attribute, super.children})
+    : super(attribute: attribute);
+
+  /// Build empty one.
+  static const BackgroundColorTag empty = BackgroundColorTag(start: -1, end: -1, attribute: '');
 
   @override
   String get name => 'backcolor';
@@ -26,5 +30,5 @@ class BackgroundColorTag extends CommonTag {
 
   @override
   BackgroundColorTag fromToken(TagHead head, TagTail? tail, List<BBCodeTag> children) =>
-      BackgroundColorTag(attribute: head.attribute!, children: children);
+      BackgroundColorTag(start: head.start, end: tail?.end ?? head.end, attribute: head.attribute!, children: children);
 }

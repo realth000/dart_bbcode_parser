@@ -10,7 +10,8 @@ import 'package:dart_quill_delta/dart_quill_delta.dart';
 /// Defines open character, close character, self closing and children validator.
 abstract class CommonTag extends BBCodeTag {
   /// Constructor.
-  const CommonTag({super.attribute, super.children, super.attributeValidator, super.childrenValidator});
+  const CommonTag(
+      {super.start, super.end, super.attribute, super.children, super.attributeValidator, super.childrenValidator});
 
   @override
   bool get isPlainText => false;
@@ -41,10 +42,18 @@ abstract class CommonTag extends BBCodeTag {
 
   @override
   AttrContext toQuilDelta(AttrContext attrContext) {
-    var ac = AttrContext();
-    for (final child in (children ?? const <BBCodeTag>[])) {
-      attrContext.save(this);
-      ac = child.toQuilDelta(attrContext)..restore(this);
+    var ac = attrContext..save(this);
+    for (final child in children) {
+      ac = child.toQuilDelta(ac);
+    }
+    ac.restore(this);
+
+    // Paragraph attributes in quill delta are applied on a separate paragraph (text "\n") after current paragraph.
+    if (target == ApplyTarget.paragraph && quillAttrName != null) {
+      ac.addOperations([Operation.insert('\n', {
+        quillAttrName!: quillAttrValue,
+      })
+      ]);
     }
     return ac;
   }
@@ -56,14 +65,16 @@ $runtimeType {
     close="$close",
     selfClosed=$selfClosed,
     attr=${attribute != null ? "$attribute" : null}
-    children = ${children?.map((e) => e.toString()).join('\n')}
+    children = ${children.map((e) => e.toString()).join('\n')}
 }''';
 }
 
 /// Tag with no attribute.
 abstract class NoAttrTag extends CommonTag {
   /// Constructor.
-  const NoAttrTag({super.children, super.attributeValidator, super.childrenValidator});
+  const NoAttrTag(
+      {required super.start, required super.end, super.children, super.attributeValidator, super.childrenValidator});
+
 
   @override
   String? get attribute => null;
@@ -75,7 +86,8 @@ abstract class NoAttrTag extends CommonTag {
 /// Tags using embed in quill delta.
 abstract class EmbedTag extends BBCodeTag {
   /// Constructor.
-  const EmbedTag({super.attribute, super.children, super.attributeValidator, super.childrenValidator});
+  const EmbedTag(
+      {required super.start, required super.end, super.attribute, super.children, super.attributeValidator, super.childrenValidator});
 
   @override
   bool get isPlainText => false;

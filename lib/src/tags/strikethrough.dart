@@ -5,7 +5,10 @@ import 'package:dart_bbcode_parser/src/token.dart';
 /// Tag name.
 class StrikethroughTag extends NoAttrTag {
   /// Constructor.
-  const StrikethroughTag({super.children});
+  const StrikethroughTag({required super.start, required super.end, super.children});
+
+  /// Build empty one.
+  static const empty = StrikethroughTag(start: -1, end: -1);
 
   @override
   String get name => 's';
@@ -21,5 +24,5 @@ class StrikethroughTag extends NoAttrTag {
 
   @override
   StrikethroughTag fromToken(TagHead head, TagTail? tail, List<BBCodeTag> children) =>
-      StrikethroughTag(children: children);
+      StrikethroughTag(start: head.start, end: tail?.end ?? head.end, children: children);
 }

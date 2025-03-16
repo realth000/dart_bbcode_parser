@@ -11,7 +11,11 @@ import 'package:dart_bbcode_parser/src/utils.dart';
 /// Children shall all be text content.
 class ImageTag extends EmbedTag {
   /// Constructor.
-  const ImageTag({required String attribute, super.children}) : super(attribute: attribute);
+  const ImageTag({required super.start, required super.end, required String attribute, super.children})
+    : super(attribute: attribute);
+
+  /// Build empty one.
+  static const ImageTag empty = ImageTag(start: -1, end: -1, attribute: '');
 
   static final _imageSizeRe = RegExp(r'^(?<width>\d+),(?<height>\d+)$');
 
@@ -41,5 +45,5 @@ class ImageTag extends EmbedTag {
 
   @override
   ImageTag fromToken(TagHead head, TagTail? tail, List<BBCodeTag> children) =>
-      ImageTag(attribute: head.attribute!, children: children);
+      ImageTag(start: head.start, end: tail?.end ?? head.end, attribute: head.attribute!, children: children);
 }

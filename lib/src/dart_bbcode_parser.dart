@@ -17,18 +17,18 @@ import 'package:dart_quill_delta/dart_quill_delta.dart';
 
 /// BBCode tags that are enabled by default.
 const defaultSupportedTags = [
-  BoldTag(),
-  ItalicTag(),
-  UnderlineTag(),
-  StrikethroughTag(),
-  UrlTag(),
-  FontSizeTag(attribute: ''),
-  ColorTag(attribute: ''),
-  BackgroundColorTag(attribute: ''),
-  SuperscriptTag(),
-  ImageTag(attribute: ''),
-  DividerTag(),
-  AlignTag(attribute: ''),
+  BoldTag.empty,
+  ItalicTag.empty,
+  UnderlineTag.empty,
+  StrikethroughTag.empty,
+  UrlTag.empty,
+  FontSizeTag.empty,
+  ColorTag.empty,
+  BackgroundColorTag.empty,
+  SuperscriptTag.empty,
+  ImageTag.empty,
+  DividerTag.empty,
+  AlignTag.empty,
 ];
 
 /// Parse plain [bbcode] text into quill [Delta].

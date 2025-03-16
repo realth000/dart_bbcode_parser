@@ -5,7 +5,10 @@ import 'package:dart_bbcode_parser/src/token.dart';
 /// Tag name.
 class SuperscriptTag extends NoAttrTag {
   /// Constructor.
-  const SuperscriptTag({super.children});
+  const SuperscriptTag({required super.start, required super.end, super.children});
+
+  /// Constructor.
+  static const SuperscriptTag empty = SuperscriptTag(start: -1, end: -1);
 
   @override
   String get name => 'sup';
@@ -20,6 +23,7 @@ class SuperscriptTag extends NoAttrTag {
   String get quillAttrValue => 'super';
 
   @override
-  SuperscriptTag fromToken(TagHead head, TagTail? tail, List<BBCodeTag> children) => SuperscriptTag(children: children);
+  SuperscriptTag fromToken(TagHead head, TagTail? tail, List<BBCodeTag> children) =>
+      SuperscriptTag(start: head.start, end: tail?.end ?? head.end, children: children);
 }
 

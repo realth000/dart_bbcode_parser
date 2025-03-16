@@ -5,10 +5,19 @@ import 'package:dart_quill_delta/dart_quill_delta.dart';
 /// The attributes context go through conversion.
 class AttrContext {
   /// Constructor.
-  AttrContext() : attrs = [], operation = [];
+  AttrContext()
+      : attrs = [],
+        paragraphAttrs = [],
+        operation = [];
 
-  /// All attrs.
+  /// All attributes on text.
   List<QuillAttribute> attrs;
+
+  /// All attributes on paragraph.
+  ///
+  /// Till now this field is not used because paragraph attributes are manually attached to a new paragraph when
+  /// finished parsing current tag. It's what quill delta expected, though we do not have "paragraph" concept in bbcode.
+  List<QuillAttribute> paragraphAttrs;
 
   /// All operations.
   List<Operation> operation;
@@ -24,13 +33,34 @@ class AttrContext {
       attrs.add(QuillAttribute(attrName, attrValue));
   }
 
+  void _rememberForParagraph(String attrName, dynamic attrValue) {
+    paragraphAttrs.add(QuillAttribute(attrName, attrValue));
+  }
+
   /// Forget last attribute from context.
-  void _forget() {
+  void _forget(String tagName) {
     // Shall not throw empty element exception.
     if (attrs.isEmpty) {
       throw Exception('did you forget to save tags?');
     }
+
+    if (attrs.last.name != tagName) {
+      throw Exception('forgetting incorrect tag: intend to forget "$tagName", but exactly have "${attrs.last.name}"');
+    }
     attrs.removeLast();
+  }
+
+  void _forgetForParagraph(String tagName) {
+    // Shall not throw empty element exception.
+    if (paragraphAttrs.isEmpty) {
+      throw Exception('did you forget to save paragraph tags?');
+    }
+
+    if (paragraphAttrs.last.name != tagName) {
+      throw Exception(
+          'forgetting incorrect paragraph tag: intend to forget "$tagName", but exactly have "${attrs.last.name}"');
+    }
+    paragraphAttrs.removeLast();
   }
 
   /// Save the attribute in [tag] to context.
@@ -38,6 +68,12 @@ class AttrContext {
     if (!tag.hasQuillAttr) {
       return;
     }
+
+    if (tag.target == ApplyTarget.paragraph) {
+      _rememberForParagraph(tag.quillAttrName!, tag.quillAttrValue);
+      return;
+    }
+
     _remember(tag.quillAttrName!, tag.quillAttrValue);
   }
 
@@ -46,7 +82,13 @@ class AttrContext {
     if (!tag.hasQuillAttr) {
       return;
     }
-    _forget();
+
+    if (tag.target == ApplyTarget.paragraph) {
+      _forgetForParagraph(tag.quillAttrName!);
+      return;
+    }
+
+    _forget(tag.quillAttrName!);
   }
 
   /// Add operations.

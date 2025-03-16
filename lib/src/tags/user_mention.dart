@@ -8,7 +8,10 @@ import 'package:dart_bbcode_parser/src/utils.dart';
 /// User mention `@$USERNAME`>
 class UserMentionTag extends EmbedTag {
   /// Constructor.
-  const UserMentionTag({super.children});
+  const UserMentionTag({required super.start, required super.end, super.children});
+
+  /// Build empty one.
+  factory UserMentionTag.empty() => const UserMentionTag(start: -1, end: -1);
 
   @override
   String get name => '@';
@@ -26,5 +29,6 @@ class UserMentionTag extends EmbedTag {
     });
 
   @override
-  UserMentionTag fromToken(TagHead head, TagTail? tail, List<BBCodeTag> children) => UserMentionTag(children: children);
+  UserMentionTag fromToken(TagHead head, TagTail? tail, List<BBCodeTag> children) =>
+      UserMentionTag(start: head.start, end: tail?.end ?? head.end, children: children);
 }

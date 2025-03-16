@@ -9,7 +9,10 @@ import 'package:meta/meta.dart';
 @immutable
 class TextContent implements BBCodeTag {
   /// Constructor.
-  const TextContent(String data) : _data = data;
+  const TextContent(int start, int end, String data) : _data = data, _start = start, _end = end;
+
+  /// Build empty one.
+  factory TextContent.empty() => const TextContent(-1, -1, '');
 
   /// Data content.
   final String _data;
@@ -64,6 +67,19 @@ class TextContent implements BBCodeTag {
   @override
   bool get selfClosed => true;
 
+  final int _start;
+
+  @override
+  int get start => _start;
+
+  final int _end;
+
+  @override
+  int get end => _end;
+
+  @override
+  ApplyTarget get target => throw UnsupportedError('text has no apply target');
+
   @override
   StringBuffer toBBCode(StringBuffer buffer) {
     buffer.write(_data);
@@ -72,6 +88,7 @@ class TextContent implements BBCodeTag {
 
   @override
   AttrContext toQuilDelta(AttrContext attrContext) {
+    final attrs = attrContext.attrMap;
     attrContext.operation.add(Operation.insert(data, attrContext.attrMap));
     return attrContext;
   }

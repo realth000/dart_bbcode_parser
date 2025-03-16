@@ -10,7 +10,10 @@ import 'package:dart_bbcode_parser/src/utils.dart';
 /// ```
 class UrlTag extends CommonTag {
   /// Constructor.
-  const UrlTag({super.attribute, super.children});
+  const UrlTag({required super.start, required super.end, super.attribute, super.children});
+
+  /// Build empty one.
+  static const empty = UrlTag(start: -1, end: -1);
 
   /// Url shall not be empty.
   @override
@@ -31,6 +34,8 @@ class UrlTag extends CommonTag {
   @override
   UrlTag fromToken(TagHead head, TagTail? tail, List<BBCodeTag> children) =>
       UrlTag(
+        start: head.start,
+        end: tail?.end ?? head.end,
         attribute: head.attribute,
         children: children,
       );

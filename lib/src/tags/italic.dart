@@ -5,7 +5,10 @@ import 'package:dart_bbcode_parser/src/token.dart';
 /// Tag name.
 class ItalicTag extends NoAttrTag {
   /// Constructor.
-  const ItalicTag({super.children});
+  const ItalicTag({required super.start, required super.end, super.children});
+
+  /// Build empty one.
+  static const empty = ItalicTag(start: -1, end: -1);
 
   @override
   String get name => 'i';
@@ -20,5 +23,6 @@ class ItalicTag extends NoAttrTag {
   dynamic get quillAttrValue => true;
 
   @override
-  ItalicTag fromToken(TagHead head, TagTail? tail, List<BBCodeTag> children) => ItalicTag(children: children);
+  ItalicTag fromToken(TagHead head, TagTail? tail, List<BBCodeTag> children) =>
+      ItalicTag(start: head.start, end: tail?.end ?? head.end, children: children);
 }

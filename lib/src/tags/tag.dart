@@ -2,12 +2,26 @@ import 'package:dart_bbcode_parser/src/quill/attr_context.dart';
 import 'package:dart_bbcode_parser/src/quill/convertible.dart';
 import 'package:dart_bbcode_parser/src/token.dart';
 import 'package:dart_bbcode_parser/src/utils.dart';
-import 'package:dart_quill_delta/dart_quill_delta.dart';
+
+/// Attribute apply on what.
+enum ApplyTarget {
+  /// On text.
+  ///
+  /// Default value.
+  text,
+
+  /// On paragraph.
+  paragraph,
+}
 
 /// The basic class describes common feature and shape on all kinds of tags.
 abstract class BBCodeTag implements QuillConvertible {
   /// Constructor.
-  const BBCodeTag({required this.attributeValidator, required this.childrenValidator, this.children, this.attribute});
+  const BBCodeTag({int? start, int? end, required this.attributeValidator, required this.childrenValidator, List<
+      BBCodeTag>? children, this.attribute})
+      : _start = start ?? 0,
+        _end = end ?? 0,
+        children = children ?? const [];
 
   /// Is plain text or not.
   bool get isPlainText;
@@ -24,11 +38,28 @@ abstract class BBCodeTag implements QuillConvertible {
   /// Close tag character.
   String get close;
 
+  /// Start position.
+  final int _start;
+
+  /// Get the start position.
+  int get start => _start;
+
+  /// End position.
+  final int _end;
+
+  /// Get the end position.
+  int get end => _end;
+
   /// Whether the tag is self closed.
   ///
   /// For example `[url][/url]` is not self closing because it needs a separate close tag `[/url]` and `[hr]` is self
   /// closing because it does not need one.
   bool get selfClosed;
+
+  /// By default the tag applies on text.
+  ///
+  /// Change to other target if necessary.
+  ApplyTarget get target => ApplyTarget.text;
 
   /// Function to validate a attribute.
   final AttributeValidator? attributeValidator;
@@ -48,7 +79,7 @@ abstract class BBCodeTag implements QuillConvertible {
   // final List<BBCodeTag> disallowedChildren;
 
   /// All childrens
-  final List<BBCodeTag>? children;
+  final List<BBCodeTag> children;
 
   /// Function converts current tag into bbcode text.
   ///

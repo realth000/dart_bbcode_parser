@@ -21,6 +21,9 @@ final class QuillAttribute {
 
   @override
   int get hashCode => name.hashCode;
+
+  @override
+  String toString() => 'QuillAttribute { name="$name", value="$value" }';
 }
 
 /// Interface requires the conversion between bbcode and quill delta.

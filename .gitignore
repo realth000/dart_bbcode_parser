@@ -2,6 +2,7 @@
 /.vscode
 /build
 /custom_lint.log
+/data/*.test.txt
 
 # https://dart.dev/guides/libraries/private-files
 # Created by `dart pub`

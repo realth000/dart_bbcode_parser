@@ -5,7 +5,10 @@ import 'package:dart_bbcode_parser/src/token.dart';
 /// Horizontal divider.
 class DividerTag extends EmbedTag {
   /// Constructor.
-  const DividerTag({super.children});
+  const DividerTag({required super.start, required super.end, super.children});
+
+  /// Build empty one.
+  static const DividerTag empty = DividerTag(start: -1, end: -1);
 
   @override
   String get name => 'hr';
@@ -23,6 +26,6 @@ class DividerTag extends EmbedTag {
   String get quillEmbedValue => 'hr';
 
   @override
-  DividerTag fromToken(TagHead head, TagTail? tail, List<BBCodeTag> children) => DividerTag(children: children);
-
+  DividerTag fromToken(TagHead head, TagTail? tail, List<BBCodeTag> children) =>
+      DividerTag(start: head.start, end: tail?.end ?? head.start, children: children);
 }

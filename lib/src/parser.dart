@@ -31,7 +31,7 @@ final class Parser {
     final context = _ParseContext();
     for (final token in _tokens) {
       if (token is Text) {
-        context.saveText(TextContent(token.data));
+        context.saveText(TextContent(token.start, token.end, token.data));
       } else if (token is TagHead) {
         if (_isSupported(token.name)) {
           // Try check for self closed tags.
@@ -41,7 +41,8 @@ final class Parser {
             if (tag.attributeValidator != null && !tag.attributeValidator!.call(token.attribute)) {
               // Tag has invalid attribute.
               context.saveTextToAST(
-                  TextContent('[${token.name}${token.attribute != null ? "=${token.attribute}" : ""}]'));
+                  TextContent(token.start, token.end,
+                      '[${token.name}${token.attribute != null ? "=${token.attribute}" : ""}]'));
               continue;
             }
 
@@ -55,7 +56,8 @@ final class Parser {
             ..composeTags();
         } else {
           // Unrecognized tag.
-          context.saveText(TextContent('[${token.name}${token.attribute != null ? "=${token.attribute}" : ""}]'));
+          context.saveText(TextContent(
+              token.start, token.end, '[${token.name}${token.attribute != null ? "=${token.attribute}" : ""}]'));
         }
       } else if (token is TagTail) {
         if (_isSupported(token.name) && context.inScope(token)) {
@@ -71,17 +73,18 @@ final class Parser {
               (tag.childrenValidator != null && !tag.childrenValidator!.call(children))) {
             // Fallback current tag to common tags.
             context.saveTextToAST(
-                TextContent('[${tagHead.name}${tagHead.attribute != null ? "=${tagHead.attribute}" : ""}]'));
+                TextContent(token.start, token.end,
+                    '[${tagHead.name}${tagHead.attribute != null ? "=${tagHead.attribute}" : ""}]'));
             for (final child in children) {
               context.saveTagToAST(child);
             }
-            context.saveText(TextContent('[/${token.name}]'));
+            context.saveText(TextContent(token.start, token.end, '[/${token.name}]'));
             continue;
           }
           context.saveTagToAST(tag);
         } else {
           // Unrecognized tag or crossed tag, fallback to text.
-          context.saveText(TextContent('[/${token.name}]'));
+          context.saveText(TextContent(token.start, token.end, '[/${token.name}]'));
         }
       }
     }
@@ -199,6 +202,10 @@ final class _ParseContext {
     parsedTags.add(text);
   }
 
+  void saveTag(BBCodeTag tag) {
+    parsedTags.add(tag);
+  }
+
   /// Save the [text].
   void saveTextToAST(TextContent text) {
     // if (token is! Text) {
@@ -208,10 +215,41 @@ final class _ParseContext {
   }
 
   /// Save a named tag.
+  ///
+  /// Add [tag] to the ast and a more important thing: transform the AST by checking previously saved children tags.
+  ///
+  /// Detail explain:
+  ///
+  /// Our parsing process is linear, which means it will save the recognized tag immediately, without checking for
+  /// parent nodes:
+  ///
+  /// ```console
+  /// [b] [i] text [/i] [/b]
+  /// ```
+  ///
+  /// For the example above, when the parsing process at `[/b]`, it save the valid tag `[b]` to AST, but it does not
+  /// know `[i]` and `text` are its children, so an extra step is needed here, checking tags already in the AST, if
+  /// these previous tags have a start pos after the current pending one, it means these tags are inside current tag,
+  /// move them to be current tags' children.
   void saveTagToAST(BBCodeTag tag) {
     // if (head is! TagHead || tail is! TagTail || head.name != tail.name) {
     //   throw Exception('calling saveTag on incorrect head $head and tail $tail');
     // }
+
+    int? removeRangStartIdx;
+    if (ast.isNotEmpty) {
+      for (var i = ast.length - 1; i >= 0; i--) {
+        if (ast[i].start <= tag.start) {
+          break;
+        }
+        removeRangStartIdx = i;
+        tag.children.add(ast[i]);
+      }
+    }
+    if (removeRangStartIdx != null) {
+      ast.removeRange(removeRangStartIdx, ast.length);
+    }
+
     ast.add(tag);
   }
 

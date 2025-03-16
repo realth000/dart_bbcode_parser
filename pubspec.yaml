@@ -9,6 +9,7 @@ environment:
   sdk: ^3.7.0
 
 dependencies:
+  args: ^2.7.0
   collection: ^1.19.1
   dart_bbcode_web_colors:
     path: ../dart_bbcode_web_colors
