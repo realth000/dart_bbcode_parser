@@ -16,23 +16,23 @@ class FontSizeTag extends CommonTag {
   ///
   /// This value is synced with bbcode editor.
   /// TODO: Decouple default font size values.
-  static final sizeMap = <String, String>{
+  static final sizeMap = <String, double>{
     // x-small
-    '1': '11.0',
+    '1': 11.0,
     // small
-    '2': '14.0',
+    '2': 14.0,
     // medium
-    '3': '17.0',
+    '3': 17.0,
     // large
-    '4': '19.0',
+    '4': 19.0,
     // x-large
-    '5': '25.0',
+    '5': 25.0,
     // xx-large
-    '6': '33.0',
+    '6': 33.0,
     // xxx-large
-    '7': '49.0',
+    '7': 49.0,
     // Not set
-    '0': '0',
+    '0': 0,
   };
 
   @override
@@ -48,7 +48,7 @@ class FontSizeTag extends CommonTag {
   String get quillAttrName => 'size';
 
   @override
-  String get quillAttrValue => sizeMap[attribute!]!;
+  double get quillAttrValue => sizeMap[attribute!]!;
 
   @override
   FontSizeTag fromToken(TagHead head, TagTail? tail, List<BBCodeTag> children) =>

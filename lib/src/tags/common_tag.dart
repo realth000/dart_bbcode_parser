@@ -43,6 +43,10 @@ abstract class CommonTag extends BBCodeTag {
   @override
   AttrContext toQuilDelta(AttrContext attrContext) {
     var ac = attrContext..save(this);
+    if (target == ApplyTarget.paragraph && quillAttrName != null) {
+      ac.addOperations([Operation.insert('\n', {})
+      ]);
+    }
     for (final child in children) {
       ac = child.toQuilDelta(ac);
     }

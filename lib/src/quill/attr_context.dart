@@ -25,6 +25,19 @@ class AttrContext {
   /// Get attrs in map format.
   Map<String, dynamic> get attrMap => Map.fromEntries(attrs.map((e) => MapEntry(e.name, e.value)));
 
+  /// Check if context ended with '\n'.
+  bool? get endWithNewLine {
+    if (operation.isEmpty) {
+      return null;
+    }
+
+    final lastOp = operation.last.data;
+    if (lastOp is! String) {
+      return null;
+    }
+    return lastOp.endsWith('\n');
+  }
+
   /// Add attributes into the context.
   //
   // The attribute value is dynamic type according to quill delta definition.
