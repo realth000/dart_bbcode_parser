@@ -25,13 +25,16 @@ class AttrContext {
   /// Get attrs in map format.
   Map<String, dynamic> get attrMap => Map.fromEntries(attrs.map((e) => MapEntry(e.name, e.value)));
 
+  /// Get paragraph attributes in map format.
+  Map<String, dynamic> get paragraphAttrMap => Map.fromEntries(paragraphAttrs.map((e) => MapEntry(e.name, e.value)));
+
   /// Check if context ended with '\n'.
   bool? get endWithNewLine {
     if (operation.isEmpty) {
       return null;
     }
 
-    final lastOp = operation.last.data;
+    final lastOp = operation.lastOrNull?.data;
     if (lastOp is! String) {
       return null;
     }

@@ -8,5 +8,11 @@ Delta buildDelta(List<BBCodeTag> tags) {
   for (final tag in tags) {
     attrContext = tag.toQuilDelta(attrContext);
   }
-  return Delta.fromOperations([...attrContext.operation, Operation.insert('\n')]);
+
+  // Ensure delta end with '\n'.
+  if (attrContext.endWithNewLine != true) {
+    attrContext.operation.add(Operation.insert('\n'));
+  }
+
+  return Delta.fromOperations(attrContext.operation);
 }

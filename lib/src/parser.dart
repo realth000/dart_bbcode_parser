@@ -81,6 +81,8 @@ final class Parser {
             context.saveText(TextContent(token.start, token.end, '[/${token.name}]'));
             continue;
           }
+
+          // Valid tag.
           context.saveTagToAST(tag);
         } else {
           // Unrecognized tag or crossed tag, fallback to text.
@@ -232,22 +234,20 @@ final class _ParseContext {
   /// these previous tags have a start pos after the current pending one, it means these tags are inside current tag,
   /// move them to be current tags' children.
   void saveTagToAST(BBCodeTag tag) {
-    // if (head is! TagHead || tail is! TagTail || head.name != tail.name) {
-    //   throw Exception('calling saveTag on incorrect head $head and tail $tail');
-    // }
-
-    int? removeRangStartIdx;
+    int? removeRangeStartIndex;
     if (ast.isNotEmpty) {
+      final childrenTags = <BBCodeTag>[];
       for (var i = ast.length - 1; i >= 0; i--) {
         if (ast[i].start <= tag.start) {
           break;
         }
-        removeRangStartIdx = i;
-        tag.children.add(ast[i]);
+        removeRangeStartIndex = i;
+        childrenTags.add(ast[i]);
       }
+      tag.children.addAll(childrenTags.reversed.toList());
     }
-    if (removeRangStartIdx != null) {
-      ast.removeRange(removeRangStartIdx, ast.length);
+    if (removeRangeStartIndex != null) {
+      ast.removeRange(removeRangeStartIndex, ast.length);
     }
 
     ast.add(tag);

@@ -43,17 +43,20 @@ abstract class CommonTag extends BBCodeTag {
   @override
   AttrContext toQuilDelta(AttrContext attrContext) {
     var ac = attrContext..save(this);
-    if (target == ApplyTarget.paragraph && quillAttrName != null) {
-      ac.addOperations([Operation.insert('\n', {})
+    // Ensure paragraphs are prefixed with new line.
+    if (target == ApplyTarget.paragraph && quillAttrName != null && (ac.endWithNewLine == false)) {
+      ac.addOperations([Operation.insert('\n')
       ]);
     }
+
     for (final child in children) {
       ac = child.toQuilDelta(ac);
     }
     ac.restore(this);
 
-    // Paragraph attributes in quill delta are applied on a separate paragraph (text "\n") after current paragraph.
-    if (target == ApplyTarget.paragraph && quillAttrName != null) {
+    // Ensure paragraphs are suffixed with new line.
+    if (target == ApplyTarget.paragraph && quillAttrName != null
+        && (ac.endWithNewLine == false)) {
       ac.addOperations([Operation.insert('\n', {
         quillAttrName!: quillAttrValue,
       })
@@ -126,6 +129,12 @@ abstract class EmbedTag extends BBCodeTag {
   @override
   AttrContext toQuilDelta(AttrContext attrContext) {
     attrContext.operation.add(Operation.insert({quillEmbedName: quillEmbedValue}, attrContext.attrMap));
+    final paragraphAttrs = attrContext.paragraphAttrMap;
+    // Ensure embed tags inside children have attr.
+    // But does it break composed content in paragraph node?
+    if (paragraphAttrs.isNotEmpty) {
+      attrContext.operation.add(Operation.insert('\n', paragraphAttrs));
+    }
     return attrContext;
   }
 
@@ -136,6 +145,6 @@ $runtimeType {
     close="$close",
     selfClosed=$selfClosed,
     attr=${attribute != null ? "$attribute" : null}
-    children = ${children?.map((e) => e.toString()).join('\n')}
+    children = ${children.map((e) => e.toString()).join('\n')}
 }''';
 }

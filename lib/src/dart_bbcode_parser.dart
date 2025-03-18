@@ -29,8 +29,8 @@ const defaultSupportedTags = [
   SuperscriptTag.empty,
   ImageTag.empty,
   DividerTag.empty,
-  // AlignTag.empty,
-  // CodeTag.empty,
+  AlignTag.empty,
+  CodeTag.empty,
 ];
 
 /// Parse plain [bbcode] text into quill [Delta].

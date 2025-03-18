@@ -4,6 +4,7 @@ import 'package:dart_bbcode_parser/src/token.dart';
 import 'package:dart_bbcode_parser/src/utils.dart';
 import 'package:dart_quill_delta/dart_quill_delta.dart';
 import 'package:meta/meta.dart';
+import 'package:string_scanner/string_scanner.dart';
 
 /// Plain text.
 @immutable
@@ -88,8 +89,46 @@ class TextContent implements BBCodeTag {
 
   @override
   AttrContext toQuilDelta(AttrContext attrContext) {
+    if (data.isEmpty) {
+      return attrContext;
+    }
+    const lf = 0x0a;
     final attrs = attrContext.attrMap;
-    attrContext.operation.add(Operation.insert(data, attrContext.attrMap));
+    final paragraphAttrs = attrContext.paragraphAttrMap;
+    if (paragraphAttrs.isEmpty) {
+      // Just insert the text if no paragraph attributes presents.
+      attrContext.operation.add(Operation.insert(data, attrContext.attrMap));
+      return attrContext;
+    }
+
+    // Only contains '\n'.
+    if (data.codeUnits.every((e) => e == lf)) {
+      attrContext.operation.add(Operation.insert(data, attrContext.attrMap));
+      return attrContext;
+    }
+
+    // '\n' code unit.
+
+    // From here, we are parsing text that attached paragraph attributes.
+    final scanner = StringScanner(data);
+    var lastSection = 0;
+    while (!scanner.isDone) {
+      final curr = scanner.readChar();
+      final next = scanner.peekChar(1);
+      if (curr == lf && next != lf) {
+        // Here is the position to paragraph attributes.
+        attrContext.operation.add(
+            Operation.insert(scanner.substring(lastSection, scanner.position - 1), attrContext.attrMap));
+        attrContext.operation.add(Operation.insert('\n', attrContext.paragraphAttrMap));
+        lastSection = scanner.position;
+        continue;
+      }
+    }
+
+    if (lastSection < scanner.position) {
+      // Some content not scanned yet, do not miss them.
+      attrContext.operation.add(Operation.insert(scanner.substring(lastSection, scanner.position), attrs));
+    }
     return attrContext;
   }
 
