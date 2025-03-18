@@ -51,7 +51,7 @@ final class Parser {
             }
 
             // Valid self closed tag.
-            context.saveTagToAST(tag.fromToken(token, null, []));
+            context.saveTag(tag.fromToken(token, null, []));
             continue;
           }
 
