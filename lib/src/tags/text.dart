@@ -118,7 +118,8 @@ class TextContent implements BBCodeTag {
       if (curr == lf && next != lf) {
         // Here is the position to paragraph attributes.
         attrContext.operation.add(
-            Operation.insert(scanner.substring(lastSection, scanner.position - 1), attrContext.attrMap));
+          Operation.insert(scanner.substring(lastSection, scanner.position - 1), attrContext.attrMap),
+        );
         attrContext.operation.add(Operation.insert('\n', attrContext.paragraphAttrMap));
         lastSection = scanner.position;
         continue;

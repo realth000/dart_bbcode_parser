@@ -17,11 +17,16 @@ enum ApplyTarget {
 /// The basic class describes common feature and shape on all kinds of tags.
 abstract class BBCodeTag implements QuillConvertible {
   /// Constructor.
-  const BBCodeTag({int? start, int? end, required this.attributeValidator, required this.childrenValidator, List<
-      BBCodeTag>? children, this.attribute})
-      : _start = start ?? 0,
-        _end = end ?? 0,
-        children = children ?? const [];
+  const BBCodeTag({
+    int? start,
+    int? end,
+    required this.attributeValidator,
+    required this.childrenValidator,
+    List<BBCodeTag>? children,
+    this.attribute,
+  }) : _start = start ?? 0,
+       _end = end ?? 0,
+       children = children ?? const [];
 
   /// Is plain text or not.
   bool get isPlainText;

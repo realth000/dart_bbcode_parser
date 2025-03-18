@@ -33,10 +33,5 @@ class UrlTag extends CommonTag {
 
   @override
   UrlTag fromToken(TagHead head, TagTail? tail, List<BBCodeTag> children) =>
-      UrlTag(
-        start: head.start,
-        end: tail?.end ?? head.end,
-        attribute: head.attribute,
-        children: children,
-      );
+      UrlTag(start: head.start, end: tail?.end ?? head.end, attribute: head.attribute, children: children);
 }

@@ -26,4 +26,3 @@ class SuperscriptTag extends NoAttrTag {
   SuperscriptTag fromToken(TagHead head, TagTail? tail, List<BBCodeTag> children) =>
       SuperscriptTag(start: head.start, end: tail?.end ?? head.end, children: children);
 }
-

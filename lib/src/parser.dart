@@ -41,8 +41,12 @@ final class Parser {
             if (tag.attributeValidator != null && !tag.attributeValidator!.call(token.attribute)) {
               // Tag has invalid attribute.
               context.saveTextToAST(
-                  TextContent(token.start, token.end,
-                      '[${token.name}${token.attribute != null ? "=${token.attribute}" : ""}]'));
+                TextContent(
+                  token.start,
+                  token.end,
+                  '[${token.name}${token.attribute != null ? "=${token.attribute}" : ""}]',
+                ),
+              );
               continue;
             }
 
@@ -56,8 +60,13 @@ final class Parser {
             ..composeTags();
         } else {
           // Unrecognized tag.
-          context.saveText(TextContent(
-              token.start, token.end, '[${token.name}${token.attribute != null ? "=${token.attribute}" : ""}]'));
+          context.saveText(
+            TextContent(
+              token.start,
+              token.end,
+              '[${token.name}${token.attribute != null ? "=${token.attribute}" : ""}]',
+            ),
+          );
         }
       } else if (token is TagTail) {
         if (_isSupported(token.name) && context.inScope(token)) {
@@ -73,8 +82,12 @@ final class Parser {
               (tag.childrenValidator != null && !tag.childrenValidator!.call(children))) {
             // Fallback current tag to common tags.
             context.saveTextToAST(
-                TextContent(token.start, token.end,
-                    '[${tagHead.name}${tagHead.attribute != null ? "=${tagHead.attribute}" : ""}]'));
+              TextContent(
+                token.start,
+                token.end,
+                '[${tagHead.name}${tagHead.attribute != null ? "=${tagHead.attribute}" : ""}]',
+              ),
+            );
             for (final child in children) {
               context.saveTagToAST(child);
             }
@@ -125,6 +138,7 @@ ${_ast.map((e) => "    $e").join('\n')}
 
 final class _ParseContext {
   _ParseContext();
+
   /// All scopes.
   ///
   /// A scope is an area between the head of tag and tail of same tag:
@@ -194,10 +208,10 @@ final class _ParseContext {
   }
 
   /// Is the last memorized scope is [tag].
-  bool inScope(TagTail tag)  => _scope.lastOrNull?.name == tag.name ?? false;
+  bool inScope(TagTail tag) => _scope.lastOrNull?.name == tag.name ?? false;
 
   /// Save the [text].
-  void saveText(TextContent text)  {
+  void saveText(TextContent text) {
     // if (token is! Text) {
     //   throw Exception('calling saveText on non text token type $token');
     // }

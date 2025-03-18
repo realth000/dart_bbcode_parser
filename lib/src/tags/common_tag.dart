@@ -10,8 +10,14 @@ import 'package:dart_quill_delta/dart_quill_delta.dart';
 /// Defines open character, close character, self closing and children validator.
 abstract class CommonTag extends BBCodeTag {
   /// Constructor.
-  const CommonTag(
-      {super.start, super.end, super.attribute, super.children, super.attributeValidator, super.childrenValidator});
+  const CommonTag({
+    super.start,
+    super.end,
+    super.attribute,
+    super.children,
+    super.attributeValidator,
+    super.childrenValidator,
+  });
 
   @override
   bool get isPlainText => false;
@@ -45,8 +51,7 @@ abstract class CommonTag extends BBCodeTag {
     var ac = attrContext..save(this);
     // Ensure paragraphs are prefixed with new line.
     if (target == ApplyTarget.paragraph && quillAttrName != null && (ac.endWithNewLine == false)) {
-      ac.addOperations([Operation.insert('\n')
-      ]);
+      ac.addOperations([Operation.insert('\n')]);
     }
 
     for (final child in children) {
@@ -55,11 +60,9 @@ abstract class CommonTag extends BBCodeTag {
     ac.restore(this);
 
     // Ensure paragraphs are suffixed with new line.
-    if (target == ApplyTarget.paragraph && quillAttrName != null
-        && (ac.endWithNewLine == false)) {
-      ac.addOperations([Operation.insert('\n', {
-        quillAttrName!: quillAttrValue,
-      })
+    if (target == ApplyTarget.paragraph && quillAttrName != null && (ac.endWithNewLine == false)) {
+      ac.addOperations([
+        Operation.insert('\n', {quillAttrName!: quillAttrValue}),
       ]);
     }
     return ac;
@@ -79,9 +82,13 @@ $runtimeType {
 /// Tag with no attribute.
 abstract class NoAttrTag extends CommonTag {
   /// Constructor.
-  const NoAttrTag(
-      {required super.start, required super.end, super.children, super.attributeValidator, super.childrenValidator});
-
+  const NoAttrTag({
+    required super.start,
+    required super.end,
+    super.children,
+    super.attributeValidator,
+    super.childrenValidator,
+  });
 
   @override
   String? get attribute => null;
@@ -93,8 +100,14 @@ abstract class NoAttrTag extends CommonTag {
 /// Tags using embed in quill delta.
 abstract class EmbedTag extends BBCodeTag {
   /// Constructor.
-  const EmbedTag(
-      {required super.start, required super.end, super.attribute, super.children, super.attributeValidator, super.childrenValidator});
+  const EmbedTag({
+    required super.start,
+    required super.end,
+    super.attribute,
+    super.children,
+    super.attributeValidator,
+    super.childrenValidator,
+  });
 
   @override
   bool get isPlainText => false;

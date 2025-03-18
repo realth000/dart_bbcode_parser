@@ -40,7 +40,10 @@ class CodeTag extends CommonTag {
 
     print('>>> code children: $buffer');
 
-    return CodeTag(start: head.start, end: tail?.end ?? head.end, children: [TextContent( children.first.start, children.last.end, buffer.toString())]);
+    return CodeTag(
+      start: head.start,
+      end: tail?.end ?? head.end,
+      children: [TextContent(children.first.start, children.last.end, buffer.toString())],
+    );
   }
-
 }

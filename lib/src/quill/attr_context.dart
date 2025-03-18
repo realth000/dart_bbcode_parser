@@ -5,10 +5,7 @@ import 'package:dart_quill_delta/dart_quill_delta.dart';
 /// The attributes context go through conversion.
 class AttrContext {
   /// Constructor.
-  AttrContext()
-      : attrs = [],
-        paragraphAttrs = [],
-        operation = [];
+  AttrContext() : attrs = [], paragraphAttrs = [], operation = [];
 
   /// All attributes on text.
   List<QuillAttribute> attrs;
@@ -46,7 +43,7 @@ class AttrContext {
   // The attribute value is dynamic type according to quill delta definition.
   // ignore: avoid_dynamic
   void _remember(String attrName, dynamic attrValue) {
-      attrs.add(QuillAttribute(attrName, attrValue));
+    attrs.add(QuillAttribute(attrName, attrValue));
   }
 
   void _rememberForParagraph(String attrName, dynamic attrValue) {
@@ -74,7 +71,8 @@ class AttrContext {
 
     if (paragraphAttrs.last.name != tagName) {
       throw Exception(
-          'forgetting incorrect paragraph tag: intend to forget "$tagName", but exactly have "${attrs.last.name}"');
+        'forgetting incorrect paragraph tag: intend to forget "$tagName", but exactly have "${attrs.last.name}"',
+      );
     }
     paragraphAttrs.removeLast();
   }
