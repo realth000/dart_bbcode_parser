@@ -38,8 +38,6 @@ class CodeTag extends CommonTag {
       buffer = child.toBBCode(buffer);
     }
 
-    print('>>> code children: $buffer');
-
     return CodeTag(
       start: head.start,
       end: tail?.end ?? head.end,

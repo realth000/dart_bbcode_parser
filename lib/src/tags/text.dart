@@ -119,7 +119,6 @@ class TextContent implements BBCodeTag {
           Operation.insert(scanner.substring(lastSection, scanner.position - 1), attrContext.attrMap),
         );
         attrContext.operation.add(Operation.insert('\n', attrContext.paragraphAttrMap));
-        print('>>> insert \n when $curr');
         lastSection = scanner.position;
         continue;
       }
@@ -128,9 +127,6 @@ class TextContent implements BBCodeTag {
     if (lastSection < scanner.position) {
       // Some content not scanned yet, do not miss them.
       attrContext.operation.add(Operation.insert(scanner.substring(lastSection, scanner.position), attrs));
-    }
-    if (data == 'aaa' || data.contains('1111111111111')) {
-      print('>>> ast is ${attrContext.operation}');
     }
     return attrContext;
   }
