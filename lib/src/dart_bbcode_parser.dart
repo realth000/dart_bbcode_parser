@@ -10,6 +10,7 @@ import 'package:dart_bbcode_parser/src/tags/divider.dart';
 import 'package:dart_bbcode_parser/src/tags/font_size.dart';
 import 'package:dart_bbcode_parser/src/tags/image.dart';
 import 'package:dart_bbcode_parser/src/tags/italic.dart';
+import 'package:dart_bbcode_parser/src/tags/quote.dart';
 import 'package:dart_bbcode_parser/src/tags/strikethrough.dart';
 import 'package:dart_bbcode_parser/src/tags/superscript.dart';
 import 'package:dart_bbcode_parser/src/tags/underline.dart';
@@ -31,6 +32,7 @@ const defaultSupportedTags = [
   DividerTag.empty,
   AlignTag.empty,
   CodeTag.empty,
+  QuoteTag.empty,
 ];
 
 /// Parse plain [bbcode] text into quill [Delta].

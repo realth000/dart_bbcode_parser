@@ -50,7 +50,7 @@ abstract class CommonTag extends BBCodeTag {
   AttrContext toQuilDelta(AttrContext attrContext) {
     var ac = attrContext..save(this);
     // Ensure paragraphs are prefixed with new line.
-    if (target == ApplyTarget.paragraph && quillAttrName != null && (ac.endWithNewLine == false)) {
+    if (target == ApplyTarget.paragraph && quillAttrName != null && ac.endWithNewLine == false) {
       ac.addOperations([Operation.insert('\n')]);
     }
 
@@ -60,7 +60,7 @@ abstract class CommonTag extends BBCodeTag {
     ac.restore(this);
 
     // Ensure paragraphs are suffixed with new line.
-    if (target == ApplyTarget.paragraph && quillAttrName != null && (ac.endWithNewLine == false)) {
+    if (target == ApplyTarget.paragraph && quillAttrName != null && ac.endWithNewLine == false) {
       ac.addOperations([
         Operation.insert('\n', {quillAttrName!: quillAttrValue}),
       ]);
