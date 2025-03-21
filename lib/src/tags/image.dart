@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:dart_bbcode_parser/src/tags/common_tag.dart';
 import 'package:dart_bbcode_parser/src/tags/tag.dart';
-import 'package:dart_bbcode_parser/src/tags/text.dart';
 import 'package:dart_bbcode_parser/src/token.dart';
 import 'package:dart_bbcode_parser/src/utils.dart';
 
@@ -32,7 +31,7 @@ class ImageTag extends EmbedTag {
     final m = _imageSizeRe.firstMatch(attribute!);
 
     return jsonEncode({
-      'link': children!.map((e) => e.data).whereType<String>().join(),
+      'link': children.firstOrNull?.data,
       'width': m!.namedGroup('width'),
       'height': m.namedGroup('height'),
     });

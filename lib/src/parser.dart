@@ -40,7 +40,7 @@ final class Parser {
             // Save self closed tag.
             if (tag.attributeValidator != null && !tag.attributeValidator!.call(token.attribute)) {
               // Tag has invalid attribute.
-              context.saveTextToAST(
+              context.saveText(
                 TextContent(
                   token.start,
                   token.end,
@@ -72,7 +72,7 @@ final class Parser {
         if (_isSupported(token.name) && context.inScope(token)) {
           // Safely leave the scope and produce a parsed BBCode tag according to supported tags.
           final tagHead = context.leaveScope(token);
-          final children = context.popParsed();
+          final children = context.popParsed(tagHead.start);
           final tag = _buildTag(tagHead, token, children);
 
           if (
@@ -81,7 +81,7 @@ final class Parser {
               // Validate children, if any.
               (tag.childrenValidator != null && !tag.childrenValidator!.call(children))) {
             // Fallback current tag to common tags.
-            context.saveTextToAST(
+            context.saveText(
               TextContent(
                 token.start,
                 token.end,
@@ -89,14 +89,14 @@ final class Parser {
               ),
             );
             for (final child in children) {
-              context.saveTagToAST(child);
+              context.saveTag(child);
             }
-            context.saveText(TextContent(token.start, token.end, '[/${token.name}]'));
+            context.saveText(TextContent(token.end, token.end, '[/${token.name}]'));
             continue;
           }
 
           // Valid tag.
-          context.saveTagToAST(tag);
+          context.saveTag(tag, rearrange: true);
         } else {
           // Unrecognized tag or crossed tag, fallback to text.
           context.saveText(TextContent(token.start, token.end, '[/${token.name}]'));
@@ -184,7 +184,7 @@ final class _ParseContext {
   /// Save successfully parsed tags.
   ///
   /// A temporary list of tags that recognized but not composed together.
-  List<BBCodeTag> parsedTags = [];
+  // List<BBCodeTag> parsedTags = [];
 
   /// Final result.
   List<BBCodeTag> ast = [];
@@ -201,9 +201,11 @@ final class _ParseContext {
     throw Exception('calling leaveScope outside of scope $tail');
   }
 
-  List<BBCodeTag> popParsed() {
-    final popped = List<BBCodeTag>.from(parsedTags);
-    parsedTags.clear();
+  List<BBCodeTag> popParsed(int after) {
+    final popped = List<BBCodeTag>.from(ast.skipWhile((e) => e.start <= after));
+    if (popped.isNotEmpty && ast.isNotEmpty) {
+      ast.removeRange(ast.length - popped.length, ast.length);
+    }
     return popped;
   }
 
@@ -212,18 +214,6 @@ final class _ParseContext {
 
   /// Save the [text].
   void saveText(TextContent text) {
-    // if (token is! Text) {
-    //   throw Exception('calling saveText on non text token type $token');
-    // }
-    parsedTags.add(text);
-  }
-
-  void saveTag(BBCodeTag tag) {
-    parsedTags.add(tag);
-  }
-
-  /// Save the [text].
-  void saveTextToAST(TextContent text) {
     // if (token is! Text) {
     //   throw Exception('calling saveText on non text token type $token');
     // }
@@ -247,12 +237,9 @@ final class _ParseContext {
   /// know `[i]` and `text` are its children, so an extra step is needed here, checking tags already in the AST, if
   /// these previous tags have a start pos after the current pending one, it means these tags are inside current tag,
   /// move them to be current tags' children.
-  void saveTagToAST(BBCodeTag tag) {
-    if (tag.isPlainText) {
-      return;
-    }
+  void saveTag(BBCodeTag tag, {bool rearrange = false}) {
     int? removeRangeStartIndex;
-    if (ast.isNotEmpty) {
+    if (!tag.isPlainText && ast.isNotEmpty && rearrange && !tag.selfClosed) {
       final childrenTags = <BBCodeTag>[];
       for (var i = ast.length - 1; i >= 0; i--) {
         if (ast[i].start <= tag.start) {
@@ -271,8 +258,8 @@ final class _ParseContext {
   }
 
   void composeTags() {
-    ast.addAll(parsedTags);
-    parsedTags.clear();
+    // ast.addAll(parsedTags);
+    // parsedTags.clear();
   }
 }
 
