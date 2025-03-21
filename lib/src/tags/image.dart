@@ -21,20 +21,26 @@ class ImageTag extends EmbedTag {
   String get name => 'img';
 
   @override
-  AttributeValidator get attributeValidator => (input) => input != null && _imageSizeRe.hasMatch(input!);
+  AttributeValidator get attributeValidator =>
+      (input) => input == null || input.isEmpty || _imageSizeRe.hasMatch(input);
 
   @override
   String get quillEmbedName => 'bbcodeImage';
 
   @override
   String get quillEmbedValue {
-    final m = _imageSizeRe.firstMatch(attribute!);
+    final m = _imageSizeRe.firstMatch(attribute ?? '');
+    final rawLink = children.firstOrNull?.data;
+    final String? link;
+    if (rawLink == null) {
+      link = null;
+    } else if (!rawLink.startsWith('https://')) {
+      link = 'https://www.tsdm39.com/$rawLink';
+    } else {
+      link = rawLink;
+    }
 
-    return jsonEncode({
-      'link': children.firstOrNull?.data,
-      'width': m!.namedGroup('width'),
-      'height': m.namedGroup('height'),
-    });
+    return jsonEncode({'link': link, 'width': m?.namedGroup('width') ?? '', 'height': m?.namedGroup('height') ?? ''});
   }
 
   /// Children shall be text content.
