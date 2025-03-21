@@ -248,6 +248,9 @@ final class _ParseContext {
   /// these previous tags have a start pos after the current pending one, it means these tags are inside current tag,
   /// move them to be current tags' children.
   void saveTagToAST(BBCodeTag tag) {
+    if (tag.isPlainText) {
+      return;
+    }
     int? removeRangeStartIndex;
     if (ast.isNotEmpty) {
       final childrenTags = <BBCodeTag>[];
