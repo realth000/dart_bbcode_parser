@@ -11,8 +11,7 @@ import 'package:dart_bbcode_parser/src/utils.dart';
 /// Children shall all be text content.
 class ImageTag extends EmbedTag {
   /// Constructor.
-  const ImageTag({required super.start, required super.end, required String attribute, super.children})
-    : super(attribute: attribute);
+  const ImageTag({required super.start, required super.end, required super.attribute, super.children});
 
   /// Build empty one.
   static const ImageTag empty = ImageTag(start: -1, end: -1, attribute: '');
@@ -45,5 +44,5 @@ class ImageTag extends EmbedTag {
 
   @override
   ImageTag fromToken(TagHead head, TagTail? tail, List<BBCodeTag> children) =>
-      ImageTag(start: head.start, end: tail?.end ?? head.end, attribute: head.attribute!, children: children);
+      ImageTag(start: head.start, end: tail?.end ?? head.end, attribute: head.attribute, children: children);
 }
