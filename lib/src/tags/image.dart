@@ -40,7 +40,11 @@ class ImageTag extends EmbedTag {
       link = rawLink;
     }
 
-    return jsonEncode({'link': link, 'width': m?.namedGroup('width') ?? '', 'height': m?.namedGroup('height') ?? ''});
+    return jsonEncode({
+      'link': link,
+      'width': int.tryParse(m?.namedGroup('width') ?? ''),
+      'height': int.tryParse(m?.namedGroup('height') ?? ''),
+    });
   }
 
   /// Children shall be text content.
