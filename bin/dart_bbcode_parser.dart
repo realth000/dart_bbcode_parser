@@ -12,19 +12,32 @@ const flagLexOnly = 'lex';
 const flagParseOnly = 'parse';
 
 Future<int> main(List<String> args) async {
+  final argParser =
+      ArgParser()
+        ..addSeparator('Options:')
+        ..addOption('code', abbr: 'c', help: 'parse bbcode from stdin', valueHelp: 'bbcode')
+        ..addOption('file', abbr: 'f', help: 'read and parse bbcode from file', valueHelp: 'file_path')
+        ..addSeparator('Processing flags:')
+        ..addFlag(flagLexOnly, abbr: 'l', help: 'process till lex end and print lexed result (tokens)')
+        ..addFlag(flagParseOnly, abbr: 'p', help: 'process till parse end and print parsed result (bbcode)')
+        ..addSeparator('Other flags:')
+        ..addFlag('help', abbr: 'h', help: 'print this help message');
+
   if (args.isEmpty) {
-    print('usage: bbcode_parser <bbcode>');
+    print('usage:');
+    print('');
+    print(argParser.usage);
     return 0;
   }
 
-  final argParser =
-      ArgParser()
-        ..addOption('code', abbr: 'c', help: 'parse bbcode from stdin', valueHelp: 'bbcode')
-        ..addOption('file', abbr: 'f', help: 'read and parse bbcode from file', valueHelp: 'file_path')
-        ..addFlag(flagLexOnly, abbr: 'l', help: 'process till lex end and print lexed result (tokens)')
-        ..addFlag(flagParseOnly, abbr: 'p', help: 'process till parse end and print parsed result (bbcode)');
-
   final parsedArgs = argParser.parse(args);
+
+  if (parsedArgs.flag('help')) {
+    print('usage:');
+    print('');
+    print(argParser.usage);
+    return 0;
+  }
 
   if (parsedArgs.option('code') != null) {
     final delta = parseBBCodeTextToDelta(parsedArgs.option('code')!);
