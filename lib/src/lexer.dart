@@ -60,11 +60,16 @@ final class Lexer {
         // Chances are that two or more `Text`s are siblings stay beside each other.
         _appendText(buffer);
         currTagStartPos = _scanner.position - 1;
-        if (_scanner.peekChar().isSlash) {
+        final next2 = _scanner.peekChar();
+        if (next2.isSlash) {
           // Read and drop the slash.
           _scanner.readChar();
           // Perhaps tag tail.
           _scanTail();
+        } else if (next2.isOpen) {
+          // '[[', fallback to text.
+          _appendConsumedText('[');
+          _scanText();
         } else {
           // Perhaps tag head.
           _scanHead();
@@ -117,10 +122,6 @@ final class Lexer {
         _appendHead(nameBuffer, null);
         currTagStartPos = _scanner.position;
         return true;
-      } else if (next.isOpen) {
-        // Invalid tag head, fallback to plain text.
-        _appendConsumedText('[');
-        return false;
       }
 
       nameBuffer.writeCharCode(next);
