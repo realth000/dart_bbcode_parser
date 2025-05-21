@@ -1,5 +1,6 @@
 // Cli printing messages.
 // ignore_for_file: avoid_print
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:args/args.dart';
@@ -58,7 +59,9 @@ Future<int> main(List<String> args) async {
       return 0;
     }
     final delta = buildDelta(parser.ast);
-    print('$delta');
+    const encoder = JsonEncoder.withIndent('  ');
+
+    print(encoder.convert(delta));
     return 0;
   }
 
