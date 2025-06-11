@@ -29,6 +29,10 @@ class BackgroundColorTag extends CommonTag {
   AttributeValidator get attributeValidator => (input) => input.toColor() != null;
 
   @override
-  BackgroundColorTag fromToken(TagHead head, TagTail? tail, List<BBCodeTag> children) =>
-      BackgroundColorTag(start: head.start, end: tail?.end ?? head.end, attribute: head.attribute!, children: children);
+  BackgroundColorTag fromToken(TagHead? head, TagTail? tail, List<BBCodeTag> children) => BackgroundColorTag(
+    start: head!.start,
+    end: tail?.end ?? head.end,
+    attribute: head.attribute!,
+    children: children,
+  );
 }

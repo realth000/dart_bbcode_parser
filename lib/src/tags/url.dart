@@ -32,6 +32,6 @@ class UrlTag extends CommonTag {
   String get quillAttrValue => attribute!;
 
   @override
-  UrlTag fromToken(TagHead head, TagTail? tail, List<BBCodeTag> children) =>
-      UrlTag(start: head.start, end: tail?.end ?? head.end, attribute: head.attribute, children: children);
+  UrlTag fromToken(TagHead? head, TagTail? tail, List<BBCodeTag> children) =>
+      UrlTag(start: head!.start, end: tail?.end ?? head.end, attribute: head.attribute, children: children);
 }

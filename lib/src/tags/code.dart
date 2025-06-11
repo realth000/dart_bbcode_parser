@@ -27,9 +27,9 @@ class CodeTag extends CommonTag {
   bool get quillAttrValue => true;
 
   @override
-  BBCodeTag fromToken(TagHead head, TagTail? tail, List<BBCodeTag> children) {
+  BBCodeTag fromToken(TagHead? head, TagTail? tail, List<BBCodeTag> children) {
     if (children.isEmpty) {
-      return CodeTag(start: head.start, end: tail?.end ?? head.end, children: []);
+      return CodeTag(start: head!.start, end: tail?.end ?? head.end, children: []);
     }
 
     var buffer = StringBuffer();
@@ -39,7 +39,7 @@ class CodeTag extends CommonTag {
     }
 
     return CodeTag(
-      start: head.start,
+      start: head!.start,
       end: tail?.end ?? head.end,
       children: [TextContent(children.first.start, children.last.end, buffer.toString())],
     );

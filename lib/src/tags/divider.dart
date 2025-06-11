@@ -26,6 +26,6 @@ class DividerTag extends EmbedTag {
   String get quillEmbedValue => 'hr';
 
   @override
-  DividerTag fromToken(TagHead head, TagTail? tail, List<BBCodeTag> children) =>
-      DividerTag(start: head.start, end: tail?.end ?? head.start, children: children);
+  DividerTag fromToken(TagHead? head, TagTail? tail, List<BBCodeTag> children) =>
+      DividerTag(start: head!.start, end: tail?.end ?? head.start, children: children);
 }

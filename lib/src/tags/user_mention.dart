@@ -26,6 +26,6 @@ class UserMentionTag extends EmbedTag {
   String get quillEmbedValue => jsonEncode({'name': children!.map((e) => e.data).whereType<String>().join()});
 
   @override
-  UserMentionTag fromToken(TagHead head, TagTail? tail, List<BBCodeTag> children) =>
-      UserMentionTag(start: head.start, end: tail?.end ?? head.end, children: children);
+  UserMentionTag fromToken(TagHead? head, TagTail? tail, List<BBCodeTag> children) =>
+      UserMentionTag(start: head!.start, end: tail?.end ?? head.end, children: children);
 }

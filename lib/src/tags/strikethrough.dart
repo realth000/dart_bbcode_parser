@@ -23,6 +23,6 @@ class StrikethroughTag extends NoAttrTag {
   bool get quillAttrValue => true;
 
   @override
-  StrikethroughTag fromToken(TagHead head, TagTail? tail, List<BBCodeTag> children) =>
-      StrikethroughTag(start: head.start, end: tail?.end ?? head.end, children: children);
+  StrikethroughTag fromToken(TagHead? head, TagTail? tail, List<BBCodeTag> children) =>
+      StrikethroughTag(start: head!.start, end: tail?.end ?? head.end, children: children);
 }

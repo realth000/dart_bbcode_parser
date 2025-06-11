@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dart_bbcode_parser/src/quill/attr_context.dart';
 import 'package:dart_bbcode_parser/src/tags/tag.dart';
 import 'package:dart_bbcode_parser/src/utils.dart';
@@ -33,6 +31,9 @@ abstract class CommonTag extends BBCodeTag {
 
   @override
   bool get selfClosed => false;
+
+  @override
+  bool get selfClosedAtTail => false;
 
   @override
   bool get hasQuillEmbed => false;
@@ -123,6 +124,9 @@ abstract class EmbedTag extends BBCodeTag {
 
   @override
   bool get selfClosed => false;
+
+  @override
+  bool get selfClosedAtTail => false;
 
   @override
   bool get hasQuillAttr => false;

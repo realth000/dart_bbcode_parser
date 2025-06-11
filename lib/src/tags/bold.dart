@@ -23,6 +23,6 @@ class BoldTag extends NoAttrTag {
   bool get quillAttrValue => true;
 
   @override
-  BoldTag fromToken(TagHead head, TagTail? tail, List<BBCodeTag> children) =>
-      BoldTag(start: head.start, end: tail?.end ?? head.end, children: children);
+  BoldTag fromToken(TagHead? head, TagTail? tail, List<BBCodeTag> children) =>
+      BoldTag(start: head!.start, end: tail?.end ?? head.end, children: children);
 }

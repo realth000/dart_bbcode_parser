@@ -23,6 +23,6 @@ class ItalicTag extends NoAttrTag {
   dynamic get quillAttrValue => true;
 
   @override
-  ItalicTag fromToken(TagHead head, TagTail? tail, List<BBCodeTag> children) =>
-      ItalicTag(start: head.start, end: tail?.end ?? head.end, children: children);
+  ItalicTag fromToken(TagHead? head, TagTail? tail, List<BBCodeTag> children) =>
+      ItalicTag(start: head!.start, end: tail?.end ?? head.end, children: children);
 }

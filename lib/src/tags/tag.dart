@@ -61,6 +61,11 @@ abstract class BBCodeTag implements QuillConvertible {
   /// closing because it does not need one.
   bool get selfClosed;
 
+  /// Where the tag is self closed, if is a tail token, set to true.
+  ///
+  /// This field is ignored when [selfClosed] is false.
+  bool get selfClosedAtTail;
+
   /// By default the tag applies on text.
   ///
   /// Change to other target if necessary.
@@ -116,5 +121,5 @@ abstract class BBCodeTag implements QuillConvertible {
   // }
 
   /// Build one from token.
-  BBCodeTag fromToken(TagHead head, TagTail? tail, List<BBCodeTag> children);
+  BBCodeTag fromToken(TagHead? head, TagTail? tail, List<BBCodeTag> children);
 }

@@ -51,6 +51,6 @@ class FontSizeTag extends CommonTag {
   double get quillAttrValue => sizeMap[attribute!]!;
 
   @override
-  FontSizeTag fromToken(TagHead head, TagTail? tail, List<BBCodeTag> children) =>
-      FontSizeTag(start: head.start, end: tail?.end ?? head.end, attribute: head.attribute!, children: children);
+  FontSizeTag fromToken(TagHead? head, TagTail? tail, List<BBCodeTag> children) =>
+      FontSizeTag(start: head!.start, end: tail?.end ?? head.end, attribute: head.attribute!, children: children);
 }

@@ -38,6 +38,6 @@ class AlignTag extends CommonTag {
   AttributeValidator get attributeValidator => (attr) => attr != null && ['left', 'center', 'right'].contains(attr);
 
   @override
-  AlignTag fromToken(TagHead head, TagTail? tail, List<BBCodeTag> children) =>
-      AlignTag(start: head.start, end: tail?.end ?? head.end, attribute: head.attribute!, children: children);
+  AlignTag fromToken(TagHead? head, TagTail? tail, List<BBCodeTag> children) =>
+      AlignTag(start: head!.start, end: tail?.end ?? head.end, attribute: head.attribute!, children: children);
 }

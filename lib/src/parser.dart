@@ -35,8 +35,10 @@ final class Parser {
       } else if (token is TagHead) {
         if (_isSupported(token.name)) {
           // Try check for self closed tags.
-          final tag = _tags.firstWhere((e) => e.name == token.name);
-          if (tag.selfClosed) {
+          final tag = _tags.firstWhereOrNull(
+            (e) => e.name == token.name && e.selfClosed == true && !e.selfClosedAtTail,
+          );
+          if (tag != null) {
             // Save self closed tag.
             if (tag.attributeValidator != null && !tag.attributeValidator!.call(token.attribute)) {
               // Tag has invalid attribute.
@@ -69,17 +71,31 @@ final class Parser {
           );
         }
       } else if (token is TagTail) {
-        if (_isSupported(token.name) && context.inScope(token)) {
+        if (_isSupported(token.name)) {
+          // Try check for self closed tags.
+          final tag = _tags.firstWhereOrNull((e) => e.name == token.name && e.selfClosed == true && e.selfClosedAtTail);
+          if (tag != null) {
+            // Save self closed tag.
+            context.saveTag(tag.fromToken(null, token, []));
+            continue;
+          }
+
+          if (!context.inScope(token)) {
+            // Tail token not self closing nor in scope, fallback to text.
+            context.saveText(TextContent(token.start, token.end, '[/${token.name}]'));
+            continue;
+          }
+
           // Safely leave the scope and produce a parsed BBCode tag according to supported tags.
           final tagHead = context.leaveScope(token);
           final children = context.popParsed(tagHead.start);
-          final tag = _buildTag(tagHead, token, children);
+          final builtTag = _buildTag(tagHead, token, children);
 
           if (
           // Validate attribute, if any.
-          (tag.attributeValidator != null && !tag.attributeValidator!.call(tagHead.attribute)) ||
+          (builtTag.attributeValidator != null && !builtTag.attributeValidator!.call(tagHead.attribute)) ||
               // Validate children, if any.
-              (tag.childrenValidator != null && !tag.childrenValidator!.call(children))) {
+              (builtTag.childrenValidator != null && !builtTag.childrenValidator!.call(children))) {
             // Fallback current tag to common tags.
             context.saveText(
               TextContent(
@@ -96,7 +112,7 @@ final class Parser {
           }
 
           // Valid tag.
-          context.saveTag(tag, rearrange: true);
+          context.saveTag(builtTag, rearrange: true);
         } else {
           // Unrecognized tag or crossed tag, fallback to text.
           context.saveText(TextContent(token.start, token.end, '[/${token.name}]'));

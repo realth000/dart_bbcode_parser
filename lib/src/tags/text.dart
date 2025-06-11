@@ -68,6 +68,9 @@ class TextContent implements BBCodeTag {
   @override
   bool get selfClosed => true;
 
+  @override
+  bool get selfClosedAtTail => false;
+
   final int _start;
 
   @override
@@ -141,6 +144,6 @@ class TextContent implements BBCodeTag {
   String toString() => 'TextContent { data=$_data }';
 
   @override
-  BBCodeTag fromToken(TagHead head, TagTail? tail, List<BBCodeTag> children) =>
+  BBCodeTag fromToken(TagHead? head, TagTail? tail, List<BBCodeTag> children) =>
       throw Exception('can not build text content from tokens');
 }

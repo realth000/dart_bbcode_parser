@@ -26,6 +26,6 @@ class QuoteTag extends CommonTag {
   bool get quillAttrValue => true;
 
   @override
-  BBCodeTag fromToken(TagHead head, TagTail? tail, List<BBCodeTag> children) =>
-      QuoteTag(start: head.start, end: tail?.end ?? head.end, children: children);
+  BBCodeTag fromToken(TagHead? head, TagTail? tail, List<BBCodeTag> children) =>
+      QuoteTag(start: head!.start, end: tail?.end ?? head.end, children: children);
 }
