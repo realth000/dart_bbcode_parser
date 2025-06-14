@@ -16,7 +16,7 @@ class FreeV2HeaderTag extends EmbedTag {
   String get name => 'free';
 
   @override
-  String get quillEmbedName => 'bbcodeFreeV2Header';
+  String get quillEmbedName => 'bbcodeFreeHeader';
 
   @override
   bool get selfClosed => true;
@@ -47,7 +47,7 @@ class FreeV2TailTag extends EmbedTag {
   bool get selfClosedAtTail => true;
 
   @override
-  String get quillEmbedName => 'bbcodeFreeV2Tail';
+  String get quillEmbedName => 'bbcodeFreeTail';
 
   @override
   String get quillEmbedValue => jsonEncode({});
