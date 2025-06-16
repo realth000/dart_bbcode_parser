@@ -193,15 +193,3 @@ ${_tokens.map((e) => '  $e').join('\n')}
 }
 ''';
 }
-
-/// State of lexer currently in.
-enum _LexerState {
-  /// Head tag.
-  head,
-
-  /// Tail tag.
-  tail,
-
-  /// Collecting plain text.
-  text,
-}

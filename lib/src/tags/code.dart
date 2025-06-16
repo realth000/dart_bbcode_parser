@@ -29,7 +29,7 @@ class CodeTag extends CommonTag {
   @override
   BBCodeTag fromToken(TagHead? head, TagTail? tail, List<BBCodeTag> children) {
     if (children.isEmpty) {
-      return CodeTag(start: head!.start, end: tail?.end ?? head.end, children: []);
+      return CodeTag(start: head!.start, end: tail?.end ?? head.end, children: const []);
     }
 
     var buffer = StringBuffer();

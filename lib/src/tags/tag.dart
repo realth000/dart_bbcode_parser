@@ -24,10 +24,10 @@ enum ApplyTarget {
 abstract class BBCodeTag implements QuillConvertible {
   /// Constructor.
   const BBCodeTag({
-    int? start,
-    int? end,
     required this.attributeValidator,
     required this.childrenValidator,
+    int? start,
+    int? end,
     List<BBCodeTag>? children,
     this.attribute,
   }) : _start = start ?? 0,
@@ -104,7 +104,9 @@ abstract class BBCodeTag implements QuillConvertible {
   /// Recursing may cause stack overflow.
   StringBuffer toBBCode(StringBuffer buffer) {
     buffer.write('[$name]');
-    children?.forEach((e) => e.toBBCode(buffer));
+    for (final e in children) {
+      e.toBBCode(buffer);
+    }
     buffer.write('[/$name]');
     return buffer;
   }
@@ -115,16 +117,6 @@ abstract class BBCodeTag implements QuillConvertible {
   ///
   /// Recurse stack overflow.
   AttrContext toQuilDelta(AttrContext attrContext);
-
-  /// Transform current bbcode tag into quill delta operation and insert the operation into [queryDelta] so that once
-  /// the insertion is finished,
-  ///
-  /// ## CAUTION
-  ///
-  /// Recursing may cause stack overflow.
-  // void buildQueryDelta(QueryDelta queryDelta) {
-  //   queryDelta.insert(insert: Operation.insert().input?, insertAtLastOperation: true, target: null);
-  // }
 
   /// Build one from token.
   BBCodeTag fromToken(TagHead? head, TagTail? tail, List<BBCodeTag> children);

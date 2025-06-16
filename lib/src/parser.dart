@@ -226,7 +226,7 @@ final class _ParseContext {
   }
 
   /// Is the last memorized scope is [tag].
-  bool inScope(TagTail tag) => _scope.lastOrNull?.name == tag.name ?? false;
+  bool inScope(TagTail tag) => _scope.lastOrNull?.name == tag.name;
 
   /// Save the [text].
   void saveText(TextContent text) {
@@ -277,16 +277,4 @@ final class _ParseContext {
     // ast.addAll(parsedTags);
     // parsedTags.clear();
   }
-}
-
-/// Private extension methods on token.
-extension _TokenExt on Token {
-  /// Is text token.
-  bool get isText => tokenType == TokenType.text;
-
-  /// Is head token.
-  bool get isHead => tokenType == TokenType.tagHead;
-
-  /// Is tail token.
-  bool get isTail => tokenType == TokenType.tagTail;
 }
