@@ -1,3 +1,6 @@
+# Coverage files
+/coverage
+
 /.idea
 /.vscode
 /build
