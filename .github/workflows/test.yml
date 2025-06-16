@@ -1,0 +1,43 @@
+name: Test
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch:
+    collect_coverage:
+      description: Upload coverage to codecov.
+      required: true
+      type: boolean
+      default: true
+
+env:
+  CI_FLUTTER_VERSION: '3.32.4'
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1
+      - name: Prepare dependencies
+        run: |
+          dart pub get
+      - name: Analyze code
+        run: |
+          dart analyze --fatal-warnings --fatal-infos lib
+      - name: Run tests with coverage
+        run: |
+          dart test --coverage=coverage
+      - name: Generate coverage report
+        run: |
+          dart pub global activate coverage
+          dart pub global run coverage:format_coverage --lcov --in=coverage --out=coverage/lcov.info --packages=.dart_tool/package_config.json --report-on=true
+      # Ref: https://github.com/felangel/bloc/blob/61a62af0b269cef8c214d991bb223c1797c34595/.github/actions/dart_package/action.yaml#L95
+      - name: Upload Coverage
+        if: inputs.collect_coverage == 'true'
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ SECRETS.CODECOV_TOKEN }}
