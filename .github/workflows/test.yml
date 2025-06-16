@@ -6,11 +6,12 @@ on:
   pull_request:
     branches: [ "master" ]
   workflow_dispatch:
-    collect_coverage:
-      description: Upload coverage to codecov.
-      required: true
-      type: boolean
-      default: true
+    inputs:
+      collect_coverage:
+        description: Upload coverage to codecov.
+        required: true
+        type: boolean
+        default: true
 
 jobs:
   test:
