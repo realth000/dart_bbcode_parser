@@ -1,5 +1,7 @@
 # dart_bbcode_parser
 
+![Codecov](https://img.shields.io/codecov/c/github/realth000/dart_bbcode_parser)
+
 BBCode parser written in pure dart.
 
 ## WIP
