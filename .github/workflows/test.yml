@@ -31,11 +31,8 @@ jobs:
           dart analyze --fatal-warnings --fatal-infos lib
       - name: Run tests with coverage
         run: |
-          dart test --coverage=coverage
-      - name: Generate coverage report
-        run: |
           dart pub global activate coverage
-          dart pub global run coverage:format_coverage --lcov --in=coverage --out=coverage/lcov.info --packages=.dart_tool/package_config.json --report-on=true
+          dart pub global run coverage:test_with_coverage
       # Ref: https://github.com/felangel/bloc/blob/61a62af0b269cef8c214d991bb223c1797c34595/.github/actions/dart_package/action.yaml#L95
       - name: Upload Coverage
         if: ${{ github.event_name == 'push' || inputs.collect_coverage }}
