@@ -12,9 +12,6 @@ on:
       type: boolean
       default: true
 
-env:
-  CI_FLUTTER_VERSION: '3.32.4'
-
 jobs:
   test:
     name: Test
@@ -22,8 +19,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dart-lang/setup-dart@v1
-      - name: Prepare dependencies
+      - name: Precompile
         run: |
+          mkdir packages
+          sed -i 's#    path: ../dart_bbcode_web_colors#    path: packages/dart_bbcode_web_colors#g' pubspec.yaml
+          git clone https://github.com/realth000/dart_bbcode_web_colors.git packages/dart_bbcode_web_colors
           dart pub get
       - name: Analyze code
         run: |
