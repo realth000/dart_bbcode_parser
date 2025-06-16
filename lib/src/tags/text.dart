@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dart_bbcode_parser/src/quill/attr_context.dart';
 import 'package:dart_bbcode_parser/src/tags/tag.dart';
 import 'package:dart_bbcode_parser/src/token.dart';
@@ -13,7 +15,7 @@ class TextContent implements BBCodeTag {
   const TextContent(int start, int end, String data) : _data = data, _start = start, _end = end;
 
   /// Build empty one.
-  factory TextContent.empty() => const TextContent(-1, -1, '');
+  static const empty = TextContent(-1, -1, '');
 
   /// Data content.
   final String _data;
@@ -135,13 +137,18 @@ class TextContent implements BBCodeTag {
   }
 
   @override
-  int get hashCode => data.hashCode;
+  Map<String, dynamic> toJson() => {'start': start, 'end': end, 'text': data};
 
   @override
-  bool operator ==(Object other) => identical(this, other) || (other is TextContent && other.data == data);
+  int get hashCode => Object.hash(start, end, data);
 
   @override
-  String toString() => 'TextContent { data=$_data }';
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TextContent && other.start == start && other.end == end && other.data == data);
+
+  @override
+  String toString() => jsonEncode(toJson());
 
   @override
   BBCodeTag fromToken(TagHead? head, TagTail? tail, List<BBCodeTag> children) =>

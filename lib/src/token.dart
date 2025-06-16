@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:meta/meta.dart';
+
 /// Type of token.
 enum TokenType {
   /// Plain text.
@@ -23,9 +27,13 @@ abstract interface class Token {
 
   /// Get the length of token.
   int get length;
+
+  /// Convert into json string
+  String toJson();
 }
 
 /// Plain text token.
+@immutable
 class Text implements Token {
   /// Constructor.
   const Text({required this.data, required this.start, required this.end});
@@ -54,12 +62,23 @@ class Text implements Token {
   TokenType get tokenType => TokenType.text;
 
   @override
-  String toString() => 'Text { start=$start; end=$end; data=$data; }';
+  String toJson() => jsonEncode({'token': 'Text', 'start': start, 'end': end, 'data': data});
+
+  @override
+  String toString() => toJson();
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) || (other is Text && other.start == start && other.end == end && other.data == data);
+
+  @override
+  int get hashCode => Object.hash('Text', start, end, data);
 }
 
 /// Head of tag.
 ///
 /// In `[$NAME=$ATTR]` format.
+@immutable
 class TagHead implements Token {
   /// Constructor.
   const TagHead({required this.name, required this.attribute, required this.start, required this.end});
@@ -93,11 +112,26 @@ class TagHead implements Token {
   TokenType get tokenType => TokenType.tagHead;
 
   @override
-  String toString() =>
-      'TagHead { start=$start; end=$end; name="$name";${attribute == null ? "" : ' attribute="$attribute"'} }';
+  String toJson() => jsonEncode({'token': 'TagHead', 'start': start, 'end': end, 'name': name, 'attribute': attribute});
+
+  @override
+  String toString() => toJson();
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TagHead &&
+          other.start == start &&
+          other.end == end &&
+          other.name == name &&
+          other.attribute == attribute);
+
+  @override
+  int get hashCode => Object.hash('TagHead', start, end, name, attribute);
 }
 
 /// The tail of tag.
+@immutable
 class TagTail implements Token {
   /// Constructor.
   const TagTail({required this.name, required this.start, required this.end});
@@ -129,5 +163,15 @@ class TagTail implements Token {
   TokenType get tokenType => TokenType.tagTail;
 
   @override
-  String toString() => 'TagTail { start=$start; end=$end; name=$name; }';
+  String toJson() => jsonEncode({'token': 'TagTail', 'start': start, 'end': end, 'name': name});
+
+  @override
+  String toString() => toJson();
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) || (other is TagTail && other.start == start && other.end == end && other.name == name);
+
+  @override
+  int get hashCode => Object.hash('TagTail', start, end, name);
 }

@@ -1,7 +1,12 @@
+import 'dart:convert';
+
+import 'package:collection/collection.dart';
+import 'package:dart_bbcode_parser/src/constants.dart';
 import 'package:dart_bbcode_parser/src/quill/attr_context.dart';
 import 'package:dart_bbcode_parser/src/quill/convertible.dart';
 import 'package:dart_bbcode_parser/src/token.dart';
 import 'package:dart_bbcode_parser/src/utils.dart';
+import 'package:meta/meta.dart';
 
 /// Attribute apply on what.
 enum ApplyTarget {
@@ -15,6 +20,7 @@ enum ApplyTarget {
 }
 
 /// The basic class describes common feature and shape on all kinds of tags.
+@immutable
 abstract class BBCodeTag implements QuillConvertible {
   /// Constructor.
   const BBCodeTag({
@@ -122,4 +128,44 @@ abstract class BBCodeTag implements QuillConvertible {
 
   /// Build one from token.
   BBCodeTag fromToken(TagHead? head, TagTail? tail, List<BBCodeTag> children);
+
+  /// To json string.
+  Map<String, dynamic> toJson() => {
+    'start': start,
+    'end': end,
+    'open': open,
+    'close': close,
+    'name': name,
+    'selfClosed': selfClosed,
+    'selfClosedAtTail': selfClosedAtTail,
+    'hasQuillAttr': hasQuillAttr,
+    'quillAttrName': hasQuillAttr ? quillAttrName : K.unsupported,
+    'quillAttrValue': hasQuillAttr ? quillAttrValue : K.unsupported,
+    'hasQuillEmbed': hasQuillEmbed,
+    'quillEmbedName': hasQuillEmbed ? quillEmbedName : K.unsupported,
+    'quillEmbedValue': hasQuillEmbed ? quillEmbedValue : K.unsupported,
+    'target': '$target',
+    'attribute': attribute,
+    'children': children.map((e) => e.toJson()).join('; '),
+  };
+
+  @override
+  String toString() => jsonEncode(toJson());
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+
+    if (other is! BBCodeTag) {
+      return false;
+    }
+
+    const comparator = ListEquality<BBCodeTag>(DefaultEquality<BBCodeTag>());
+    return comparator.equals(children, other.children);
+  }
+
+  @override
+  int get hashCode => Object.hash(open, close, name, start, end, selfClosed, selfClosedAtTail, target, children);
 }

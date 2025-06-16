@@ -2,10 +2,12 @@ import 'package:dart_bbcode_parser/src/quill/attr_context.dart';
 import 'package:dart_bbcode_parser/src/tags/tag.dart';
 import 'package:dart_bbcode_parser/src/utils.dart';
 import 'package:dart_quill_delta/dart_quill_delta.dart';
+import 'package:meta/meta.dart';
 
 /// Common common and base tags.
 ///
 /// Defines open character, close character, self closing and children validator.
+@immutable
 abstract class CommonTag extends BBCodeTag {
   /// Constructor.
   const CommonTag({
@@ -68,16 +70,6 @@ abstract class CommonTag extends BBCodeTag {
     }
     return ac;
   }
-
-  @override
-  String toString() => '''
-$runtimeType {
-    open="$open",
-    close="$close",
-    selfClosed=$selfClosed,
-    attr=${attribute != null ? "$attribute" : null}
-    children = ${children.map((e) => e.toString()).join('\n')}
-}''';
 }
 
 /// Tag with no attribute.
@@ -99,6 +91,7 @@ abstract class NoAttrTag extends CommonTag {
 }
 
 /// Tags using embed in quill delta.
+@immutable
 abstract class EmbedTag extends BBCodeTag {
   /// Constructor.
   const EmbedTag({
@@ -154,14 +147,4 @@ abstract class EmbedTag extends BBCodeTag {
     }
     return attrContext;
   }
-
-  @override
-  String toString() => '''
-$runtimeType {
-    open="$open",
-    close="$close",
-    selfClosed=$selfClosed,
-    attr=${attribute != null ? "$attribute" : null}
-    children = ${children.map((e) => e.toString()).join('\n')}
-}''';
 }

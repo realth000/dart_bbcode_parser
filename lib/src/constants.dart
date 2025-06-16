@@ -25,4 +25,7 @@ abstract class K {
 
   /// Utf-16 character code of [slash].
   static const slashCode = 0x2f;
+
+  /// Placeholder for unsupported data.
+  static const unsupported = '<unsupported>';
 }
