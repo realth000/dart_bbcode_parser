@@ -11,7 +11,8 @@ import 'package:test/test.dart';
 void main() {
   group('align center tag', () {
     test('without content', () {
-      final lexer = Lexer(input: '[align=center][/align]')..scanAll();
+      const input = '[align=center][/align]';
+      final lexer = Lexer(input: input)..scanAll();
       final tokens = lexer.tokens;
       expect(tokens.length, 2);
       expect(tokens[0], const TagHead(start: 0, end: 14, name: 'align', attribute: 'center'));
@@ -23,13 +24,19 @@ void main() {
       expect(ast[0], const AlignTag(start: 0, end: 22, attribute: 'center'));
 
       final quillDelta = buildDelta(ast);
-      final targetDelta = Delta.fromOperations([Operation.insert('\n')]);
+      final targetDelta = Delta.fromOperations([
+        Operation.insert('', {}),
+        Operation.insert('\n', {'align': 'center'}),
+      ]);
       expect(quillDelta.toJson(), targetDelta.toJson());
+
+      expect(convertBBCodeToText(ast), input);
     });
 
     test('with content', () {
       const content = 'CONTENT';
-      final lexer = Lexer(input: '[align=center]$content[/align]')..scanAll();
+      const input = '[align=center]$content[/align]';
+      final lexer = Lexer(input: input)..scanAll();
       final tokens = lexer.tokens;
       expect(tokens.length, 3);
       expect(tokens[0], const TagHead(start: 0, end: 14, name: 'align', attribute: 'center'));
@@ -55,12 +62,15 @@ void main() {
         Operation.insert('\n', {'align': 'center'}),
       ]);
       expect(quillDelta.toJson(), targetDelta.toJson());
+
+      expect(convertBBCodeToText(ast), input);
     });
   });
 
   group('align left tag', () {
     test('without content', () {
-      final lexer = Lexer(input: '[align=left][/align]')..scanAll();
+      const input = '[align=left][/align]';
+      final lexer = Lexer(input: input)..scanAll();
       final tokens = lexer.tokens;
       expect(tokens.length, 2);
       expect(tokens[0], const TagHead(start: 0, end: 12, name: 'align', attribute: 'left'));
@@ -72,13 +82,19 @@ void main() {
       expect(ast[0], const AlignTag(start: 0, end: 20, attribute: 'left'));
 
       final quillDelta = buildDelta(ast);
-      final targetDelta = Delta.fromOperations([Operation.insert('\n')]);
+      final targetDelta = Delta.fromOperations([
+        Operation.insert('', {}),
+        Operation.insert('\n', {'align': 'left'}),
+      ]);
       expect(quillDelta.toJson(), targetDelta.toJson());
+
+      expect(convertBBCodeToText(ast), input);
     });
 
     test('with content', () {
       const content = 'CONTENT';
-      final lexer = Lexer(input: '[align=left]$content[/align]')..scanAll();
+      const input = '[align=left]$content[/align]';
+      final lexer = Lexer(input: input)..scanAll();
       final tokens = lexer.tokens;
       expect(tokens.length, 3);
       expect(tokens[0], const TagHead(start: 0, end: 12, name: 'align', attribute: 'left'));
@@ -104,12 +120,15 @@ void main() {
         Operation.insert('\n', {'align': 'left'}),
       ]);
       expect(quillDelta.toJson(), targetDelta.toJson());
+
+      expect(convertBBCodeToText(ast), input);
     });
   });
 
   group('align right tag', () {
     test('without content', () {
-      final lexer = Lexer(input: '[align=right][/align]')..scanAll();
+      const input = '[align=right][/align]';
+      final lexer = Lexer(input: input)..scanAll();
       final tokens = lexer.tokens;
       expect(tokens.length, 2);
       expect(tokens[0], const TagHead(start: 0, end: 13, name: 'align', attribute: 'right'));
@@ -121,13 +140,19 @@ void main() {
       expect(ast[0], const AlignTag(start: 0, end: 21, attribute: 'right'));
 
       final quillDelta = buildDelta(ast);
-      final targetDelta = Delta.fromOperations([Operation.insert('\n')]);
+      final targetDelta = Delta.fromOperations([
+        Operation.insert('', {}),
+        Operation.insert('\n', {'align': 'right'}),
+      ]);
       expect(quillDelta.toJson(), targetDelta.toJson());
+
+      expect(convertBBCodeToText(ast), input);
     });
 
     test('with content', () {
       const content = 'CONTENT';
-      final lexer = Lexer(input: '[align=right]$content[/align]')..scanAll();
+      const input = '[align=right]$content[/align]';
+      final lexer = Lexer(input: input)..scanAll();
       final tokens = lexer.tokens;
       expect(tokens.length, 3);
       expect(tokens[0], const TagHead(start: 0, end: 13, name: 'align', attribute: 'right'));
@@ -153,6 +178,8 @@ void main() {
         Operation.insert('\n', {'align': 'right'}),
       ]);
       expect(quillDelta.toJson(), targetDelta.toJson());
+
+      expect(convertBBCodeToText(ast), input);
     });
   });
 }
