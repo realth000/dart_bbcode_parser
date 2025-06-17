@@ -2,4 +2,4 @@
 library;
 
 // For test.
-export 'src/dart_bbcode_parser.dart' show parseBBCodeTextToDelta;
+export 'src/dart_bbcode_parser.dart' show convertBBCodeToText, parseBBCodeTextToDelta, parseBBCodeTextToTags;

@@ -16,6 +16,7 @@ import 'package:dart_bbcode_parser/src/tags/quote.dart';
 import 'package:dart_bbcode_parser/src/tags/spoiler_v2.dart';
 import 'package:dart_bbcode_parser/src/tags/strikethrough.dart';
 import 'package:dart_bbcode_parser/src/tags/superscript.dart';
+import 'package:dart_bbcode_parser/src/tags/tag.dart';
 import 'package:dart_bbcode_parser/src/tags/underline.dart';
 import 'package:dart_bbcode_parser/src/tags/url.dart';
 import 'package:dart_quill_delta/dart_quill_delta.dart';
@@ -43,6 +44,22 @@ const defaultSupportedTags = [
   FreeV2HeaderTag.empty,
   FreeV2TailTag.empty,
 ];
+
+/// Parse a list of tags, or call it AST, to plain bbcode text.
+String convertBBCodeToText(List<BBCodeTag> tags) {
+  final buffer = StringBuffer();
+  for (final tag in tags) {
+    tag.toBBCode(buffer);
+  }
+  return buffer.toString();
+}
+
+/// Parse plain [bbcode] to String.
+List<BBCodeTag> parseBBCodeTextToTags(String bbcode) {
+  final lexer = Lexer(input: bbcode)..scanAll();
+  final parser = Parser(tokens: lexer.tokens, supportedTags: defaultSupportedTags)..parse();
+  return parser.ast;
+}
 
 /// Parse plain [bbcode] text into quill [Delta].
 Delta parseBBCodeTextToDelta(String bbcode) {
