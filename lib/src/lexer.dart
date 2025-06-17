@@ -58,7 +58,7 @@ final class Lexer {
         // Try scan head.
         // Finish the scan process no matter is valid head or not.
         // Chances are that two or more `Text`s are siblings stay beside each other.
-        _appendText(buffer);
+        _appendText(buffer, true);
         currTagStartPos = _scanner.position - 1;
         final next2 = _scanner.peekChar();
         if (next2.isSlash) {
@@ -149,11 +149,18 @@ final class Lexer {
   }
 
   /// Build a [Text] token from [buffer] and append it to [_tokens].
-  void _appendText(StringBuffer buffer) {
+  void _appendText(StringBuffer buffer, [bool overRead = false]) {
     if (buffer.isEmpty) {
       return;
     }
-    _tokens.add(Text(start: currTagStartPos, end: _scanner.position, data: buffer.toString()));
+    final int end;
+    if (overRead) {
+      end = _scanner.position - 1;
+    } else {
+      end = _scanner.position;
+    }
+
+    _tokens.add(Text(start: currTagStartPos, end: end, data: buffer.toString()));
   }
 
   void _appendConsumedText(String text) {
