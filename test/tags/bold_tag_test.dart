@@ -44,7 +44,7 @@ void main() {
         tail: tail,
         expectedTokens: [
           const TagHead(start: 0, end: head.length, name: tag, attribute: null),
-          const Text(start: head.length, end: head.length + content.length + 1, data: content),
+          const Text(start: head.length, end: head.length + content.length, data: content),
           const TagTail(
             start: head.length + content.length,
             end: head.length + content.length + tail.length,
@@ -55,11 +55,49 @@ void main() {
           const BoldTag(
             start: 0,
             end: head.length + content.length + tail.length,
-            children: [TextContent(start: head.length, end: head.length + content.length + 1, data: content)],
+            children: [TextContent(start: head.length, end: head.length + content.length, data: content)],
           ),
         ],
         expectedDelta: [
           Operation.insert(content, {BoldTag.empty.quillAttrName: true}),
+          Operation.insert('\n'),
+        ],
+      );
+    });
+
+    test('invalid with attribute', () {
+      const tag = 'b';
+      const attr = 'attr';
+      const head = '[$tag=$attr]';
+      const content = 'CONTENT';
+      const tail = '[/$tag]';
+      checkSingleTag(
+        head: head,
+        content: content,
+        tail: tail,
+        expectedTokens: [
+          const TagHead(start: 0, end: head.length, name: tag, attribute: attr),
+          // [b=attr]CONTENT
+          const Text(start: head.length, end: head.length + content.length, data: content),
+          const TagTail(
+            start: head.length + content.length,
+            end: head.length + content.length + tail.length,
+            name: tag,
+          ),
+        ],
+        expectedAST: [
+          const TextContent(start: 0, end: head.length, data: head),
+          const TextContent(start: head.length, end: head.length + content.length, data: content),
+          const TextContent(
+            start: head.length + content.length,
+            end: head.length + content.length + tail.length,
+            data: tail,
+          ),
+        ],
+        expectedDelta: [
+          Operation.insert(head, {}),
+          Operation.insert(content, {}),
+          Operation.insert(tail, {}),
           Operation.insert('\n'),
         ],
       );

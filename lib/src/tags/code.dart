@@ -2,6 +2,7 @@ import 'package:dart_bbcode_parser/src/tags/common_tag.dart';
 import 'package:dart_bbcode_parser/src/tags/tag.dart';
 import 'package:dart_bbcode_parser/src/tags/text.dart';
 import 'package:dart_bbcode_parser/src/token.dart';
+import 'package:dart_bbcode_parser/src/utils.dart';
 
 /// Raw code block. `[code]`.
 class CodeTag extends CommonTag {
@@ -10,6 +11,9 @@ class CodeTag extends CommonTag {
 
   /// Build empty one.
   static const empty = CodeTag(start: -1, end: -1);
+
+  @override
+  AttributeValidator? get attributeValidator => nullAttributeValidator;
 
   @override
   bool get hasQuillAttr => true;
