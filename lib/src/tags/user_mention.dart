@@ -11,10 +11,13 @@ class UserMentionTag extends EmbedTag {
   const UserMentionTag({required super.start, required super.end, super.children});
 
   /// Build empty one.
-  factory UserMentionTag.empty() => const UserMentionTag(start: -1, end: -1);
+  static const empty = UserMentionTag(start: -1, end: -1);
 
   @override
   String get name => '@';
+
+  @override
+  AttributeValidator? get attributeValidator => nullAttributeValidator;
 
   @override
   ChildrenValidator get childrenValidator => (children) => children.every((e) => e.isPlainText);
