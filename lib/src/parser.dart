@@ -31,7 +31,7 @@ final class Parser {
     final context = _ParseContext();
     for (final token in _tokens) {
       if (token is Text) {
-        context.saveText(TextContent(token.start, token.end, token.data));
+        context.saveText(TextContent(start: token.start, end: token.end, data: token.data));
       } else if (token is TagHead) {
         if (_isSupported(token.name)) {
           // Try check for self closed tags.
@@ -44,9 +44,9 @@ final class Parser {
               // Tag has invalid attribute.
               context.saveText(
                 TextContent(
-                  token.start,
-                  token.end,
-                  '[${token.name}${token.attribute != null ? "=${token.attribute}" : ""}]',
+                  start: token.start,
+                  end: token.end,
+                  data: '[${token.name}${token.attribute != null ? "=${token.attribute}" : ""}]',
                 ),
               );
               continue;
@@ -64,9 +64,9 @@ final class Parser {
           // Unrecognized tag.
           context.saveText(
             TextContent(
-              token.start,
-              token.end,
-              '[${token.name}${token.attribute != null ? "=${token.attribute}" : ""}]',
+              start: token.start,
+              end: token.end,
+              data: '[${token.name}${token.attribute != null ? "=${token.attribute}" : ""}]',
             ),
           );
         }
@@ -82,7 +82,7 @@ final class Parser {
 
           if (!context.inScope(token)) {
             // Tail token not self closing nor in scope, fallback to text.
-            context.saveText(TextContent(token.start, token.end, '[/${token.name}]'));
+            context.saveText(TextContent(start: token.start, end: token.end, data: '[/${token.name}]'));
             continue;
           }
 
@@ -99,15 +99,15 @@ final class Parser {
             // Fallback current tag to common tags.
             context.saveText(
               TextContent(
-                token.start,
-                token.end,
-                '[${tagHead.name}${tagHead.attribute != null ? "=${tagHead.attribute}" : ""}]',
+                start: tagHead.start,
+                end: tagHead.end,
+                data: '[${tagHead.name}${tagHead.attribute != null ? "=${tagHead.attribute}" : ""}]',
               ),
             );
             for (final child in children) {
               context.saveTag(child);
             }
-            context.saveText(TextContent(token.end, token.end, '[/${token.name}]'));
+            context.saveText(TextContent(start: token.start, end: token.end, data: '[/${token.name}]'));
             continue;
           }
 
@@ -115,7 +115,7 @@ final class Parser {
           context.saveTag(builtTag, rearrange: true);
         } else {
           // Unrecognized tag or crossed tag, fallback to text.
-          context.saveText(TextContent(token.start, token.end, '[/${token.name}]'));
+          context.saveText(TextContent(start: token.start, end: token.end, data: '[/${token.name}]'));
         }
       }
     }

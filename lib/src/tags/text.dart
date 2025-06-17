@@ -12,10 +12,13 @@ import 'package:string_scanner/string_scanner.dart';
 @immutable
 class TextContent implements BBCodeTag {
   /// Constructor.
-  const TextContent(int start, int end, String data) : _data = data, _start = start, _end = end;
+  const TextContent({required int start, required int end, required String data})
+    : _data = data,
+      _start = start,
+      _end = end;
 
   /// Build empty one.
-  static const empty = TextContent(-1, -1, '');
+  static const empty = TextContent(start: -1, end: -1, data: '');
 
   /// Data content.
   final String _data;
