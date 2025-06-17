@@ -175,4 +175,29 @@ void main() {
       );
     });
   });
+
+  test('without attribute', () {
+    const tag = 'backcolor';
+    const head = '[$tag]';
+    const content = '';
+    const tail = '[/$tag]';
+    checkSingleTag(
+      head: head,
+      content: content,
+      tail: tail,
+      expectedTokens: [
+        const TagHead(start: 0, end: head.length, name: tag, attribute: null),
+        const TagTail(start: head.length + content.length, end: head.length + content.length + tail.length, name: tag),
+      ],
+      expectedAST: [
+        const TextContent(start: 0, end: head.length, data: head),
+        const TextContent(
+          start: head.length + content.length,
+          end: head.length + content.length + tail.length,
+          data: tail,
+        ),
+      ],
+      expectedDelta: [Operation.insert(head, {}), Operation.insert(tail, {}), Operation.insert('\n')],
+    );
+  });
 }

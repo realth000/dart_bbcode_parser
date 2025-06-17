@@ -119,6 +119,8 @@ abstract class BBCodeTag implements QuillConvertible {
   AttrContext toQuilDelta(AttrContext attrContext);
 
   /// Build one from token.
+  ///
+  /// Note that in parsing process, this function is called **BEFORE** attribute passed validation.
   BBCodeTag fromToken(TagHead? head, TagTail? tail, List<BBCodeTag> children);
 
   /// To json string.
