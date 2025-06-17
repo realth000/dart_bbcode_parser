@@ -60,6 +60,11 @@ abstract class CommonTag extends BBCodeTag {
     for (final child in children) {
       ac = child.toQuilDelta(ac);
     }
+
+    if (children.isEmpty) {
+      ac.addOperations([Operation.insert('', ac.attrMap)]);
+    }
+
     ac.restore(this);
 
     // Ensure paragraphs are suffixed with new line.
