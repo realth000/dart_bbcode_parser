@@ -103,7 +103,7 @@ abstract class BBCodeTag implements QuillConvertible {
   ///
   /// Recursing may cause stack overflow.
   StringBuffer toBBCode(StringBuffer buffer) {
-    buffer.write('[$name]');
+    buffer.write('[$name${attribute != null ? "=$attribute" : ""}]');
     for (final e in children) {
       e.toBBCode(buffer);
     }
