@@ -15,7 +15,7 @@ final class Lexer {
   /// The start position of current tag.
   ///
   /// Use this tag to fallback flatten to plain text.
-  int currTagStartPos = -1;
+  int currTagStartPos = 0;
 
   final StringScanner _scanner;
 
