@@ -9,57 +9,61 @@ import '../utils.dart';
 void main() {
   group('align center tag', () {
     test('without content', () {
-      const head = '[align=center]';
+      const tag = 'align';
+      const attr = 'center';
+      const head = '[$tag=$attr]';
       const content = '';
-      const tail = '[/align]';
+      const tail = '[/$tag]';
       checkSingleTag(
         head: head,
         content: content,
         tail: tail,
         expectedTokens: [
-          const TagHead(start: 0, end: head.length, name: 'align', attribute: 'center'),
+          const TagHead(start: 0, end: head.length, name: tag, attribute: attr),
           const TagTail(
             start: head.length + content.length,
             end: head.length + content.length + tail.length,
-            name: 'align',
+            name: tag,
           ),
         ],
-        expectedAST: [const AlignTag(start: 0, end: head.length + content.length + tail.length, attribute: 'center')],
+        expectedAST: [const AlignTag(start: 0, end: head.length + content.length + tail.length, attribute: attr)],
         expectedDelta: [
           Operation.insert('', {}),
-          Operation.insert('\n', {'align': 'center'}),
+          Operation.insert('\n', {AlignTag.empty.quillAttrName: 'center'}),
         ],
       );
     });
 
     test('with content', () {
-      const head = '[align=center]';
+      const tag = 'align';
+      const attr = 'center';
+      const head = '[$tag=$attr]';
       const content = 'CONTENT';
-      const tail = '[/align]';
+      const tail = '[/$tag]';
       checkSingleTag(
         head: head,
         content: content,
         tail: tail,
         expectedTokens: [
-          const TagHead(start: 0, end: head.length, name: 'align', attribute: 'center'),
+          const TagHead(start: 0, end: head.length, name: tag, attribute: attr),
           const Text(start: head.length, end: head.length + content.length + 1, data: content),
           const TagTail(
             start: head.length + content.length,
             end: head.length + content.length + tail.length,
-            name: 'align',
+            name: tag,
           ),
         ],
         expectedAST: [
           const AlignTag(
             start: 0,
             end: head.length + content.length + tail.length,
-            attribute: 'center',
+            attribute: attr,
             children: [TextContent(start: head.length, end: head.length + content.length + 1, data: content)],
           ),
         ],
         expectedDelta: [
           Operation.insert(content, {}),
-          Operation.insert('\n', {'align': 'center'}),
+          Operation.insert('\n', {AlignTag.empty.quillAttrName: 'center'}),
         ],
       );
     });
@@ -67,57 +71,61 @@ void main() {
 
   group('align left tag', () {
     test('without content', () {
-      const head = '[align=left]';
+      const tag = 'align';
+      const attr = 'left';
+      const head = '[$tag=$attr]';
       const content = '';
-      const tail = '[/align]';
+      const tail = '[/$tag]';
       checkSingleTag(
         head: head,
         content: content,
         tail: tail,
         expectedTokens: [
-          const TagHead(start: 0, end: head.length, name: 'align', attribute: 'left'),
+          const TagHead(start: 0, end: head.length, name: tag, attribute: attr),
           const TagTail(
             start: head.length + content.length,
             end: head.length + content.length + tail.length,
-            name: 'align',
+            name: tag,
           ),
         ],
-        expectedAST: [const AlignTag(start: 0, end: head.length + content.length + tail.length, attribute: 'left')],
+        expectedAST: [const AlignTag(start: 0, end: head.length + content.length + tail.length, attribute: attr)],
         expectedDelta: [
           Operation.insert('', {}),
-          Operation.insert('\n', {'align': 'left'}),
+          Operation.insert('\n', {AlignTag.empty.quillAttrName: 'left'}),
         ],
       );
     });
 
     test('with content', () {
-      const head = '[align=left]';
+      const tag = 'align';
+      const attr = 'left';
+      const head = '[$tag=$attr]';
       const content = 'CONTENT';
-      const tail = '[/align]';
+      const tail = '[/$tag]';
       checkSingleTag(
         head: head,
         content: content,
         tail: tail,
         expectedTokens: [
-          const TagHead(start: 0, end: head.length, name: 'align', attribute: 'left'),
+          const TagHead(start: 0, end: head.length, name: tag, attribute: attr),
           const Text(start: head.length, end: head.length + content.length + 1, data: content),
           const TagTail(
             start: head.length + content.length,
             end: head.length + content.length + tail.length,
-            name: 'align',
+            name: tag,
           ),
         ],
         expectedAST: [
           const AlignTag(
             start: 0,
             end: head.length + content.length + tail.length,
-            attribute: 'left',
+            attribute: attr,
             children: [TextContent(start: head.length, end: head.length + content.length + 1, data: content)],
           ),
         ],
         expectedDelta: [
           Operation.insert(content, {}),
-          Operation.insert('\n', {'align': 'left'}),
+          Operation.insert('\n', {AlignTag.empty.quillAttrName: 'left'}),
         ],
       );
     });
@@ -125,57 +133,61 @@ void main() {
 
   group('align right tag', () {
     test('without content', () {
-      const head = '[align=right]';
+      const tag = 'align';
+      const attr = 'right';
+      const head = '[$tag=$attr]';
       const content = '';
-      const tail = '[/align]';
+      const tail = '[/$tag]';
       checkSingleTag(
         head: head,
         content: content,
         tail: tail,
         expectedTokens: [
-          const TagHead(start: 0, end: head.length, name: 'align', attribute: 'right'),
+          const TagHead(start: 0, end: head.length, name: tag, attribute: attr),
           const TagTail(
             start: head.length + content.length,
             end: head.length + content.length + tail.length,
-            name: 'align',
+            name: tag,
           ),
         ],
         expectedAST: [const AlignTag(start: 0, end: head.length + content.length + tail.length, attribute: 'right')],
         expectedDelta: [
           Operation.insert('', {}),
-          Operation.insert('\n', {'align': 'right'}),
+          Operation.insert('\n', {AlignTag.empty.quillAttrName: 'right'}),
         ],
       );
     });
 
     test('with content', () {
-      const head = '[align=right]';
+      const tag = 'align';
+      const attr = 'right';
+      const head = '[$tag=$attr]';
       const content = 'CONTENT';
-      const tail = '[/align]';
+      const tail = '[/$tag]';
       checkSingleTag(
         head: head,
         content: content,
         tail: tail,
         expectedTokens: [
-          const TagHead(start: 0, end: head.length, name: 'align', attribute: 'right'),
+          const TagHead(start: 0, end: head.length, name: tag, attribute: attr),
           const Text(start: head.length, end: head.length + content.length + 1, data: content),
           const TagTail(
             start: head.length + content.length,
             end: head.length + content.length + tail.length,
-            name: 'align',
+            name: tag,
           ),
         ],
         expectedAST: [
           const AlignTag(
             start: 0,
             end: head.length + content.length + tail.length,
-            attribute: 'right',
+            attribute: attr,
             children: [TextContent(start: head.length, end: head.length + content.length + 1, data: content)],
           ),
         ],
         expectedDelta: [
           Operation.insert(content, {}),
-          Operation.insert('\n', {'align': 'right'}),
+          Operation.insert('\n', {AlignTag.empty.quillAttrName: 'right'}),
         ],
       );
     });
@@ -183,19 +195,21 @@ void main() {
 
   group('invalid alignment', () {
     test('without content', () {
-      const head = '[align=INVALID_ALIGNMENT]';
+      const tag = 'align';
+      const attr = 'INVALID_ALIGNMENT';
+      const head = '[$tag=$attr]';
       const content = '';
-      const tail = '[/align]';
+      const tail = '[/$tag]';
       checkSingleTag(
         head: head,
         content: content,
         tail: tail,
         expectedTokens: [
-          const TagHead(start: 0, end: head.length, name: 'align', attribute: 'INVALID_ALIGNMENT'),
+          const TagHead(start: 0, end: head.length, name: tag, attribute: attr),
           const TagTail(
             start: head.length + content.length,
             end: head.length + content.length + tail.length,
-            name: 'align',
+            name: tag,
           ),
         ],
         expectedAST: [
@@ -211,20 +225,22 @@ void main() {
     });
 
     test('with content', () {
-      const head = '[align=INVALID_ALIGNMENT]';
+      const tag = 'align';
+      const attr = 'INVALID_ALIGNMENT';
+      const head = '[$tag=$attr]';
       const content = 'CONTENT';
-      const tail = '[/align]';
+      const tail = '[/$tag]';
       checkSingleTag(
         head: head,
         content: content,
         tail: tail,
         expectedTokens: [
-          const TagHead(start: 0, end: head.length, name: 'align', attribute: 'INVALID_ALIGNMENT'),
+          const TagHead(start: 0, end: head.length, name: tag, attribute: attr),
           const Text(start: head.length, end: head.length + content.length + 1, data: content),
           const TagTail(
             start: head.length + content.length,
             end: head.length + content.length + tail.length,
-            name: 'align',
+            name: tag,
           ),
         ],
         expectedAST: [

@@ -9,110 +9,118 @@ import '../utils.dart';
 void main() {
   group('background color tag', () {
     test('without content', () {
-      const head = '[backcolor=red]';
+      const tag = 'backcolor';
+      const attr = 'red';
+      const head = '[$tag=$attr]';
       const content = '';
-      const tail = '[/backcolor]';
+      const tail = '[/$tag]';
       checkSingleTag(
         head: head,
         content: content,
         tail: tail,
         expectedTokens: [
-          const TagHead(start: 0, end: head.length, name: 'backcolor', attribute: 'red'),
+          const TagHead(start: 0, end: head.length, name: tag, attribute: attr),
           const TagTail(
             start: head.length + content.length,
             end: head.length + content.length + tail.length,
-            name: 'backcolor',
+            name: tag,
           ),
         ],
         expectedAST: [
-          const BackgroundColorTag(start: 0, end: head.length + content.length + tail.length, attribute: 'red'),
+          const BackgroundColorTag(start: 0, end: head.length + content.length + tail.length, attribute: attr),
         ],
         expectedDelta: [
-          Operation.insert('', {'background': 'red'}),
+          Operation.insert('', {BackgroundColorTag.empty.quillAttrName: 'red'}),
           Operation.insert('\n'),
         ],
       );
     });
 
     test('with content', () {
-      const head = '[backcolor=red]';
+      const tag = 'backcolor';
+      const attr = 'red';
+      const head = '[$tag=$attr]';
       const content = 'CONTENT';
-      const tail = '[/backcolor]';
+      const tail = '[/$tag]';
       checkSingleTag(
         head: head,
         content: content,
         tail: tail,
         expectedTokens: [
-          const TagHead(start: 0, end: head.length, name: 'backcolor', attribute: 'red'),
+          const TagHead(start: 0, end: head.length, name: tag, attribute: attr),
           const Text(start: head.length, end: head.length + content.length + 1, data: content),
           const TagTail(
             start: head.length + content.length,
             end: head.length + content.length + tail.length,
-            name: 'backcolor',
+            name: tag,
           ),
         ],
         expectedAST: [
           const BackgroundColorTag(
             start: 0,
             end: head.length + content.length + tail.length,
-            attribute: 'red',
+            attribute: attr,
             children: [TextContent(start: head.length, end: head.length + content.length + 1, data: content)],
           ),
         ],
         expectedDelta: [
-          Operation.insert(content, {'background': 'red'}),
+          Operation.insert(content, {BackgroundColorTag.empty.quillAttrName: 'red'}),
           Operation.insert('\n'),
         ],
       );
     });
 
     test('hex color - 6 digits', () {
-      const head = '[backcolor=#ff00ff]';
+      const tag = 'backcolor';
+      const attr = '#ff00ff';
+      const head = '[$tag=$attr]';
       const content = 'CONTENT';
-      const tail = '[/backcolor]';
+      const tail = '[/$tag]';
       checkSingleTag(
         head: head,
         content: content,
         tail: tail,
         expectedTokens: [
-          const TagHead(start: 0, end: head.length, name: 'backcolor', attribute: '#ff00ff'),
+          const TagHead(start: 0, end: head.length, name: tag, attribute: attr),
           const Text(start: head.length, end: head.length + content.length + 1, data: content),
           const TagTail(
             start: head.length + content.length,
             end: head.length + content.length + tail.length,
-            name: 'backcolor',
+            name: tag,
           ),
         ],
         expectedAST: [
           const BackgroundColorTag(
             start: 0,
             end: head.length + content.length + tail.length,
-            attribute: '#ff00ff',
+            attribute: attr,
             children: [TextContent(start: head.length, end: head.length + content.length + 1, data: content)],
           ),
         ],
         expectedDelta: [
-          Operation.insert(content, {'background': '#ff00ff'}),
+          Operation.insert(content, {BackgroundColorTag.empty.quillAttrName: '#ff00ff'}),
           Operation.insert('\n'),
         ],
       );
     });
 
     test('hex color - 3 digits', () {
-      const head = '[backcolor=#abc]';
+      const tag = 'backcolor';
+      const attr = '#abc';
+      const head = '[$tag=$attr]';
       const content = 'CONTENT';
-      const tail = '[/backcolor]';
+      const tail = '[/$tag]';
       checkSingleTag(
         head: head,
         content: content,
         tail: tail,
         expectedTokens: [
-          const TagHead(start: 0, end: head.length, name: 'backcolor', attribute: '#abc'),
+          const TagHead(start: 0, end: head.length, name: tag, attribute: attr),
           const Text(start: head.length, end: head.length + content.length + 1, data: content),
           const TagTail(
             start: head.length + content.length,
             end: head.length + content.length + tail.length,
-            name: 'backcolor',
+            name: tag,
           ),
         ],
         expectedAST: [
@@ -124,27 +132,29 @@ void main() {
           ),
         ],
         expectedDelta: [
-          Operation.insert(content, {'background': '#abc'}),
+          Operation.insert(content, {BackgroundColorTag.empty.quillAttrName: '#abc'}),
           Operation.insert('\n'),
         ],
       );
     });
 
     test('invalid color value (8 digits with alpha channel)', () {
-      const head = '[backcolor=#ffaabbcc]';
+      const tag = 'backcolor';
+      const attr = '#ffaabbcc';
+      const head = '[$tag=$attr]';
       const content = 'CONTENT';
-      const tail = '[/backcolor]';
+      const tail = '[/$tag]';
       checkSingleTag(
         head: head,
         content: content,
         tail: tail,
         expectedTokens: [
-          const TagHead(start: 0, end: head.length, name: 'backcolor', attribute: '#ffaabbcc'),
+          const TagHead(start: 0, end: head.length, name: tag, attribute: attr),
           const Text(start: head.length, end: head.length + content.length + 1, data: content),
           const TagTail(
             start: head.length + content.length,
             end: head.length + content.length + tail.length,
-            name: 'backcolor',
+            name: tag,
           ),
         ],
         expectedAST: [
