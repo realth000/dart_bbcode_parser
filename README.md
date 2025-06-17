@@ -2,7 +2,7 @@
 
 [![codecov](https://codecov.io/gh/realth000/dart_bbcode_parser/graph/badge.svg?token=II36HD8NJE)](https://codecov.io/gh/realth000/dart_bbcode_parser)
 
-BBCode parser written in pure dart.
+BBCode parser written in pure dart with Quill Delta conversion support.
 
 ## WIP
 
@@ -19,23 +19,21 @@ BBCode parser written in pure dart.
   * [x] Background color `[backcolor=$color]`
   * [x] Strikethrough `[s]`
   * [x] Superscript `[sup]`
-  * [ ] Alignment
-    * [ ] Align left `[align=left]`
-    * [ ] Align center `[align=center]`
-    * [ ] Align right `[align=right]`
+  * [x] Alignment
+    * [x] Align left `[align=left]`
+    * [x] Align center `[align=center]`
+    * [x] Align right `[align=right]`
   * [x] Url `[url]`
-  * [ ] Image `[img=$width,$height]$image_url[/img]`
-  * [ ] Spoiler `[spoiler]`
-  * [ ] Mention user with `[@]$user_name[/@]`
+  * [x] Image `[img=$width,$height]$image_url[/img]`
+  * [x] Spoiler `[spoiler]`
+  * [x] Mention user with `[@]$user_name[/@]`
   * [ ] Ordered list `[list=1]`
   * [ ] Bullet list `[list]`
-  * [ ] Divider `[hr]`
+  * x ] Divider `[hr]`
   * [ ] Table `[table]` & `[tr]` & `[td]`
-  * [ ] Code block `[code]`
-  * [ ] Quote block `[quote]`
-* [ ] Override tags
-* [ ] Custom tags
-* [ ] Conversion
-  * [ ] quill delta
-  * [ ] html
-  * [ ] markdown
+  * [x] Code block `[code]`
+  * [x] Quote block `[quote]`
+* [x] Override tags
+* [x] Custom tags
+* [x] Convert to Quill Delta.
+* [x] Convert to BBCode.
