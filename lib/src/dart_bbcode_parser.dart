@@ -19,30 +19,32 @@ import 'package:dart_bbcode_parser/src/tags/superscript.dart';
 import 'package:dart_bbcode_parser/src/tags/tag.dart';
 import 'package:dart_bbcode_parser/src/tags/underline.dart';
 import 'package:dart_bbcode_parser/src/tags/url.dart';
+import 'package:dart_bbcode_parser/src/tags/user_mention.dart';
 import 'package:dart_quill_delta/dart_quill_delta.dart';
 
 /// BBCode tags that are enabled by default.
 const defaultSupportedTags = [
-  BoldTag.empty,
-  ItalicTag.empty,
-  UnderlineTag.empty,
-  StrikethroughTag.empty,
-  UrlTag.empty,
-  FontSizeTag.empty,
-  ColorTag.empty,
-  BackgroundColorTag.empty,
-  SuperscriptTag.empty,
-  ImageTag.empty,
-  DividerTag.empty,
   AlignTag.empty,
+  BackgroundColorTag.empty,
+  BoldTag.empty,
   CodeTag.empty,
-  QuoteTag.empty,
-  SpoilerV2HeaderTag.empty,
-  SpoilerV2TailTag.empty,
-  HideV2HeaderTag.empty,
-  HideV2TailTag.empty,
+  ColorTag.empty,
+  DividerTag.empty,
+  FontSizeTag.empty,
   FreeV2HeaderTag.empty,
   FreeV2TailTag.empty,
+  HideV2HeaderTag.empty,
+  HideV2TailTag.empty,
+  ImageTag.empty,
+  ItalicTag.empty,
+  QuoteTag.empty,
+  StrikethroughTag.empty,
+  SuperscriptTag.empty,
+  SpoilerV2HeaderTag.empty,
+  SpoilerV2TailTag.empty,
+  UnderlineTag.empty,
+  UrlTag.empty,
+  UserMentionTag.empty,
 ];
 
 /// Parse a list of tags, or call it AST, to plain bbcode text.
