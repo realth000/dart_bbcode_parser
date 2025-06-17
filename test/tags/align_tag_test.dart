@@ -24,10 +24,8 @@ void main() {
             name: 'align',
           ),
         ],
-        expectedBBCodeTags: [
-          const AlignTag(start: 0, end: head.length + content.length + tail.length, attribute: 'center'),
-        ],
-        expectedOperations: [
+        expectedAST: [const AlignTag(start: 0, end: head.length + content.length + tail.length, attribute: 'center')],
+        expectedDelta: [
           Operation.insert('', {}),
           Operation.insert('\n', {'align': 'center'}),
         ],
@@ -51,15 +49,15 @@ void main() {
             name: 'align',
           ),
         ],
-        expectedBBCodeTags: [
+        expectedAST: [
           const AlignTag(
             start: 0,
             end: head.length + content.length + tail.length,
             attribute: 'center',
-            children: [TextContent(head.length, head.length + content.length + 1, content)],
+            children: [TextContent(start: head.length, end: head.length + content.length + 1, data: content)],
           ),
         ],
-        expectedOperations: [
+        expectedDelta: [
           Operation.insert(content, {}),
           Operation.insert('\n', {'align': 'center'}),
         ],
@@ -84,10 +82,8 @@ void main() {
             name: 'align',
           ),
         ],
-        expectedBBCodeTags: [
-          const AlignTag(start: 0, end: head.length + content.length + tail.length, attribute: 'left'),
-        ],
-        expectedOperations: [
+        expectedAST: [const AlignTag(start: 0, end: head.length + content.length + tail.length, attribute: 'left')],
+        expectedDelta: [
           Operation.insert('', {}),
           Operation.insert('\n', {'align': 'left'}),
         ],
@@ -111,15 +107,15 @@ void main() {
             name: 'align',
           ),
         ],
-        expectedBBCodeTags: [
+        expectedAST: [
           const AlignTag(
             start: 0,
             end: head.length + content.length + tail.length,
             attribute: 'left',
-            children: [TextContent(head.length, head.length + content.length + 1, content)],
+            children: [TextContent(start: head.length, end: head.length + content.length + 1, data: content)],
           ),
         ],
-        expectedOperations: [
+        expectedDelta: [
           Operation.insert(content, {}),
           Operation.insert('\n', {'align': 'left'}),
         ],
@@ -144,10 +140,8 @@ void main() {
             name: 'align',
           ),
         ],
-        expectedBBCodeTags: [
-          const AlignTag(start: 0, end: head.length + content.length + tail.length, attribute: 'right'),
-        ],
-        expectedOperations: [
+        expectedAST: [const AlignTag(start: 0, end: head.length + content.length + tail.length, attribute: 'right')],
+        expectedDelta: [
           Operation.insert('', {}),
           Operation.insert('\n', {'align': 'right'}),
         ],
@@ -171,17 +165,82 @@ void main() {
             name: 'align',
           ),
         ],
-        expectedBBCodeTags: [
+        expectedAST: [
           const AlignTag(
             start: 0,
             end: head.length + content.length + tail.length,
             attribute: 'right',
-            children: [TextContent(head.length, head.length + content.length + 1, content)],
+            children: [TextContent(start: head.length, end: head.length + content.length + 1, data: content)],
           ),
         ],
-        expectedOperations: [
+        expectedDelta: [
           Operation.insert(content, {}),
           Operation.insert('\n', {'align': 'right'}),
+        ],
+      );
+    });
+  });
+
+  group('invalid alignment', () {
+    test('without content', () {
+      const head = '[align=INVALID_ALIGNMENT]';
+      const content = '';
+      const tail = '[/align]';
+      checkSingleTag(
+        head: head,
+        content: content,
+        tail: tail,
+        expectedTokens: [
+          const TagHead(start: 0, end: head.length, name: 'align', attribute: 'INVALID_ALIGNMENT'),
+          const TagTail(
+            start: head.length + content.length,
+            end: head.length + content.length + tail.length,
+            name: 'align',
+          ),
+        ],
+        expectedAST: [
+          const TextContent(start: 0, end: head.length + content.length, data: head),
+          const TextContent(
+            start: head.length + content.length,
+            end: head.length + content.length + tail.length,
+            data: tail,
+          ),
+        ],
+        expectedDelta: [Operation.insert(head, {}), Operation.insert(tail, {}), Operation.insert('\n')],
+      );
+    });
+
+    test('with content', () {
+      const head = '[align=INVALID_ALIGNMENT]';
+      const content = 'CONTENT';
+      const tail = '[/align]';
+      checkSingleTag(
+        head: head,
+        content: content,
+        tail: tail,
+        expectedTokens: [
+          const TagHead(start: 0, end: head.length, name: 'align', attribute: 'INVALID_ALIGNMENT'),
+          const Text(start: head.length, end: head.length + content.length + 1, data: content),
+          const TagTail(
+            start: head.length + content.length,
+            end: head.length + content.length + tail.length,
+            name: 'align',
+          ),
+        ],
+        expectedAST: [
+          const TextContent(start: 0, end: head.length, data: head),
+          const TextContent(start: head.length, end: head.length + content.length + 1, data: content),
+          const TextContent(
+            start: head.length + content.length,
+            end: head.length + content.length + tail.length,
+            data: tail,
+          ),
+        ],
+        expectedDelta: [
+          Operation.insert(head, {}),
+          Operation.insert(content, {}),
+          Operation.insert(tail, {}),
+          Operation.insert('\n'),
         ],
       );
     });

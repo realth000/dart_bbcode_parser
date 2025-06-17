@@ -12,8 +12,8 @@ void checkSingleTag({
   required String content,
   required String tail,
   required List<Token> expectedTokens,
-  required List<BBCodeTag> expectedBBCodeTags,
-  required List<Operation> expectedOperations,
+  required List<BBCodeTag> expectedAST,
+  required List<Operation> expectedDelta,
   List<BBCodeTag> supportedTags = defaultSupportedTags,
   bool checkTokens = true,
   bool checkAST = true,
@@ -33,12 +33,12 @@ void checkSingleTag({
   final parser = Parser(tokens: tokens, supportedTags: supportedTags)..parse();
   final ast = parser.ast;
   if (checkAST) {
-    expect(ast, equals(expectedBBCodeTags), reason: 'AST not match as expected');
+    expect(ast, equals(expectedAST), reason: 'AST not match as expected');
   }
 
   // Delta stage.
   final delta = buildDelta(ast);
-  final targetDelta = Delta.fromOperations(expectedOperations);
+  final targetDelta = Delta.fromOperations(expectedDelta);
   if (checkDelta) {
     expect(delta.toJson(), equals(targetDelta.toJson()), reason: 'delta not match as expected');
   }
