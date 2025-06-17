@@ -1,3 +1,4 @@
+import 'package:dart_bbcode_parser/dart_bbcode_parser.dart';
 import 'package:dart_bbcode_parser/src/tags/common_tag.dart';
 import 'package:dart_bbcode_parser/src/tags/tag.dart';
 import 'package:dart_bbcode_parser/src/token.dart';
@@ -9,6 +10,9 @@ class StrikethroughTag extends NoAttrTag {
 
   /// Build empty one.
   static const empty = StrikethroughTag(start: -1, end: -1);
+
+  @override
+  AttributeValidator? get attributeValidator => nullAttributeValidator;
 
   @override
   String get name => 's';
