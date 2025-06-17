@@ -107,7 +107,9 @@ abstract class BBCodeTag implements QuillConvertible {
     for (final e in children) {
       e.toBBCode(buffer);
     }
-    buffer.write('[/$name]');
+    if (!selfClosed) {
+      buffer.write('[/$name]');
+    }
     return buffer;
   }
 
