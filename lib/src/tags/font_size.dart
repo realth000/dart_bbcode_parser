@@ -6,11 +6,10 @@ import 'package:dart_bbcode_parser/src/utils.dart';
 /// Tag name.
 class FontSizeTag extends CommonTag {
   /// Constructor.
-  const FontSizeTag({required super.start, required super.end, required String attribute, super.children})
-    : super(attribute: attribute);
+  const FontSizeTag({required super.start, required super.end, required super.attribute, super.children});
 
   /// Build empty one.
-  static const empty = FontSizeTag(start: -1, end: -1, attribute: '');
+  static const empty = FontSizeTag(start: -1, end: -1, attribute: null);
 
   /// Allowed font sizes.
   ///
@@ -52,5 +51,5 @@ class FontSizeTag extends CommonTag {
 
   @override
   FontSizeTag fromToken(TagHead? head, TagTail? tail, List<BBCodeTag> children) =>
-      FontSizeTag(start: head!.start, end: tail?.end ?? head.end, attribute: head.attribute!, children: children);
+      FontSizeTag(start: head!.start, end: tail?.end ?? head.end, attribute: head.attribute, children: children);
 }
