@@ -48,7 +48,7 @@ void main() {
         tail: tail,
         expectedTokens: [
           const TagHead(start: 0, end: head.length, name: tag, attribute: attr),
-          const Text(start: head.length, end: head.length + content.length + 1, data: content),
+          const Text(start: head.length, end: head.length + content.length, data: content),
           const TagTail(
             start: head.length + content.length,
             end: head.length + content.length + tail.length,
@@ -60,7 +60,7 @@ void main() {
             start: 0,
             end: head.length + content.length + tail.length,
             attribute: attr,
-            children: [TextContent(start: head.length, end: head.length + content.length + 1, data: content)],
+            children: [TextContent(start: head.length, end: head.length + content.length, data: content)],
           ),
         ],
         expectedDelta: [
@@ -82,7 +82,7 @@ void main() {
         tail: tail,
         expectedTokens: [
           const TagHead(start: 0, end: head.length, name: tag, attribute: attr),
-          const Text(start: head.length, end: head.length + content.length + 1, data: content),
+          const Text(start: head.length, end: head.length + content.length, data: content),
           const TagTail(
             start: head.length + content.length,
             end: head.length + content.length + tail.length,
@@ -94,7 +94,7 @@ void main() {
             start: 0,
             end: head.length + content.length + tail.length,
             attribute: attr,
-            children: [TextContent(start: head.length, end: head.length + content.length + 1, data: content)],
+            children: [TextContent(start: head.length, end: head.length + content.length, data: content)],
           ),
         ],
         expectedDelta: [
@@ -116,7 +116,7 @@ void main() {
         tail: tail,
         expectedTokens: [
           const TagHead(start: 0, end: head.length, name: tag, attribute: attr),
-          const Text(start: head.length, end: head.length + content.length + 1, data: content),
+          const Text(start: head.length, end: head.length + content.length, data: content),
           const TagTail(
             start: head.length + content.length,
             end: head.length + content.length + tail.length,
@@ -128,7 +128,7 @@ void main() {
             start: 0,
             end: head.length + content.length + tail.length,
             attribute: '#aabbcc',
-            children: [TextContent(start: head.length, end: head.length + content.length + 1, data: content)],
+            children: [TextContent(start: head.length, end: head.length + content.length, data: content)],
           ),
         ],
         expectedDelta: [
@@ -150,7 +150,7 @@ void main() {
         tail: tail,
         expectedTokens: [
           const TagHead(start: 0, end: head.length, name: tag, attribute: attr),
-          const Text(start: head.length, end: head.length + content.length + 1, data: content),
+          const Text(start: head.length, end: head.length + content.length, data: content),
           const TagTail(
             start: head.length + content.length,
             end: head.length + content.length + tail.length,
@@ -159,7 +159,7 @@ void main() {
         ],
         expectedAST: [
           const TextContent(start: 0, end: head.length, data: head),
-          const TextContent(start: head.length, end: head.length + content.length + 1, data: content),
+          const TextContent(start: head.length, end: head.length + content.length, data: content),
           const TextContent(
             start: head.length + content.length,
             end: head.length + content.length + tail.length,
