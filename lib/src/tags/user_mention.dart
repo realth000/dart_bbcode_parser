@@ -20,13 +20,13 @@ class UserMentionTag extends EmbedTag {
   AttributeValidator? get attributeValidator => nullAttributeValidator;
 
   @override
-  ChildrenValidator get childrenValidator => (children) => children.every((e) => e.isPlainText);
+  ChildrenValidator get childrenValidator => (children) => children.isNotEmpty && children.every((e) => e.isPlainText);
 
   @override
   String get quillEmbedName => 'bbcodeUserMention';
 
   @override
-  String get quillEmbedValue => jsonEncode({'name': children.map((e) => e.data).whereType<String>().join()});
+  String get quillEmbedValue => jsonEncode({'username': children.map((e) => e.data).whereType<String>().join()});
 
   @override
   UserMentionTag fromToken(TagHead? head, TagTail? tail, List<BBCodeTag> children) =>
