@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dart_bbcode_parser/dart_bbcode_parser.dart';
 import 'package:dart_bbcode_parser/src/tags/common_tag.dart';
 import 'package:dart_bbcode_parser/src/tags/tag.dart';
 import 'package:dart_bbcode_parser/src/token.dart';
@@ -13,6 +14,9 @@ class SpoilerV2HeaderTag extends EmbedTag {
   static const empty = SpoilerV2HeaderTag(start: -1, end: -1, attribute: null);
 
   static const _defaultTitle = '展开/收起';
+
+  @override
+  AttributeValidator? get attributeValidator => (attr) => attr != null && attr.isNotEmpty;
 
   @override
   String get name => 'spoiler';
