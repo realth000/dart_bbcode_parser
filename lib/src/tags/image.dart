@@ -30,18 +30,9 @@ class ImageTag extends EmbedTag {
   @override
   String get quillEmbedValue {
     final m = _imageSizeRe.firstMatch(attribute ?? '');
-    final rawLink = children.firstOrNull?.data;
-    final String? link;
-    if (rawLink == null) {
-      link = null;
-    } else if (!rawLink.startsWith('https://')) {
-      link = 'https://www.tsdm39.com/$rawLink';
-    } else {
-      link = rawLink;
-    }
 
     return jsonEncode({
-      'link': link,
+      'link': children.firstOrNull?.data,
       'width': int.tryParse(m?.namedGroup('width') ?? ''),
       'height': int.tryParse(m?.namedGroup('height') ?? ''),
     });
