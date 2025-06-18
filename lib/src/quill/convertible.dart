@@ -1,4 +1,3 @@
-import 'package:dart_quill_delta/dart_quill_delta.dart';
 import 'package:meta/meta.dart';
 
 /// A pair of quill attribute.
@@ -17,7 +16,7 @@ final class QuillAttribute {
 
   /// Only distinguish attributes on their names.
   @override
-  bool operator ==(Object other) => identical(this, other) || (other is QuillAttribute && other.name != name);
+  bool operator ==(Object other) => identical(this, other) || (other is QuillAttribute && other.name == name);
 
   @override
   int get hashCode => name.hashCode;
@@ -53,18 +52,4 @@ abstract interface class QuillConvertible {
 
   /// Embed data.
   String get quillEmbedValue;
-}
-
-/// Extension on quill delta operations.
-extension OperationExt on Operation? {
-  /// Get or init an operation
-  Operation getOrInit() => this ?? Operation.insert('');
-
-  /// Compose two operation together.
-  ///
-  /// The [other] operation will be append after current one.
-  Operation compose(Operation other) => Operation.insert(
-    (this!.data! as String) + (other.data! as String),
-    (this!.attributes ?? {})..addAll(other.attributes ?? {}),
-  );
 }

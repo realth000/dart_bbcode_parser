@@ -73,7 +73,7 @@ class AttrContext {
 
     if (paragraphAttrs.last.name != tagName) {
       throw UnsupportedError(
-        'forgetting incorrect paragraph tag: intend to forget "$tagName", but exactly have "${attrs.last.name}"',
+        'forgetting incorrect paragraph tag: intend to forget "$tagName", but exactly have "${attrs.lastOrNull?.name}"',
       );
     }
     paragraphAttrs.removeLast();
