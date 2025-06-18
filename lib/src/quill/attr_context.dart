@@ -111,12 +111,4 @@ class AttrContext {
   void addOperations(Iterable<Operation> ops) {
     operation.addAll(ops);
   }
-
-  /// Add a single operation.
-  void tryAddOperation(Operation? op) {
-    if (op == null) {
-      return;
-    }
-    operation.add(op);
-  }
 }
