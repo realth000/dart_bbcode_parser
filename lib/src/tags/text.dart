@@ -30,36 +30,36 @@ class TextContent implements BBCodeTag {
   String get data => _data;
 
   @override
-  String get attribute => throw Exception('shall not call named tag related method on plain text tag');
+  String get attribute => throw UnsupportedError('shall not call named tag related method on plain text tag');
 
   @override
   AttributeValidator get attributeValidator =>
-      throw Exception('shall not call named tag related method on plain text tag');
+      throw UnsupportedError('shall not call named tag related method on plain text tag');
 
   @override
-  List<BBCodeTag> get children => throw Exception('shall not call named tag related method on plain text tag');
+  List<BBCodeTag> get children => throw UnsupportedError('shall not call named tag related method on plain text tag');
 
   @override
   ChildrenValidator get childrenValidator =>
-      throw Exception('shall not call named tag related method on plain text tag');
+      throw UnsupportedError('shall not call named tag related method on plain text tag');
 
   @override
-  String get open => throw Exception('shall not call named tag related method on plain text tag');
+  String get open => throw UnsupportedError('shall not call named tag related method on plain text tag');
 
   @override
-  String get close => throw Exception('shall not call named tag related method on plain text tag');
+  String get close => throw UnsupportedError('shall not call named tag related method on plain text tag');
 
   @override
   bool get hasQuillAttr => false;
 
   @override
-  String get name => throw Exception('shall not call named tag related method on plain text tag');
+  String get name => throw UnsupportedError('shall not call named tag related method on plain text tag');
 
   @override
-  String get quillAttrName => throw Exception('shall not call quill attr related method on plain text tag');
+  String get quillAttrName => throw UnsupportedError('shall not call quill attr related method on plain text tag');
 
   @override
-  String get quillAttrValue => throw Exception('shall not call quill attr related method on plain text tag');
+  String get quillAttrValue => throw UnsupportedError('shall not call quill attr related method on plain text tag');
 
   @override
   bool get hasQuillEmbed => false;
@@ -155,5 +155,5 @@ class TextContent implements BBCodeTag {
 
   @override
   BBCodeTag fromToken(TagHead? head, TagTail? tail, List<BBCodeTag> children) =>
-      throw Exception('can not build text content from tokens');
+      throw UnsupportedError('can not build text content from tokens');
 }

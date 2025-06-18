@@ -132,7 +132,7 @@ final class Parser {
   /// The caller must ensure [head] and [tail] have the same name.
   BBCodeTag _buildTag(TagHead head, TagTail tail, List<BBCodeTag> children) {
     if (head.name != tail.name) {
-      throw Exception('can not build tag from head(${head.name}) and tail(${tail.name})');
+      throw UnsupportedError('can not build tag from head(${head.name}) and tail(${tail.name})');
     }
 
     final target = _tags.firstWhere((e) => e.name == head.name);
@@ -214,7 +214,7 @@ final class _ParseContext {
     if (s != null && s.name == tail.name) {
       return _scope.removeLast();
     }
-    throw Exception('calling leaveScope outside of scope $tail');
+    throw UnsupportedError('calling leaveScope outside of scope $tail');
   }
 
   List<BBCodeTag> popParsed(int after) {
@@ -230,9 +230,6 @@ final class _ParseContext {
 
   /// Save the [text].
   void saveText(TextContent text) {
-    // if (token is! Text) {
-    //   throw Exception('calling saveText on non text token type $token');
-    // }
     ast.add(text);
   }
 

@@ -23,7 +23,7 @@ abstract class CommonTag extends BBCodeTag {
   bool get isPlainText => false;
 
   @override
-  String get data => throw Exception('shall not calling data on non-plain-text tag');
+  String get data => throw UnsupportedError('shall not calling data on non-plain-text tag');
 
   @override
   String get open => '[';
@@ -92,7 +92,7 @@ abstract class NoAttrTag extends CommonTag {
   String? get attribute => null;
 
   @override
-  AttributeValidator? get attributeValidator => null;
+  AttributeValidator? get attributeValidator => nullAttributeValidator;
 }
 
 /// Tags using embed in quill delta.
@@ -112,7 +112,7 @@ abstract class EmbedTag extends BBCodeTag {
   bool get isPlainText => false;
 
   @override
-  String get data => throw Exception('shall not calling data on non-plain-text tag');
+  String get data => throw UnsupportedError('shall not calling data on non-plain-text tag');
 
   @override
   String get open => '[';
@@ -130,7 +130,7 @@ abstract class EmbedTag extends BBCodeTag {
   bool get hasQuillAttr => false;
 
   @override
-  String? get quillAttrName => null;
+  String? get quillAttrName => throw UnsupportedError('embed has no attr name');
 
   @override
   String get quillAttrValue => throw UnsupportedError('embed has no attr value');

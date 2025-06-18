@@ -54,11 +54,13 @@ class AttrContext {
   void _forget(String tagName) {
     // Shall not throw empty element exception.
     if (attrs.isEmpty) {
-      throw Exception('did you forget to save tags?');
+      throw UnsupportedError('did you forget to save tags?');
     }
 
     if (attrs.last.name != tagName) {
-      throw Exception('forgetting incorrect tag: intend to forget "$tagName", but exactly have "${attrs.last.name}"');
+      throw UnsupportedError(
+        'forgetting incorrect tag: intend to forget "$tagName", but exactly have "${attrs.last.name}"',
+      );
     }
     attrs.removeLast();
   }
@@ -66,11 +68,11 @@ class AttrContext {
   void _forgetForParagraph(String tagName) {
     // Shall not throw empty element exception.
     if (paragraphAttrs.isEmpty) {
-      throw Exception('did you forget to save paragraph tags?');
+      throw UnsupportedError('did you forget to save paragraph tags?');
     }
 
     if (paragraphAttrs.last.name != tagName) {
-      throw Exception(
+      throw UnsupportedError(
         'forgetting incorrect paragraph tag: intend to forget "$tagName", but exactly have "${attrs.last.name}"',
       );
     }

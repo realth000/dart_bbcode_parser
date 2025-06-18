@@ -7,6 +7,18 @@ import 'package:dart_bbcode_parser/src/token.dart';
 import 'package:dart_quill_delta/dart_quill_delta.dart';
 import 'package:test/expect.dart';
 
+BBCodeTag buildSingleTag({required String input, List<BBCodeTag> supportedTags = defaultSupportedTags}) {
+  final lexer = Lexer(input: input)..scanAll();
+  final parser = Parser(tokens: lexer.tokens, supportedTags: supportedTags)..parse();
+  return parser.ast[0];
+}
+
+List<BBCodeTag> buildMultipleTags({required String input, List<BBCodeTag> supportedTags = defaultSupportedTags}) {
+  final lexer = Lexer(input: input)..scanAll();
+  final parser = Parser(tokens: lexer.tokens, supportedTags: supportedTags)..parse();
+  return parser.ast;
+}
+
 void checkSingleTag({
   required String head,
   required String content,
