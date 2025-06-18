@@ -21,9 +21,6 @@ class DividerTag extends EmbedTag {
   bool get selfClosed => true;
 
   @override
-  bool get hasQuillAttr => false;
-
-  @override
   String get quillEmbedName => 'bbcodeDivider';
 
   @override

@@ -34,26 +34,26 @@ class TextContent implements BBCodeTag {
 
   @override
   AttributeValidator get attributeValidator =>
-      throw UnsupportedError('shall not call named tag related method on plain text tag');
+      throw UnsupportedError('shall not call attribute related method on plain text tag');
 
   @override
-  List<BBCodeTag> get children => throw UnsupportedError('shall not call named tag related method on plain text tag');
+  List<BBCodeTag> get children => throw UnsupportedError('shall not call children getter on plain text tag');
 
   @override
   ChildrenValidator get childrenValidator =>
-      throw UnsupportedError('shall not call named tag related method on plain text tag');
+      throw UnsupportedError('shall not call children validator on plain text tag');
 
   @override
-  String get open => throw UnsupportedError('shall not call named tag related method on plain text tag');
+  String get open => throw UnsupportedError('shall not call open getter on plain text tag');
 
   @override
-  String get close => throw UnsupportedError('shall not call named tag related method on plain text tag');
+  String get close => throw UnsupportedError('shall not call close getter on plain text tag');
 
   @override
   bool get hasQuillAttr => false;
 
   @override
-  String get name => throw UnsupportedError('shall not call named tag related method on plain text tag');
+  String get name => throw UnsupportedError('shall not call named getter on plain text tag');
 
   @override
   String get quillAttrName => throw UnsupportedError('shall not call quill attr related method on plain text tag');
@@ -71,10 +71,10 @@ class TextContent implements BBCodeTag {
   String get quillEmbedValue => throw UnsupportedError('shall not call quill embed related method on plain text tag');
 
   @override
-  bool get selfClosed => true;
+  bool get selfClosed => throw UnsupportedError('shall not call closing related method on plain text tag');
 
   @override
-  bool get selfClosedAtTail => false;
+  bool get selfClosedAtTail => throw UnsupportedError('shall not call closing related method on plain text tag');
 
   final int _start;
 
