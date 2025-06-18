@@ -11,7 +11,7 @@ on:
         description: Upload coverage to codecov.
         required: true
         type: boolean
-        default: true
+        default: false
 
 jobs:
   test:
@@ -35,7 +35,7 @@ jobs:
           dart pub global run coverage:test_with_coverage
       # Ref: https://github.com/felangel/bloc/blob/61a62af0b269cef8c214d991bb223c1797c34595/.github/actions/dart_package/action.yaml#L95
       - name: Upload Coverage
-        if: ${{ github.event_name == 'push' || inputs.collect_coverage }}
+        if: ${{ inputs.collect_coverage }}
         uses: codecov/codecov-action@v5
         with:
           token: ${{ SECRETS.CODECOV_TOKEN }}
