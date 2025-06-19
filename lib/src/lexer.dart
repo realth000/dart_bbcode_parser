@@ -97,10 +97,7 @@ final class Lexer {
         // Use the fixed end parameter because we know the '[' where starts and length is fixed to 1.
         _appendConsumedText('[', end: currTagStartPos + 1);
         currTagStartPos = currTagStartPos + 1;
-        if (nameBuffer.isNotEmpty) {
-          _appendText(nameBuffer);
-          currTagStartPos = _scanner.position;
-        }
+        _appendText(nameBuffer);
         return false;
       }
 
@@ -152,18 +149,27 @@ final class Lexer {
 
   /// Try scan and parse the tail of tag `[/$NAME]`.
   ///
-  /// When enter this function, position MUST be after the `[`.
+  /// When enter this function, position MUST be after the `[/`.
   bool _scanTail() {
     final nameBuffer = StringBuffer();
     while (true) {
       if (_scanner.isDone) {
+        // Here we reaches the end of input with incomplete tag tail.
+        // Don't forget the eaten prefix '[/'.
+        _appendConsumedText('[/', end: currTagStartPos + 2);
+        currTagStartPos = currTagStartPos + 2;
         _appendText(nameBuffer);
-        currTagStartPos = _scanner.position;
         return false;
       }
 
       final next = _scanner.readChar();
       if (next.isClose) {
+        if (nameBuffer.isEmpty) {
+          // Here we reaches the end of input with incomplete tag tail.
+          // Don't forget the eaten prefix '[/'.
+          _appendConsumedText('[/]', end: currTagStartPos + 3);
+          currTagStartPos = currTagStartPos + 3;
+        }
         _appendTail(nameBuffer);
         currTagStartPos = _scanner.position;
         return true;
