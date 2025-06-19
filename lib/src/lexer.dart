@@ -126,6 +126,13 @@ final class Lexer {
           attrBuffer.writeCharCode(next2);
         }
       } else if (next.isClose) {
+        if (nameBuffer.isEmpty) {
+          // Currently we have "[]", position is at the "]".
+          // It should be considered as plain text.
+          _appendConsumedText('[]');
+          return false;
+        }
+
         _appendHead(nameBuffer, null);
         currTagStartPos = _scanner.position;
         return true;
