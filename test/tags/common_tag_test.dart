@@ -92,6 +92,7 @@ void main() {
           supportedTags: [FakeCommonParagraphTag.empty],
         );
         expect(tag.runtimeType, equals(FakeCommonParagraphTag));
+        expect(tag.isPlainText, equals(false));
         final ac = AttrContext()..addOperations([Operation.insert('', {})]);
         tag.toQuilDelta(ac);
         expect(ac.operation.length, equals(4));
@@ -111,6 +112,7 @@ void main() {
           supportedTags: [FakeEmbedParagraphTag.empty],
         );
         expect(tag.runtimeType, equals(FakeEmbedParagraphTag));
+        expect(tag.isPlainText, equals(false));
         final ac = AttrContext()..save(const AlignTag(start: 0, end: 0, attribute: 'center'));
         tag.toQuilDelta(ac);
         expect(ac.operation.length, equals(2));
