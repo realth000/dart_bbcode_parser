@@ -224,9 +224,5 @@ final class Lexer {
   }
 
   @override
-  String toString() => '''
-Lexer {
-${_tokens.map((e) => '  $e').join('\n')}
-}
-''';
+  String toString() => '{"stage":"lexer","tokens":${_tokens.map((e) => e.toJson()).toList()}}';
 }
