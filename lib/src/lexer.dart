@@ -85,14 +85,22 @@ final class Lexer {
   ///
   /// Header is `[$NAME=$ATTR]` with attribute or `[$NAME]` without attribute.
   ///
+  /// When enter this function, position MUST be after the `[`.
+  ///
   /// Return true if is valid head, or false if fallbacks to plain text.
   bool _scanHead() {
     final nameBuffer = StringBuffer();
     while (true) {
       if (_scanner.isDone) {
-        // Here indicating a incomplete tag head, fallback to plain text.
-        _appendText(nameBuffer);
-        currTagStartPos = _scanner.position;
+        // Here indicating a incomplete tag head and reaches the end of input, fallback to plain text.
+        // Don't forget to save the consumed '[' when we enter this function.
+        // Use the fixed end parameter because we know the '[' where starts and length is fixed to 1.
+        _appendConsumedText('[', end: currTagStartPos + 1);
+        currTagStartPos = currTagStartPos + 1;
+        if (nameBuffer.isNotEmpty) {
+          _appendText(nameBuffer);
+          currTagStartPos = _scanner.position;
+        }
         return false;
       }
 
@@ -142,7 +150,9 @@ final class Lexer {
     }
   }
 
-  /// Try scan and parse the tail of tag.
+  /// Try scan and parse the tail of tag `[/$NAME]`.
+  ///
+  /// When enter this function, position MUST be after the `[`.
   bool _scanTail() {
     final nameBuffer = StringBuffer();
     while (true) {
@@ -177,11 +187,11 @@ final class Lexer {
     _tokens.add(Text(start: currTagStartPos, end: end, data: buffer.toString()));
   }
 
-  void _appendConsumedText(String text) {
+  void _appendConsumedText(String text, {int? end}) {
     if (text.isEmpty) {
       return;
     }
-    _tokens.add(Text(start: currTagStartPos, end: _scanner.position, data: text));
+    _tokens.add(Text(start: currTagStartPos, end: end ?? _scanner.position, data: text));
   }
 
   void _appendHead(StringBuffer nameBuffer, StringBuffer? attrBuffer) {
