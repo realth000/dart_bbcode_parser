@@ -98,6 +98,13 @@ final class Lexer {
 
       final next = _scanner.readChar();
       if (next.isEqual) {
+        if (nameBuffer.isEmpty) {
+          // Currently we have "[=", position is at the "=".
+          // It should be considered as plain text.
+          _appendConsumedText('[=');
+          return false;
+        }
+
         // Header with attribute.
         // Parse the attribute.
         final attrBuffer = StringBuffer();
