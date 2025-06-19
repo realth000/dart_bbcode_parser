@@ -115,7 +115,7 @@ final class Parser {
           }
 
           // Valid tag.
-          context.saveTag(builtTag, rearrange: true);
+          context.saveTag(builtTag, rotate: true);
         } else {
           // Unrecognized tag or crossed tag, fallback to text.
           context.saveText(TextContent(start: token.start, end: token.end, data: '[/${token.name}]'));
@@ -294,22 +294,35 @@ final class ParseContext {
   /// know `[i]` and `text` are its children, so an extra step is needed here, checking tags already in the AST, if
   /// these previous tags have a start pos after the current pending one, it means these tags are inside current tag,
   /// move them to be current tags' children.
-  void saveTag(BBCodeTag tag, {bool rearrange = false}) {
-    int? removeRangeStartIndex;
-    if (!tag.isPlainText && ast.isNotEmpty && rearrange && !tag.selfClosed) {
-      final childrenTags = <BBCodeTag>[];
-      for (var i = ast.length - 1; i >= 0; i--) {
-        if (ast[i].start <= tag.start) {
-          break;
-        }
-        removeRangeStartIndex = i;
-        childrenTags.add(ast[i]);
-      }
-      tag.children.addAll(childrenTags.reversed.toList());
-    }
-    if (removeRangeStartIndex != null) {
-      ast.removeRange(removeRangeStartIndex, ast.length);
-    }
+  void saveTag(BBCodeTag tag, {bool rotate = false}) {
+    // Rotating AST steps are skipped.
+    //
+    // Theoretically here are cases we need to rotate the AST because we only walk through the tree once:
+    //
+    // Consider the following BBCode: `before[b][i][/i][b]`, when processing on the tag tail `[/b]`, the `i` tag has
+    // been built and saved to AST, but exactly it is the children of `b`, when processing here we MUST remove the `i`
+    // from AST and built `b` first, then move the `i` as `b`'s child, this process is rotating.
+    // But we can not cover this case in test, somewhere else MUST have done this step, we do not notice it.
+    //
+    // Seems we do not need rotating, disable it.
+    //
+    // To enable it again, uncomment the code below and set `rotate` parameter to `true` when call this function.
+    //
+    // int? removeRangeStartIndex;
+    // if (!tag.isPlainText && ast.isNotEmpty && rotate && !tag.selfClosed) {
+    //   final childrenTags = <BBCodeTag>[];
+    //   for (var i = ast.length - 1; i >= 0; i--) {
+    //     if (ast[i].start <= tag.start) {
+    //       break;
+    //     }
+    //     removeRangeStartIndex = i;
+    //     childrenTags.add(ast[i]);
+    //   }
+    //   tag.children.addAll(childrenTags.reversed.toList());
+    // }
+    // if (removeRangeStartIndex != null) {
+    //   ast.removeRange(removeRangeStartIndex, ast.length);
+    // }
 
     ast.add(tag);
   }
