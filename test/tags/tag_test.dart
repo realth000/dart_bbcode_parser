@@ -28,7 +28,7 @@ void main() {
         'quillEmbedValue': K.unsupported,
         'target': '${ApplyTarget.text}',
         'attribute': null,
-        'children': '',
+        'children': <dynamic>[],
       };
       expect(tag.toJson(), equals(tagData));
       expect(tag.toString(), equals(jsonEncode(tagData)));
