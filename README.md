@@ -4,7 +4,9 @@
 
 BBCode parser written in pure dart with Quill Delta integration support.
 
-This package is dependent of [flutter_bbcode_editor].
+This package a dependency of [flutter_bbcode_editor], a BBCode editor based on [flutter_quill].
+
+Some tags are prepared for the editor but the package can be used standalone without it, even in pure dart environment (without Flutter).
 
 ## WIP
 
@@ -58,13 +60,13 @@ final delta = parseBBCodeTextToDelta(code);
   * [x] Code block `[code]`
   * [x] Quote block `[quote]`
   * [x] Superscript `[sup]`
-  * [x] Spoiler (extended for [flutter_bbcode_editor])
+  * [x] Spoiler \*
     * [x] Spoiler header `[spoiler=$description]`
     * [x] Spoiler tail `[/spoiler]`
-  * [x] Free area (extended for [flutter_bbcode_editor])
+  * [x] Free area \*
     * [x] Free header `[free=$points]` or `[free]`
     * [x] Free tail `[/free]`
-  * [x] Hide area (extended for [flutter_bbcode_editor])
+  * [x] Hide area \*
     * [x] Hide header `[hide=$points]` or `[hide]`
     * [x] Hide tail `[/hide]`
 * [x] Override tags
@@ -73,4 +75,8 @@ final delta = parseBBCodeTextToDelta(code);
 * [x] Parse text to BBCode tags.
 * [x] Convert BBCode tags back to text.
 
+
+\* Marked tags are extended for [flutter_bbcode_editor].
+
 [flutter_bbcode_editor]: https://github.com/realth000/flutter_bbcode_editor
+[flutter_quill]: https://github.com/singerdmx/flutter-quill
