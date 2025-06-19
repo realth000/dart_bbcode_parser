@@ -144,7 +144,7 @@ abstract class BBCodeTag implements QuillConvertible {
     'quillEmbedValue': hasQuillEmbed ? quillEmbedValue : K.unsupported,
     'target': '$target',
     'attribute': attribute,
-    'children': children.map((e) => e.toJson()).join('; '),
+    'children': children.map((e) => e.toJson()).toList(),
   };
 
   @override

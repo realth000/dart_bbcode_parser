@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:collection/collection.dart';
 import 'package:dart_bbcode_parser/src/tags/tag.dart';
 import 'package:dart_bbcode_parser/src/tags/text.dart';
@@ -131,25 +133,18 @@ final class Parser {
   ///
   /// The caller must ensure [head] and [tail] have the same name.
   BBCodeTag _buildTag(TagHead head, TagTail tail, List<BBCodeTag> children) {
-    if (head.name != tail.name) {
-      throw UnsupportedError('can not build tag from head(${head.name}) and tail(${tail.name})');
-    }
+    // Skip name check because the caller has guarantee on it.
+    //if (head.name != tail.name) {
+    //  throw UnsupportedError('can not build tag from head(${head.name}) and tail(${tail.name})');
+    //}
 
     final target = _tags.firstWhere((e) => e.name == head.name);
     return target.fromToken(head, tail, children);
   }
 
   @override
-  String toString() => '''
-Parser {
-  tags {
-${_tags.map((e) => "    $e").join('\n')}
-  },
-  ast {
-${_ast.map((e) => "    $e").join('\n')}
-  },
-}
-''';
+  String toString() =>
+      '{"stage": "parser", "tokens": ${_tokens.map((e) => e.toJson()).toList()}, "ast":${_ast.map((e) => jsonEncode(e.toJson())).toList()}}';
 }
 
 final class _ParseContext {
