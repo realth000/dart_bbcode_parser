@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math' as math;
 
 import 'package:collection/collection.dart';
 import 'package:dart_bbcode_parser/src/tags/tag.dart';
@@ -30,7 +31,7 @@ final class Parser {
     // b color url /url /color /b
     //
     // b color url </url> </color> b [/color]
-    final context = _ParseContext();
+    final context = ParseContext();
     for (final token in _tokens) {
       if (token is Text) {
         context.saveText(TextContent(start: token.start, end: token.end, data: token.data));
@@ -121,6 +122,22 @@ final class Parser {
         }
       }
     }
+
+    // Here we walked through all tokens.
+    // All scopes we still live in are invalid ones and shall fallback to text.
+    // Consider "[b]foo" and "foo[b]", when we recognize that the "[b]" shall fallback to text, we already walked
+    // behind the "foo" text, so when fallback it into state, insert instead of append.
+    for (final scope in context._scope) {
+      context.insertTextAtPosition(
+        TextContent(
+          start: scope.start,
+          end: scope.end,
+          data: '[${scope.name}${scope.attribute != null ? "=${scope.attribute}" : ""}]',
+        ),
+        scope.start,
+      );
+    }
+
     context.composeTags();
     _ast = context.ast;
   }
@@ -147,8 +164,10 @@ final class Parser {
       '{"stage": "parser", "tokens": ${_tokens.map((e) => e.toJson()).toList()}, "ast":${_ast.map((e) => jsonEncode(e.toJson())).toList()}}';
 }
 
-final class _ParseContext {
-  _ParseContext();
+/// Context hold parsed data in parsing process.
+final class ParseContext {
+  /// Constructor.
+  ParseContext();
 
   /// All scopes.
   ///
@@ -200,10 +219,14 @@ final class _ParseContext {
   /// Final result.
   List<BBCodeTag> ast = [];
 
+  /// Record new tag scope.
   void enterScope(TagHead head) {
     _scope.add(head);
   }
 
+  /// Remove recorded tag scope.
+  ///
+  /// The scope shall be the last one in [_scope], act like stack.
   TagHead leaveScope(TagTail tail) {
     final s = _scope.lastOrNull;
     if (s != null && s.name == tail.name) {
@@ -212,6 +235,7 @@ final class _ParseContext {
     throw UnsupportedError('calling leaveScope outside of scope $tail');
   }
 
+  /// Pop all parsed tags not before the position [after].
   List<BBCodeTag> popParsed(int after) {
     final popped = List<BBCodeTag>.from(ast.skipWhile((e) => e.start <= after));
     if (popped.isNotEmpty && ast.isNotEmpty) {
@@ -228,11 +252,36 @@ final class _ParseContext {
     ast.add(text);
   }
 
+  /// Save the [text] at the position start at [start].
+  ///
+  /// Unlike [saveText] always append [text] to the tail of [ast], this function may insert between tags.
+  ///
+  /// ```console
+  /// TAG1 TAG2
+  /// |    |
+  /// 10   15
+  ///    |
+  ///    13, where the text may insert.
+  /// ```
+  void insertTextAtPosition(TextContent text, int start) {
+    for (final (idx, node) in ast.indexed) {
+      if (node.start < start) {
+        continue;
+      }
+
+      ast.insert(math.max(0, idx - 1), text);
+      return;
+    }
+
+    // All tags in ast are before [text].
+    ast.add(text);
+  }
+
   /// Save a named tag.
   ///
   /// Add [tag] to the ast and a more important thing: transform the AST by checking previously saved children tags.
   ///
-  /// Detail explain:
+  /// Detailed explanation:
   ///
   /// Our parsing process is linear, which means it will save the recognized tag immediately, without checking for
   /// parent nodes:
@@ -265,6 +314,7 @@ final class _ParseContext {
     ast.add(tag);
   }
 
+  /// Compose adjacent texts.
   void composeTags() {
     // ast.addAll(parsedTags);
     // parsedTags.clear();
