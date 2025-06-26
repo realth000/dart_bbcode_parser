@@ -12,6 +12,7 @@ import 'package:dart_bbcode_parser/src/tags/free_v2.dart';
 import 'package:dart_bbcode_parser/src/tags/hide_v2.dart';
 import 'package:dart_bbcode_parser/src/tags/image.dart';
 import 'package:dart_bbcode_parser/src/tags/italic.dart';
+import 'package:dart_bbcode_parser/src/tags/list.dart';
 import 'package:dart_bbcode_parser/src/tags/quote.dart';
 import 'package:dart_bbcode_parser/src/tags/spoiler_v2.dart';
 import 'package:dart_bbcode_parser/src/tags/strikethrough.dart';
@@ -37,6 +38,8 @@ const defaultSupportedTags = [
   HideV2TailTag.empty,
   ImageTag.empty,
   ItalicTag.empty,
+  ListTag.empty,
+  ListItemTag.empty,
   QuoteTag.empty,
   StrikethroughTag.empty,
   SuperscriptTag.empty,
@@ -69,5 +72,7 @@ Delta parseBBCodeTextToDelta(String bbcode) {
   final parser = Parser(tokens: lexer.tokens, supportedTags: defaultSupportedTags)..parse();
   final ast = parser.ast;
   final delta = buildDelta(ast);
-  return delta;
+
+  // TODO: Only do it if ListTag is enabled.
+  return Delta.fromOperations(ListItemTag.normalizeListItemQuill(delta.operations));
 }

@@ -8,6 +8,8 @@ import 'package:dart_bbcode_parser/src/dart_bbcode_parser.dart';
 import 'package:dart_bbcode_parser/src/lexer.dart';
 import 'package:dart_bbcode_parser/src/parser.dart';
 import 'package:dart_bbcode_parser/src/quill/delta.dart';
+import 'package:dart_bbcode_parser/src/tags/list.dart';
+import 'package:dart_quill_delta/dart_quill_delta.dart';
 
 const flagLexOnly = 'lex';
 const flagParseOnly = 'parse';
@@ -62,7 +64,11 @@ Future<int> main(List<String> args) async {
       return 0;
     }
 
-    final delta = buildDelta(parser.ast);
+    var delta = buildDelta(parser.ast);
+
+    print(encoder.convert(delta));
+    // TODO: Only do it if ListTag is enabled.
+    delta = Delta.fromOperations(ListItemTag.normalizeListItemQuill(delta.operations));
     print(encoder.convert(delta));
     return 0;
   }

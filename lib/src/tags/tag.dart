@@ -127,6 +127,36 @@ abstract class BBCodeTag implements QuillConvertible {
   /// Note that in parsing process, this function is called **BEFORE** attribute passed validation.
   BBCodeTag fromToken(TagHead? head, TagTail? tail, List<BBCodeTag> children);
 
+  /// Fallback the current tag to plain text and save the result in [buffer], children tags are also affected.
+  void fallbackToText(StringBuffer buffer) {
+    if (selfClosed) {
+      if (selfClosedAtTail) {
+        buffer.write('$open$name$close');
+      } else {
+        buffer.write('$open${K.slash}$name$close');
+      }
+      // Self closing tags do not have children so the process is finished.
+    } else {
+      buffer.write('$open$name${attributeBBCode()}$close');
+      for (final child in children) {
+        child.fallbackToText(buffer);
+      }
+      buffer.write('$open${K.slash}$name$close');
+    }
+  }
+
+  /// Get the attribute represented in BBCode format to use directly in data.
+  ///
+  /// * If not null, prepend a '='.
+  /// * If null, return empty string.
+  String attributeBBCode() {
+    if (attribute == null) {
+      return '';
+    } else {
+      return '=$attribute';
+    }
+  }
+
   /// To json string.
   Map<String, dynamic> toJson() => {
     'start': start,

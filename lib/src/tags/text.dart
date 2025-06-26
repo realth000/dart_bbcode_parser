@@ -156,4 +156,10 @@ class TextContent implements BBCodeTag {
   @override
   BBCodeTag fromToken(TagHead? head, TagTail? tail, List<BBCodeTag> children) =>
       throw UnsupportedError('can not build text content from tokens');
+
+  @override
+  String attributeBBCode() => throw UnsupportedError('can not call attribute methods on plain text');
+
+  @override
+  void fallbackToText(StringBuffer buffer) => data;
 }
