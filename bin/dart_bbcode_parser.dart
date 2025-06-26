@@ -31,6 +31,8 @@ Future<int> main(List<String> args) async {
     return 0;
   }
 
+  const encoder = JsonEncoder.withIndent('  ');
+
   final parsedArgs = argParser.parse(args);
 
   if (parsedArgs.flag('help')) {
@@ -50,17 +52,17 @@ Future<int> main(List<String> args) async {
     final content = await File(parsedArgs.option('file')!).readAsString();
     final lexer = Lexer(input: content)..scanAll();
     if (parsedArgs.flag(flagLexOnly)) {
-      print(lexer.tokens);
+      print(encoder.convert(lexer.tokens));
       return 0;
     }
+
     final parser = Parser(tokens: lexer.tokens, supportedTags: defaultSupportedTags)..parse();
     if (parsedArgs.flag(flagParseOnly)) {
-      print(parser.ast);
+      print(encoder.convert(parser.ast));
       return 0;
     }
-    final delta = buildDelta(parser.ast);
-    const encoder = JsonEncoder.withIndent('  ');
 
+    final delta = buildDelta(parser.ast);
     print(encoder.convert(delta));
     return 0;
   }
