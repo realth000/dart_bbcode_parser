@@ -10,7 +10,7 @@ Some tags are prepared for the editor but the package can be used standalone wit
 
 ## WIP
 
-**This package is still in early stage.**
+**This package is not ready to publish to pub.dev.**
 
 ## Usage
 
@@ -36,7 +36,7 @@ final delta = parseBBCodeTextToDelta(code);
 
 ## Features
 
-* [ ] Tags
+* [x] Tags
   * [x] Font size `[size=$size]`
   * [x] Font color `[color=$color]`
   * [x] Bold `[b]`
@@ -53,10 +53,9 @@ final delta = parseBBCodeTextToDelta(code);
   * [x] Image `[img=$width,$height]$image_url[/img]`
   * [x] Spoiler `[spoiler]`
   * [x] Mention user with `[@]$user_name[/@]`
-  * [ ] Ordered list `[list=1]`
-  * [ ] Bullet list `[list]`
+  * [x] Ordered list `[list=1]`
+  * [x] Bullet list `[list]`
   * [x] Divider `[hr]`
-  * [ ] Table `[table]` & `[tr]` & `[td]`
   * [x] Code block `[code]`
   * [x] Quote block `[quote]`
   * [x] Superscript `[sup]`
@@ -74,7 +73,6 @@ final delta = parseBBCodeTextToDelta(code);
 * [x] Convert BBCode tags to Quill Delta.
 * [x] Parse text to BBCode tags.
 * [x] Convert BBCode tags back to text.
-
 
 \* Marked tags are extended for [flutter_bbcode_editor].
 
