@@ -161,5 +161,5 @@ class TextContent implements BBCodeTag {
   String attributeBBCode() => throw UnsupportedError('can not call attribute methods on plain text');
 
   @override
-  void fallbackToText(StringBuffer buffer) => data;
+  void fallbackToText(StringBuffer buffer) => buffer.write(data);
 }

@@ -1,4 +1,11 @@
+import 'package:dart_bbcode_parser/src/tags/align.dart';
+import 'package:dart_bbcode_parser/src/tags/code.dart';
 import 'package:dart_bbcode_parser/src/tags/common_tag.dart';
+import 'package:dart_bbcode_parser/src/tags/divider.dart';
+import 'package:dart_bbcode_parser/src/tags/free_v2.dart';
+import 'package:dart_bbcode_parser/src/tags/hide_v2.dart';
+import 'package:dart_bbcode_parser/src/tags/quote.dart';
+import 'package:dart_bbcode_parser/src/tags/spoiler_v2.dart';
 import 'package:dart_bbcode_parser/src/tags/tag.dart';
 import 'package:dart_bbcode_parser/src/tags/text.dart';
 import 'package:dart_bbcode_parser/src/token.dart';
@@ -6,8 +13,7 @@ import 'package:dart_quill_delta/dart_quill_delta.dart';
 
 extension _UpdateOperationListAttr on Operation {
   Operation withListAttr(ListType listType) {
-    final attrs = attributes?.withListAttr(listType);
-
+    final attrs = attributes.withListAttr(listType);
     return Operation(key, length, data, attrs);
   }
 }
@@ -107,20 +113,48 @@ class ListTag extends CommonTag {
   static const empty = ListTag(start: 0, end: 0, attribute: null, children: null);
 
   String _normalizeString(String s) {
-    final endedWithLF = s.endsWith('\n');
-    final ss = s.replaceAll('\n', '');
-    return endedWithLF ? '$ss\n' : ss;
+    return s.replaceAll('\n', '');
+  }
+
+  /// Tags here is checking conflict with list or not.
+  ///
+  /// Those ones conflict should fallback to text.
+  static bool _shouldFallbackTag(BBCodeTag tag) {
+    if (tag.target == ApplyTarget.paragraph) {
+      // Fallback if tag is another paragraph attribute.
+      return true;
+    }
+
+    // Conflict tags must fallback.
+    const conflictTags = [
+      AlignTag.empty,
+      CodeTag.empty,
+      DividerTag.empty,
+      FreeV2HeaderTag.empty,
+      FreeV2TailTag.empty,
+      HideV2HeaderTag.empty,
+      HideV2TailTag.empty,
+      ListTag.empty,
+      QuoteTag.empty,
+      SpoilerV2HeaderTag.empty,
+      SpoilerV2TailTag.empty,
+    ];
+    if (conflictTags.any((e) => e.name == tag.name)) {
+      return true;
+    }
+
+    return false;
   }
 
   /// Currently:
   ///
-  /// * Embed tags are not supported.
+  /// * Other paragraph applied tags are not supported.
   /// * Multiline text are not supported.
   /// * Tag and text outside of `[*]` are ignored.
   ///
   /// When building children:
   ///
-  /// * Embed tags will fallback to plain text.
+  /// * Other paragraph applied tags will fallback to plain text.
   /// * Multiline text strip lines.
   /// * Ignore tag and text if out of list item scope.
   List<BBCodeTag> _transformChildren(List<BBCodeTag> children, _TransformContext context) {
@@ -133,15 +167,7 @@ class ListTag extends CommonTag {
   }
 
   BBCodeTag? _transformChild(BBCodeTag child, _TransformContext context) {
-    if (child.hasQuillEmbed) {
-      // Fallback embed children tags.
-      final start = child.start;
-      final end = child.end;
-      final buffer = StringBuffer();
-      child.fallbackToText(buffer);
-      // Don't forget to strip lines as multiline text are not supported.
-      return TextContent(start: start, end: end, data: _normalizeString(buffer.toString()));
-    } else if (child.isPlainText) {
+    if (child.isPlainText) {
       if (!context.inItem) {
         // Skip item outside of any item or null text data.
         return null;
@@ -157,6 +183,14 @@ class ListTag extends CommonTag {
       context.inItem = true;
       // Revise the item.
       return ListItemTag(start: child.start, end: child.end, listType: context.listType);
+    } else if (_shouldFallbackTag(child)) {
+      // Fallback other paragraph styles.
+      final start = child.start;
+      final end = child.end;
+      final buffer = StringBuffer();
+      child.fallbackToText(buffer);
+      // Don't forget to strip lines as multiline text are not supported.
+      return TextContent(start: start, end: end, data: _normalizeString(buffer.toString()));
     }
 
     final transformedChildren = <BBCodeTag?>[];
@@ -187,6 +221,16 @@ class ListTag extends CommonTag {
   String? get quillAttrValue => null;
 
   @override
+  StringBuffer toBBCode(StringBuffer buffer) {
+    var buf = buffer..write('[list${attributeBBCode()}]');
+    for (final child in children) {
+      buf = child.toBBCode(buf);
+    }
+    buf.write('\n[/list]');
+    return buf;
+  }
+
+  @override
   ListTag fromToken(TagHead? head, TagTail? tail, List<BBCodeTag> children) => ListTag(
     start: head!.start,
     end: tail?.end ?? head.end,
@@ -206,16 +250,10 @@ class ListItemTag extends NoAttrTag {
 
   /// Move list paragraph attribute to next one.
   static List<Operation> normalizeListItemQuill(List<Operation> operations) {
+    final ops = operations.where((e) => e.key == 'insert');
     final ret = <Operation>[];
     var deferredAttr = ListType.undecided;
-    for (final op in operations) {
-      if (op.key != 'insert') {
-        // Unreachable.
-        // All operations generated by parsing process are insert operations.
-        ret.add(op);
-        continue;
-      }
-
+    for (final op in ops) {
       if (op.value is! String || op.value != '\n') {
         ret.add(op);
         continue;
@@ -255,10 +293,8 @@ class ListItemTag extends NoAttrTag {
       } else if (currListType != ListType.undecided && deferredAttr == ListType.undecided) {
         // Current paragraph has list but previous do not have it.
         // Record the list type and remove it from current paragraph, start 'moving'.
-        final m =
-            op.attributes ?? {}
-              ..remove('list');
-        newOp = Operation(op.key, op.length, op.data, m);
+        // Current paragraph is added for carrying the list attribute, replace it with empty operation.
+        newOp = Operation.insert('');
         deferredAttr = currListType;
       } else {
         // Unreachable, condition is exhausted.
@@ -304,6 +340,12 @@ class ListItemTag extends NoAttrTag {
 
   @override
   ApplyTarget get target => ApplyTarget.paragraph;
+
+  @override
+  StringBuffer toBBCode(StringBuffer buffer) {
+    buffer.write('\n[*]');
+    return buffer;
+  }
 
   @override
   ListItemTag fromToken(TagHead? head, TagTail? tail, List<BBCodeTag> children) =>
