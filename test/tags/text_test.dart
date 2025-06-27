@@ -30,6 +30,7 @@ void main() {
       expect(() => tag.selfClosed, throwsUnsupportedError);
       expect(() => tag.selfClosedAtTail, throwsUnsupportedError);
       expect(() => tag.target, throwsUnsupportedError);
+      expect(tag.attributeBBCode, throwsUnsupportedError);
       final targetData = {'start': 0, 'end': 12, 'text': 'text_content'};
       expect(tag.toJson(), equals(targetData));
       expect(tag.toString(), equals(jsonEncode(targetData)));

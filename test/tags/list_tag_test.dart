@@ -6,6 +6,13 @@ import '../utils.dart';
 
 void main() {
   group('list tags', () {
+    test('unused situations', () {
+      final tag = buildSingleTag(input: '[list][/list]');
+      expect(tag.name, equals('list'));
+      expect(tag.quillAttrName, equals(null));
+      expect(tag.quillAttrValue, equals(null));
+    });
+
     test('parsing simple bullet tag', () {
       const input = '''
 [list]
