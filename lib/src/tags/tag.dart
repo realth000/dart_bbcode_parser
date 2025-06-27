@@ -131,9 +131,9 @@ abstract class BBCodeTag implements QuillConvertible {
   void fallbackToText(StringBuffer buffer) {
     if (selfClosed) {
       if (selfClosedAtTail) {
-        buffer.write('$open$name$close');
-      } else {
         buffer.write('$open${K.slash}$name$close');
+      } else {
+        buffer.write('$open$name${attributeBBCode()}$close');
       }
       // Self closing tags do not have children so the process is finished.
     } else {
