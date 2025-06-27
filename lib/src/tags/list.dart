@@ -12,9 +12,35 @@ import 'package:dart_bbcode_parser/src/token.dart';
 import 'package:dart_quill_delta/dart_quill_delta.dart';
 
 extension _UpdateOperationListAttr on Operation {
-  Operation withListAttr(ListType listType) {
-    final attrs = attributes.withListAttr(listType);
-    return Operation(key, length, data, attrs);
+  List<Operation> withListAttr(ListType listType) {
+    // If text in current operation is multiline:
+    //
+    // [list=1]
+    // [*]1
+    // [/list] <- Before and after tag tail, text all exists, the converted Quill Delta is:
+    // 2
+    //
+    // ```json
+    // {
+    //   "insert": "\n2"
+    // },
+    // {
+    //   "insert": "\n" <- Optional trailing LF
+    // }
+    // ```
+    //
+    // But we only want the first `\n` in `\n2` have list attribute.
+    // So split the `\n2` into `\n` and `2`, only the first text `\n` has list attribute.
+
+    final data = value as String;
+
+    // Split!
+    final op1 = attributes.withListAttr(listType);
+    final opWithList = Operation(key, 1, '\n', op1);
+    final attr2 = attributes;
+    attr2?.remove('list');
+    final opRemaining = Operation(key, length == null ? null : length! - 1, data.substring(1), attr2);
+    return [opWithList, opRemaining];
   }
 }
 
@@ -253,9 +279,12 @@ class ListItemTag extends NoAttrTag {
     final ops = operations.where((e) => e.key == 'insert');
     final ret = <Operation>[];
     var deferredAttr = ListType.undecided;
-    for (final op in ops) {
-      if (op.value is! String || op.value != '\n') {
-        ret.add(op);
+    for (final (idx, op) in ops.indexed) {
+      final value = op.value;
+      if (value is! String || !value.startsWith('\n')) {
+        if (idx == ops.length - 1 || op.value.toString().isNotEmpty || (op.attributes?.isNotEmpty ?? false)) {
+          ret.add(op);
+        }
         continue;
       }
 
@@ -275,7 +304,7 @@ class ListItemTag extends NoAttrTag {
 
       final currListType = ListType.raw(op.attributes?['list'] as String?);
 
-      final Operation newOp;
+      var newOp = <Operation>[];
 
       if (currListType == ListType.undecided && deferredAttr != ListType.undecided) {
         // Current operation has not 'list' attribute
@@ -289,19 +318,16 @@ class ListItemTag extends NoAttrTag {
         newOp = op.withListAttr(deferredAttr);
         deferredAttr = currListType;
       } else if (currListType == ListType.undecided && deferredAttr == ListType.undecided) {
-        newOp = op;
+        newOp = [op];
       } else if (currListType != ListType.undecided && deferredAttr == ListType.undecided) {
         // Current paragraph has list but previous do not have it.
         // Record the list type and remove it from current paragraph, start 'moving'.
         // Current paragraph is added for carrying the list attribute, replace it with empty operation.
-        newOp = Operation.insert('');
+        newOp = [Operation.insert('')];
         deferredAttr = currListType;
-      } else {
-        // Unreachable, condition is exhausted.
-        newOp = op;
       }
 
-      ret.add(newOp);
+      ret.addAll(newOp);
     }
 
     return ret;

@@ -218,22 +218,40 @@ void main() {
     expect(
       deltas.toJson(),
       equals([
-        {'insert': '', 'attributes': <String, dynamic>{}},
         {'insert': ''},
-        {'insert': '', 'attributes': <String, dynamic>{}},
         {
-          'insert': '\n',
+          'insert':
+              '\n'
+              '',
           'attributes': {'list': 'bullet'},
         },
+        {'insert': '', 'attributes': {}},
         {
           'insert': 'b',
           'attributes': {'color': '#00FF00'},
         },
         {
-          'insert': '\n',
+          'insert':
+              '\n'
+              '',
           'attributes': {'list': 'bullet'},
         },
+        {'insert': ''},
       ]),
     );
+  });
+
+  test('surrounded by text', () {
+    const input = '''
+1
+[list]
+[*]a
+[*]b
+[*]c
+[/list]
+2''';
+    final tags = parseBBCodeTextToTags(input);
+    final output = convertBBCodeToText(tags);
+    expect(output, equals(input));
   });
 }
