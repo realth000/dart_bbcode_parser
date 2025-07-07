@@ -74,5 +74,12 @@ Delta parseBBCodeTextToDelta(String bbcode) {
   final delta = buildDelta(ast);
 
   // TODO: Only do it if ListTag is enabled.
-  return Delta.fromOperations(ListItemTag.normalizeListItemQuill(delta.operations));
+  final output = Delta.fromOperations(ListItemTag.normalizeListItemQuill(delta.operations));
+
+  final lastOp = output.operations.lastOrNull;
+  final lastOpData = lastOp?.data;
+  if (lastOp == null || lastOp.data == null || lastOpData is! String || !lastOpData.endsWith('\n')) {
+    output.operations.add(Operation.insert('\n'));
+  }
+  return output;
 }

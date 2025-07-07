@@ -237,6 +237,7 @@ void main() {
           'attributes': {'list': 'bullet'},
         },
         {'insert': ''},
+        {'insert': '\n'}, // Last operation must be new line.
       ]),
     );
   });
