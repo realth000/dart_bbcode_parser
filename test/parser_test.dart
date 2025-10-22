@@ -284,4 +284,115 @@ void main() {
       }
     });
   });
+
+  group('parse unfinished tags cases', () {
+    test('only unfinished tags', () {
+      {
+        final parser = Parser(
+          tokens: [
+            // 111: [0, 3)
+            const Text(start: 0, end: 3, data: '111'),
+            // [b]: [3, 6)
+            const TagHead(start: 3, end: 6, name: 'b', attribute: null),
+            // 222: [6, 9)
+            const Text(start: 6, end: 9, data: '222'),
+          ],
+          supportedTags: defaultSupportedTags,
+        )..parse();
+
+        expect(parser.ast.length, equals(3));
+        expect(parser.ast[0], equals(const TextContent(start: 0, end: 3, data: '111')));
+        expect(parser.ast[1], equals(const TextContent(start: 3, end: 6, data: '[b]')));
+        expect(parser.ast[2], equals(const TextContent(start: 6, end: 9, data: '222')));
+      }
+      {
+        final parser = Parser(
+          tokens: [
+            // 111: [0, 3)
+            const Text(start: 0, end: 3, data: '111'),
+            // [b]: [3, 6)
+            const TagHead(start: 3, end: 6, name: 'b', attribute: null),
+            // 222: [6, 9)
+            const Text(start: 6, end: 9, data: '222'),
+            // [u]: [9, 12)
+            const TagHead(start: 9, end: 12, name: 'u', attribute: null),
+            // 333: [12, 15)
+            const Text(start: 12, end: 15, data: '333'),
+          ],
+          supportedTags: defaultSupportedTags,
+        )..parse();
+
+        expect(parser.ast.length, equals(5));
+        expect(parser.ast[0], equals(const TextContent(start: 0, end: 3, data: '111')));
+        expect(parser.ast[1], equals(const TextContent(start: 3, end: 6, data: '[b]')));
+        expect(parser.ast[2], equals(const TextContent(start: 6, end: 9, data: '222')));
+        expect(parser.ast[3], equals(const TextContent(start: 9, end: 12, data: '[u]')));
+        expect(parser.ast[4], equals(const TextContent(start: 12, end: 15, data: '333')));
+      }
+    });
+
+    test('before finished tags', () {
+      final parser = Parser(
+        tokens: [
+          // 111: [0, 3)
+          const Text(start: 0, end: 3, data: '111'),
+          // [b]: [3, 6)
+          const TagHead(start: 3, end: 6, name: 'b', attribute: null),
+          // 222: [6, 9)
+          const Text(start: 6, end: 9, data: '222'),
+          // [u]: [9, 12)
+          const TagHead(start: 9, end: 12, name: 'u', attribute: null),
+          // 333: [12, 15)
+          const Text(start: 12, end: 15, data: '333'),
+          // [/u]: [15, 19)
+          const TagTail(start: 15, end: 10, name: 'u'),
+          // 444: [19, 22)
+          const Text(start: 19, end: 22, data: '444'),
+        ],
+        supportedTags: defaultSupportedTags,
+      )..parse();
+
+      expect(parser.ast.length, equals(5));
+      expect(parser.ast[0], equals(const TextContent(start: 0, end: 3, data: '111')));
+      expect(parser.ast[1], equals(const TextContent(start: 3, end: 6, data: '[b]')));
+      expect(parser.ast[2], equals(const TextContent(start: 6, end: 9, data: '222')));
+      expect(
+        parser.ast[3],
+        equals(const UnderlineTag(start: 9, end: 19, children: [TextContent(start: 12, end: 15, data: '333')])),
+      );
+      expect(parser.ast[4], equals(const TextContent(start: 19, end: 22, data: '444')));
+    });
+
+    test('after finished tags', () {
+      final parser = Parser(
+        tokens: [
+          // 111: [0, 3)
+          const Text(start: 0, end: 3, data: '111'),
+          // [u]: [3, 6)
+          const TagHead(start: 3, end: 6, name: 'u', attribute: null),
+          // 333: [6, 9)
+          const Text(start: 6, end: 9, data: '333'),
+          // [/u]: [9, 13)
+          const TagTail(start: 9, end: 13, name: 'u'),
+          // 222: [13, 16)
+          const Text(start: 13, end: 16, data: '222'),
+          // [b]: [16, 19)
+          const TagHead(start: 16, end: 19, name: 'b', attribute: null),
+          // 444: [19, 22)
+          const Text(start: 19, end: 22, data: '444'),
+        ],
+        supportedTags: defaultSupportedTags,
+      )..parse();
+
+      expect(parser.ast.length, equals(5));
+      expect(parser.ast[0], equals(const TextContent(start: 0, end: 3, data: '111')));
+      expect(
+        parser.ast[1],
+        equals(const UnderlineTag(start: 3, end: 13, children: [TextContent(start: 6, end: 9, data: '333')])),
+      );
+      expect(parser.ast[2], equals(const TextContent(start: 13, end: 16, data: '222')));
+      expect(parser.ast[3], equals(const TextContent(start: 16, end: 19, data: '[b]')));
+      expect(parser.ast[4], equals(const TextContent(start: 19, end: 22, data: '444')));
+    });
+  });
 }

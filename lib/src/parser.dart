@@ -269,7 +269,7 @@ final class ParseContext {
         continue;
       }
 
-      ast.insert(math.max(0, idx - 1), text);
+      ast.insert(math.max(0, idx), text);
       return;
     }
 

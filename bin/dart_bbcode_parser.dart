@@ -66,7 +66,6 @@ Future<int> main(List<String> args) async {
 
     var delta = buildDelta(parser.ast);
 
-    print(encoder.convert(delta));
     // TODO: Only do it if ListTag is enabled.
     delta = Delta.fromOperations(ListItemTag.normalizeListItemQuill(delta.operations));
     print(encoder.convert(delta));
