@@ -219,6 +219,17 @@ final class ParseContext {
   /// Final result.
   List<BBCodeTag> ast = [];
 
+  /// A flag indicating is next '\n' should be ignored.
+  ///
+  /// When parsing after a paragraph tag, the paragraph trailing '\n'
+  /// is implicitly held by the relevant quill delta node. So the next '\n'
+  /// in plain text should be ignored.
+  ///
+  /// This flag is a boolean value, not a numeric value because adjacent
+  /// paragraph node without '\n' in between is expected to only ignore
+  /// one '\n' after the last paragraph tag.
+  bool _ignoreNextLineFeed = false;
+
   /// Record new tag scope.
   void enterScope(TagHead head) {
     _scope.add(head);
@@ -249,7 +260,15 @@ final class ParseContext {
 
   /// Save the [text].
   void saveText(TextContent text) {
-    ast.add(text);
+    if (_ignoreNextLineFeed && text.data.endsWith('\n')) {
+      if (text.data != '\n') {
+        // Do not add empty text content.
+        ast.add(TextContent(start: text.start, end: text.end - 1, data: text.data.substring(0, text.data.length - 1)));
+      }
+      _ignoreNextLineFeed = false;
+    } else {
+      ast.add(text);
+    }
   }
 
   /// Save the [text] at the position start at [start].
@@ -323,6 +342,13 @@ final class ParseContext {
     // if (removeRangeStartIndex != null) {
     //   ast.removeRange(removeRangeStartIndex, ast.length);
     // }
+
+    if (!tag.isPlainText && tag.target == ApplyTarget.paragraph) {
+      // It's expected to only set the flag to true, do not check its original
+      // value since adjacent paragraphs only ignore one line feed after the
+      // last pargraph tag..
+      _ignoreNextLineFeed = true;
+    }
 
     ast.add(tag);
   }

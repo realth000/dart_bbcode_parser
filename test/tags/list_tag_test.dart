@@ -55,7 +55,7 @@ void main() {
             'attribute': null,
             'children': <BBCodeTag>[],
           },
-          {'start': 10, 'end': 12, 'text': 'a'},
+          {'start': 10, 'end': 11, 'text': 'a'},
         ],
       });
     });
@@ -102,7 +102,7 @@ void main() {
             'attribute': null,
             'children': <BBCodeTag>[],
           },
-          {'start': 12, 'end': 14, 'text': 'a'},
+          {'start': 12, 'end': 13, 'text': 'a'},
         ],
       });
     });

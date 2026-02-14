@@ -60,3 +60,42 @@ void checkSingleTag({
     expect(convertBBCodeToText(ast), equals(input), reason: 'BBCode not match as expected');
   }
 }
+
+void checkMultipleTags({
+  required String input,
+  required List<Token> expectedTokens,
+  required List<BBCodeTag> expectedAST,
+  required List<Operation> expectedDelta,
+  String? expectedBBCodeOutput,
+  List<BBCodeTag> supportedTags = defaultSupportedTags,
+  bool checkTokens = true,
+  bool checkAST = true,
+  bool checkDelta = true,
+  bool checkBBCode = true,
+}) {
+  // Tokens stage.
+  final lexer = Lexer(input: input)..scanAll();
+  final tokens = lexer.tokens;
+  if (checkTokens) {
+    expect(tokens, equals(expectedTokens), reason: 'tokens not match as expected');
+  }
+
+  // AST stage.
+  final parser = Parser(tokens: tokens, supportedTags: supportedTags)..parse();
+  final ast = parser.ast;
+  if (checkAST) {
+    expect(ast, equals(expectedAST), reason: 'AST not match as expected');
+  }
+
+  // Delta stage.
+  final delta = buildDelta(ast);
+  final targetDelta = Delta.fromOperations(expectedDelta);
+  if (checkDelta) {
+    expect(delta.toJson(), equals(targetDelta.toJson()), reason: 'delta not match as expected');
+  }
+
+  // Back to BBCode stage.
+  if (checkBBCode) {
+    expect(convertBBCodeToText(ast), equals(expectedBBCodeOutput ?? input), reason: 'BBCode not match as expected');
+  }
+}
