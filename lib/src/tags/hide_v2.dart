@@ -20,7 +20,7 @@ class HideV2HeaderTag extends EmbedTag {
   String get quillEmbedName => 'bbcodeHideV2Header';
 
   @override
-  AttributeValidator? get attributeValidator => (attr) => attr == null || (int.tryParse(attr) ?? -1) >= 0;
+  AttributeValidator get attributeValidator => (attr) => attr == null || (int.tryParse(attr) ?? -1) >= 0;
 
   @override
   bool get selfClosed => true;

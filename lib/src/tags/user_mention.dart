@@ -17,7 +17,7 @@ class UserMentionTag extends EmbedTag {
   String get name => '@';
 
   @override
-  AttributeValidator? get attributeValidator => nullAttributeValidator;
+  AttributeValidator get attributeValidator => nullAttributeValidator;
 
   @override
   ChildrenValidator get childrenValidator => (children) => children.isNotEmpty && children.every((e) => e.isPlainText);

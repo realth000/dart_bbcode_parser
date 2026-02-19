@@ -92,7 +92,7 @@ abstract class NoAttrTag extends CommonTag {
   String? get attribute => null;
 
   @override
-  AttributeValidator? get attributeValidator => nullAttributeValidator;
+  AttributeValidator get attributeValidator => nullAttributeValidator;
 }
 
 /// Tags using embed in quill delta.
@@ -130,7 +130,7 @@ abstract class EmbedTag extends BBCodeTag {
   bool get hasQuillAttr => false;
 
   @override
-  String? get quillAttrName => throw UnsupportedError('embed has no attr name');
+  String get quillAttrName => throw UnsupportedError('embed has no attr name');
 
   @override
   String get quillAttrValue => throw UnsupportedError('embed has no attr value');

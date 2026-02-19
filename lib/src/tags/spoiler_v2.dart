@@ -16,7 +16,7 @@ class SpoilerV2HeaderTag extends EmbedTag {
   static const _defaultTitle = '展开/收起';
 
   @override
-  AttributeValidator? get attributeValidator => (attr) => attr != null && attr.isNotEmpty;
+  AttributeValidator get attributeValidator => (attr) => attr != null && attr.isNotEmpty;
 
   @override
   String get name => 'spoiler';

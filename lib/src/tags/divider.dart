@@ -15,7 +15,7 @@ class DividerTag extends EmbedTag {
   String get name => 'hr';
 
   @override
-  AttributeValidator? get attributeValidator => nullAttributeValidator;
+  AttributeValidator get attributeValidator => nullAttributeValidator;
 
   @override
   bool get selfClosed => true;

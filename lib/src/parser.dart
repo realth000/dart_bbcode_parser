@@ -60,9 +60,7 @@ final class Parser {
             continue;
           }
 
-          context
-            ..enterScope(token)
-            ..composeTags();
+          context.enterScope(token);
         } else {
           // Unrecognized tag.
           context.saveText(
@@ -115,7 +113,7 @@ final class Parser {
           }
 
           // Valid tag.
-          context.saveTag(builtTag, rotate: true);
+          context.saveTag(builtTag);
         } else {
           // Unrecognized tag or crossed tag, fallback to text.
           context.saveText(TextContent(start: token.start, end: token.end, data: '[/${token.name}]'));
@@ -138,7 +136,6 @@ final class Parser {
       );
     }
 
-    context.composeTags();
     _ast = context.ast;
   }
 
@@ -313,7 +310,7 @@ final class ParseContext {
   /// know `[i]` and `text` are its children, so an extra step is needed here, checking tags already in the AST, if
   /// these previous tags have a start pos after the current pending one, it means these tags are inside current tag,
   /// move them to be current tags' children.
-  void saveTag(BBCodeTag tag, {bool rotate = false}) {
+  void saveTag(BBCodeTag tag) {
     // Rotating AST steps are skipped.
     //
     // Theoretically here are cases we need to rotate the AST because we only walk through the tree once:
@@ -351,11 +348,5 @@ final class ParseContext {
     }
 
     ast.add(tag);
-  }
-
-  /// Compose adjacent texts.
-  void composeTags() {
-    // ast.addAll(parsedTags);
-    // parsedTags.clear();
   }
 }

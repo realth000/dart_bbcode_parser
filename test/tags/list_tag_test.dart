@@ -1,3 +1,5 @@
+// Keep it simple.
+// ignore_for_file: prefer_iterable_first
 import 'package:dart_bbcode_parser/dart_bbcode_parser.dart';
 import 'package:dart_bbcode_parser/src/tags/tag.dart';
 import 'package:test/test.dart';
@@ -225,7 +227,7 @@ void main() {
               '',
           'attributes': {'list': 'bullet'},
         },
-        {'insert': '', 'attributes': {}},
+        {'insert': '', 'attributes': <String, dynamic>{}},
         {
           'insert': 'b',
           'attributes': {'color': '#00FF00'},

@@ -18,7 +18,7 @@ final class FakeCommonParagraphTag extends CommonTag {
 
   @override
   FakeCommonParagraphTag fromToken(TagHead? head, TagTail? tail, List<BBCodeTag> children) =>
-      const FakeCommonParagraphTag();
+      FakeCommonParagraphTag.empty;
 
   @override
   bool get hasQuillAttr => true;
@@ -27,7 +27,7 @@ final class FakeCommonParagraphTag extends CommonTag {
   String get name => 'fake-paragraph';
 
   @override
-  String? get quillAttrName => 'fake-paragraph-quill-attr-name';
+  String get quillAttrName => 'fake-paragraph-quill-attr-name';
 
   @override
   String get quillAttrValue => 'fake-paragraph-quill-attr-value';

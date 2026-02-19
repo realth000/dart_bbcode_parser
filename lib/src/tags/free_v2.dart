@@ -17,7 +17,7 @@ class FreeV2HeaderTag extends EmbedTag {
   String get name => 'free';
 
   @override
-  AttributeValidator? get attributeValidator => nullAttributeValidator;
+  AttributeValidator get attributeValidator => nullAttributeValidator;
 
   @override
   String get quillEmbedName => 'bbcodeFreeHeader';

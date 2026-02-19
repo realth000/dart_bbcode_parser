@@ -20,7 +20,7 @@ final class FakeParagraphTag extends CommonTag {
   String get name => 'fake-paragraph';
 
   @override
-  String? get quillAttrName => 'fake-paragraph-attr-name';
+  String get quillAttrName => 'fake-paragraph-attr-name';
 
   @override
   String get quillAttrValue => 'fake-paragraph-attr-value';

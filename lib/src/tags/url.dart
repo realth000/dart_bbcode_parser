@@ -21,7 +21,7 @@ class UrlTag extends CommonTag {
 
   /// Children shall not be empty.
   @override
-  ChildrenValidator? get childrenValidator => (children) => children.isNotEmpty;
+  ChildrenValidator get childrenValidator => (children) => children.isNotEmpty;
 
   @override
   String get name => 'url';

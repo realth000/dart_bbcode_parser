@@ -13,7 +13,7 @@ class CodeTag extends CommonTag {
   static const empty = CodeTag(start: -1, end: -1);
 
   @override
-  AttributeValidator? get attributeValidator => nullAttributeValidator;
+  AttributeValidator get attributeValidator => nullAttributeValidator;
 
   @override
   bool get hasQuillAttr => true;
