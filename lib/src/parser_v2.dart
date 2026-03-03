@@ -112,11 +112,6 @@ final class ParserV2 implements Parser {
 
           _currentPathTags.removeLast();
           _replaceInParent(currentTag, rebuiltTag);
-
-          // Logic from V1: Manage paragraph-level line feed.
-          if (rebuiltTag.target == ApplyTarget.paragraph) {
-            _ignoreNextLineFeed = true;
-          }
         } else {
           // No corresponding tag head or crossed tag, fallback to text.
           _saveText(_buildOriginalTokenText(token));
@@ -140,14 +135,16 @@ final class ParserV2 implements Parser {
   }
 
   /// Handles text tokens and the special [_ignoreNextLineFeed] logic.
-  void _handleTextContent(Text token) {
-    var data = token.data;
-    final start = token.start;
-    var end = token.end;
+  void _handleTextContent(Text text) {
+    var data = text.data;
+    final start = text.start;
+    var end = text.end;
 
     if (_ignoreNextLineFeed && data.endsWith('\n')) {
       _ignoreNextLineFeed = false;
-      if (data == '\n') return;
+      if (data == '\n') {
+        return;
+      }
 
       data = data.substring(0, data.length - 1);
       end -= 1;

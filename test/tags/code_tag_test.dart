@@ -209,5 +209,45 @@ void main() {
         ],
       );
     });
+
+    test('with text content surrounding whitespaces', () {
+      const tag = 'code';
+      const head = '[$tag]';
+      const content = '\n\n\nCONTENT\n\n\n';
+      const contentTrimmed = 'CONTENT';
+      const tail = '[/$tag]';
+      checkSingleTag(
+        head: head,
+        content: content,
+        tail: tail,
+        expectedTokens: [
+          const TagHead(start: 0, end: head.length, name: tag, attribute: null),
+          const Text(start: head.length, end: head.length + content.length, data: content),
+          const TagTail(
+            start: head.length + content.length,
+            end: head.length + content.length + tail.length,
+            name: tag,
+          ),
+        ],
+        expectedAST: [
+          CodeTag(
+            start: 0,
+            end: head.length + content.length + tail.length,
+            children: [
+              TextContent(
+                start: head.length,
+                end: head.length + content.length - 1 /* ParserV2 needs this, figure it out later*/,
+                data: contentTrimmed,
+              ),
+            ],
+          ),
+        ],
+        expectedDelta: [
+          Operation.insert(contentTrimmed, {}),
+          Operation.insert('\n', {CodeTag.empty.quillAttrName: CodeTag.empty.quillAttrValue}),
+        ],
+        expectedBBCodeOutput: '$head$contentTrimmed$tail',
+      );
+    });
   });
 }

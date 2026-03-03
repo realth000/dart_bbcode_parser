@@ -54,6 +54,7 @@ void checkSingleTag({
   required List<Token> expectedTokens,
   required List<BBCodeTag> expectedAST,
   required List<Operation> expectedDelta,
+  String? expectedBBCodeOutput,
   List<BBCodeTag>? supportedTags,
   bool checkTokens = true,
   bool checkAST = true,
@@ -90,7 +91,7 @@ void checkSingleTag({
 
   // Back to BBCode stage.
   if (checkBBCode) {
-    expect(convertBBCodeToText(ast), equals(input), reason: 'BBCode not match as expected');
+    expect(convertBBCodeToText(ast), equals(expectedBBCodeOutput ?? input), reason: 'BBCode not match as expected');
   }
 }
 

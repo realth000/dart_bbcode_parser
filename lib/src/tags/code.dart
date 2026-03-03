@@ -47,7 +47,7 @@ class CodeTag extends CommonTag {
     return CodeTag(
       start: head!.start,
       end: tail?.end ?? head.end,
-      children: [TextContent(start: children.first.start, end: children.last.end, data: buffer.toString())],
+      children: [TextContent(start: children.first.start, end: children.last.end, data: buffer.toString().trim())],
     );
   }
 }
