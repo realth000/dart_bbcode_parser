@@ -15,9 +15,9 @@ class TestEnv {
   static final BBCodeParserVersion parserVersion = _loadParserVersion();
 
   static BBCodeParserVersion _loadParserVersion() {
-    final versionInput = int.tryParse(Platform.environment['DBP_PARSER_VERSION'] ?? '1') ?? 1;
+    final versionInput = int.tryParse(Platform.environment['DBP_PARSER_VERSION'] ?? '2') ?? 2;
     final version =
-        BBCodeParserVersion.values.firstWhereOrNull((v) => v.index + 1 == versionInput) ?? BBCodeParserVersion.v1;
+        BBCodeParserVersion.values.firstWhereOrNull((v) => v.index + 1 == versionInput) ?? BBCodeParserVersion.v2;
     // Fine in testing.
     // ignore: avoid_print
     print('loadParserVersion: using $version');

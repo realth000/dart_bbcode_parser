@@ -74,14 +74,21 @@ String convertBBCodeToText(List<BBCodeTag> tags) {
 }
 
 /// Parse plain [bbcode] to String.
-List<BBCodeTag> parseBBCodeTextToTags(String bbcode) {
+List<BBCodeTag> parseBBCodeTextToTags(String bbcode, {BBCodeParserVersion parserVersion = BBCodeParserVersion.v2}) {
   final lexer = Lexer(input: bbcode)..scanAll();
-  final parser = ParserV1(tokens: lexer.tokens, supportedTags: defaultSupportedTags)..parse();
+  final parser = switch (parserVersion) {
+    BBCodeParserVersion.v1 => ParserV1(tokens: lexer.tokens, supportedTags: defaultSupportedTags),
+    BBCodeParserVersion.v2 => ParserV2(
+      originalString: bbcode,
+      tokens: lexer.tokens,
+      supportedTags: defaultSupportedTags,
+    ),
+  }..parse();
   return parser.ast;
 }
 
 /// Parse plain [bbcode] text into quill [Delta].
-Delta parseBBCodeTextToDelta(String bbcode, {BBCodeParserVersion parserVersion = BBCodeParserVersion.v1}) {
+Delta parseBBCodeTextToDelta(String bbcode, {BBCodeParserVersion parserVersion = BBCodeParserVersion.v2}) {
   final lexer = Lexer(input: bbcode)..scanAll();
   final parser = switch (parserVersion) {
     BBCodeParserVersion.v1 => ParserV1(tokens: lexer.tokens, supportedTags: defaultSupportedTags),
