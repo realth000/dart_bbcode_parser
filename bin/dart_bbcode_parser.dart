@@ -15,7 +15,7 @@ import 'package:dart_quill_delta/dart_quill_delta.dart';
 
 const flagLexOnly = 'lex';
 const flagParseOnly = 'parse';
-const flagUseParserV2 = 'parser-v2';
+const flagUseParserV1 = 'parser-v1';
 
 Future<int> main(List<String> args) async {
   final argParser =
@@ -27,7 +27,7 @@ Future<int> main(List<String> args) async {
         ..addFlag(flagLexOnly, abbr: 'l', help: 'process till lex end and print lexed result (tokens)')
         ..addFlag(flagParseOnly, abbr: 'p', help: 'process till parse end and print parsed result (bbcode)')
         ..addSeparator('Other flags:')
-        ..addFlag(flagUseParserV2, help: 'use the v2 version parser')
+        ..addFlag(flagUseParserV1, help: 'use the v1 version parser')
         ..addFlag('help', abbr: 'h', help: 'print this help message');
 
   if (args.isEmpty) {
@@ -64,10 +64,10 @@ Future<int> main(List<String> args) async {
 
     final Parser parser;
 
-    if (parsedArgs.flag(flagUseParserV2)) {
-      parser = ParserV2(originalString: content, tokens: lexer.tokens, supportedTags: defaultSupportedTags);
-    } else {
+    if (parsedArgs.flag(flagUseParserV1)) {
       parser = ParserV1(tokens: lexer.tokens, supportedTags: defaultSupportedTags);
+    } else {
+      parser = ParserV2(originalString: content, tokens: lexer.tokens, supportedTags: defaultSupportedTags);
     }
 
     parser.parse();
