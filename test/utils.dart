@@ -1,21 +1,49 @@
+import 'dart:io';
+
+import 'package:collection/collection.dart';
 import 'package:dart_bbcode_parser/src/dart_bbcode_parser.dart';
 import 'package:dart_bbcode_parser/src/lexer.dart';
-import 'package:dart_bbcode_parser/src/parser.dart';
+import 'package:dart_bbcode_parser/src/parser_v1.dart';
+import 'package:dart_bbcode_parser/src/parser_v2.dart';
 import 'package:dart_bbcode_parser/src/quill/delta.dart';
 import 'package:dart_bbcode_parser/src/tags/tag.dart';
 import 'package:dart_bbcode_parser/src/token.dart';
 import 'package:dart_quill_delta/dart_quill_delta.dart';
 import 'package:test/expect.dart';
 
-BBCodeTag buildSingleTag({required String input, List<BBCodeTag> supportedTags = defaultSupportedTags}) {
+class TestEnv {
+  static final BBCodeParserVersion parserVersion = _loadParserVersion();
+
+  static BBCodeParserVersion _loadParserVersion() {
+    final versionInput = int.tryParse(Platform.environment['DBP_PARSER_VERSION'] ?? '1') ?? 1;
+    final version =
+        BBCodeParserVersion.values.firstWhereOrNull((v) => v.index + 1 == versionInput) ?? BBCodeParserVersion.v1;
+    // Fine in testing.
+    // ignore: avoid_print
+    print('loadParserVersion: using $version');
+    return version;
+  }
+}
+
+BBCodeTag buildSingleTag({required String input, List<BBCodeTag>? supportedTags}) {
+  final ss = supportedTags ?? defaultSupportedTags;
   final lexer = Lexer(input: input)..scanAll();
-  final parser = Parser(tokens: lexer.tokens, supportedTags: supportedTags)..parse();
+  final parserVersion = TestEnv.parserVersion;
+  final parser = switch (parserVersion) {
+    BBCodeParserVersion.v1 => ParserV1(tokens: lexer.tokens, supportedTags: ss),
+    BBCodeParserVersion.v2 => ParserV2(originalString: input, tokens: lexer.tokens, supportedTags: ss),
+  }..parse();
   return parser.ast[0];
 }
 
-List<BBCodeTag> buildMultipleTags({required String input, List<BBCodeTag> supportedTags = defaultSupportedTags}) {
+List<BBCodeTag> buildMultipleTags({required String input, List<BBCodeTag>? supportedTags}) {
+  final ss = supportedTags ?? defaultSupportedTags;
   final lexer = Lexer(input: input)..scanAll();
-  final parser = Parser(tokens: lexer.tokens, supportedTags: supportedTags)..parse();
+  final parserVersion = TestEnv.parserVersion;
+  final parser = switch (parserVersion) {
+    BBCodeParserVersion.v1 => ParserV1(tokens: lexer.tokens, supportedTags: ss),
+    BBCodeParserVersion.v2 => ParserV2(originalString: input, tokens: lexer.tokens, supportedTags: ss),
+  }..parse();
   return parser.ast;
 }
 
@@ -26,13 +54,15 @@ void checkSingleTag({
   required List<Token> expectedTokens,
   required List<BBCodeTag> expectedAST,
   required List<Operation> expectedDelta,
-  List<BBCodeTag> supportedTags = defaultSupportedTags,
+  List<BBCodeTag>? supportedTags,
   bool checkTokens = true,
   bool checkAST = true,
   bool checkDelta = true,
   bool checkBBCode = true,
 }) {
+  final ss = supportedTags ?? defaultSupportedTags;
   final input = '$head$content$tail';
+  final parserVersion = TestEnv.parserVersion;
 
   // Tokens stage.
   final lexer = Lexer(input: input)..scanAll();
@@ -42,7 +72,10 @@ void checkSingleTag({
   }
 
   // AST stage.
-  final parser = Parser(tokens: tokens, supportedTags: supportedTags)..parse();
+  final parser = switch (parserVersion) {
+    BBCodeParserVersion.v1 => ParserV1(tokens: lexer.tokens, supportedTags: ss),
+    BBCodeParserVersion.v2 => ParserV2(originalString: input, tokens: lexer.tokens, supportedTags: ss),
+  }..parse();
   final ast = parser.ast;
   if (checkAST) {
     expect(ast, equals(expectedAST), reason: 'AST not match as expected');
@@ -67,12 +100,15 @@ void checkMultipleTags({
   required List<BBCodeTag> expectedAST,
   required List<Operation> expectedDelta,
   String? expectedBBCodeOutput,
-  List<BBCodeTag> supportedTags = defaultSupportedTags,
+  List<BBCodeTag>? supportedTags,
   bool checkTokens = true,
   bool checkAST = true,
   bool checkDelta = true,
   bool checkBBCode = true,
 }) {
+  final ss = supportedTags ?? defaultSupportedTags;
+  final parserVersion = TestEnv.parserVersion;
+
   // Tokens stage.
   final lexer = Lexer(input: input)..scanAll();
   final tokens = lexer.tokens;
@@ -81,7 +117,10 @@ void checkMultipleTags({
   }
 
   // AST stage.
-  final parser = Parser(tokens: tokens, supportedTags: supportedTags)..parse();
+  final parser = switch (parserVersion) {
+    BBCodeParserVersion.v1 => ParserV1(tokens: lexer.tokens, supportedTags: ss),
+    BBCodeParserVersion.v2 => ParserV2(originalString: input, tokens: lexer.tokens, supportedTags: ss),
+  }..parse();
   final ast = parser.ast;
   if (checkAST) {
     expect(ast, equals(expectedAST), reason: 'AST not match as expected');

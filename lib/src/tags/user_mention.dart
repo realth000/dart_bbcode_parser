@@ -7,11 +7,13 @@ import 'package:dart_bbcode_parser/src/utils.dart';
 
 /// User mention `@$USERNAME`>
 class UserMentionTag extends EmbedTag {
+  // False positive.
+  // ignore: prefer_const_constructor_declarations
   /// Constructor.
-  const UserMentionTag({required super.start, required super.end, super.children});
+  UserMentionTag({required super.start, required super.end, super.children});
 
   /// Build empty one.
-  static const empty = UserMentionTag(start: -1, end: -1);
+  static final empty = UserMentionTag(start: -1, end: -1);
 
   @override
   String get name => '@';

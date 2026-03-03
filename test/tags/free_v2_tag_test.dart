@@ -21,8 +21,8 @@ void main() {
           const TagTail(start: head.length, end: head.length + tail.length, name: tag),
         ],
         expectedAST: [
-          const FreeV2HeaderTag(start: 0, end: head.length),
-          const FreeV2TailTag(start: head.length, end: head.length + tail.length),
+          FreeV2HeaderTag(start: 0, end: head.length),
+          FreeV2TailTag(start: head.length, end: head.length + tail.length),
         ],
         expectedDelta: [
           Operation.insert({FreeV2HeaderTag.empty.quillEmbedName: FreeV2HeaderTag.empty.quillEmbedValue}, {}),
@@ -46,8 +46,8 @@ void main() {
           const TagTail(start: head.length, end: head.length + tail.length, name: tag),
         ],
         expectedAST: [
-          const TextContent(start: 0, end: head.length, data: head),
-          const FreeV2TailTag(start: head.length, end: head.length + tail.length),
+          TextContent(start: 0, end: head.length, data: head),
+          FreeV2TailTag(start: head.length, end: head.length + tail.length),
         ],
         expectedDelta: [
           Operation.insert(head, {}),

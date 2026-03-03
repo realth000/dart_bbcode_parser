@@ -9,11 +9,13 @@ import 'package:dart_bbcode_parser/src/utils.dart';
 /// [url=$URL]$CHILDREN[/url]
 /// ```
 class UrlTag extends CommonTag {
+  // False positive.
+  // ignore: prefer_const_constructor_declarations
   /// Constructor.
-  const UrlTag({required super.start, required super.end, super.attribute, super.children});
+  UrlTag({required super.start, required super.end, super.attribute, super.children});
 
   /// Build empty one.
-  static const empty = UrlTag(start: -1, end: -1);
+  static final empty = UrlTag(start: -1, end: -1);
 
   /// Url shall not be empty.
   @override

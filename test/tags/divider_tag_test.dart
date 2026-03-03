@@ -16,7 +16,7 @@ void main() {
         content: '',
         tail: '',
         expectedTokens: [const TagHead(start: 0, end: head.length, name: tag, attribute: null)],
-        expectedAST: [const DividerTag(start: 0, end: head.length)],
+        expectedAST: [DividerTag(start: 0, end: head.length)],
         expectedDelta: [
           Operation.insert({DividerTag.empty.quillEmbedName: DividerTag.empty.quillEmbedValue}, {}),
           Operation.insert('\n'),
@@ -33,7 +33,7 @@ void main() {
         content: '',
         tail: '',
         expectedTokens: [const TagHead(start: 0, end: head.length, name: tag, attribute: attr)],
-        expectedAST: [const TextContent(start: 0, end: head.length, data: head)],
+        expectedAST: [TextContent(start: 0, end: head.length, data: head)],
         expectedDelta: [Operation.insert(head, {}), Operation.insert('\n')],
       );
     });
@@ -46,7 +46,7 @@ void main() {
         content: '',
         tail: '',
         expectedTokens: [const TagHead(start: 0, end: head.length, name: tag, attribute: '')],
-        expectedAST: [const TextContent(start: 0, end: head.length, data: head)],
+        expectedAST: [TextContent(start: 0, end: head.length, data: head)],
         expectedDelta: [Operation.insert(head, {}), Operation.insert('\n')],
       );
     });

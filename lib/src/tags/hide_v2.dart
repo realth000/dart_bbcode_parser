@@ -7,11 +7,13 @@ import 'package:dart_bbcode_parser/src/utils.dart';
 
 /// Hide v2 tag header in bbcode editor.
 class HideV2HeaderTag extends EmbedTag {
+  // False positive.
+  // ignore: prefer_const_constructor_declarations
   /// Constructor.
-  const HideV2HeaderTag({required super.start, required super.end, required super.attribute});
+  HideV2HeaderTag({required super.start, required super.end, required super.attribute});
 
   /// Build empty one.
-  static const empty = HideV2HeaderTag(start: -1, end: -1, attribute: null);
+  static final empty = HideV2HeaderTag(start: -1, end: -1, attribute: null);
 
   @override
   String get name => 'hide';
@@ -35,11 +37,13 @@ class HideV2HeaderTag extends EmbedTag {
 
 /// Hide v2 tag tail in bbcode editor.
 class HideV2TailTag extends EmbedTag {
+  // False positive.
+  // ignore: prefer_const_constructor_declarations
   /// Constructor.
-  const HideV2TailTag({required super.start, required super.end});
+  HideV2TailTag({required super.start, required super.end});
 
   /// Build empty one.
-  static const empty = HideV2TailTag(start: -1, end: -1);
+  static final empty = HideV2TailTag(start: -1, end: -1);
 
   @override
   String get name => 'hide';

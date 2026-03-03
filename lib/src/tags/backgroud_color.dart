@@ -6,11 +6,13 @@ import 'package:dart_bbcode_web_colors/dart_bbcode_web_colors.dart';
 
 /// Tag name.
 class BackgroundColorTag extends CommonTag {
+  // False positive.
+  // ignore: prefer_const_constructor_declarations
   /// Constructor.
-  const BackgroundColorTag({required super.start, required super.end, required super.attribute, super.children});
+  BackgroundColorTag({required super.start, required super.end, required super.attribute, super.children});
 
   /// Build empty one.
-  static const BackgroundColorTag empty = BackgroundColorTag(start: -1, end: -1, attribute: null);
+  static final BackgroundColorTag empty = BackgroundColorTag(start: -1, end: -1, attribute: null);
 
   @override
   String get name => 'backcolor';

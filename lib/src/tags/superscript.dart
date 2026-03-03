@@ -4,11 +4,13 @@ import 'package:dart_bbcode_parser/src/token.dart';
 
 /// Tag name.
 class SuperscriptTag extends NoAttrTag {
+  // False positive.
+  // ignore: prefer_const_constructor_declarations
   /// Constructor.
-  const SuperscriptTag({required super.start, required super.end, super.children});
+  SuperscriptTag({required super.start, required super.end, super.children});
 
   /// Constructor.
-  static const SuperscriptTag empty = SuperscriptTag(start: -1, end: -1);
+  static final SuperscriptTag empty = SuperscriptTag(start: -1, end: -1);
 
   @override
   String get name => 'sup';

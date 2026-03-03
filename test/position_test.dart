@@ -14,7 +14,7 @@ void main() {
         content: content,
         tail: '',
         expectedTokens: [const Text(start: 0, end: content.length, data: content)],
-        expectedAST: [const TextContent(start: 0, end: content.length, data: content)],
+        expectedAST: [TextContent(start: 0, end: content.length, data: content)],
         expectedDelta: [Operation.insert(content, {}), Operation.insert('\n')],
       );
     });

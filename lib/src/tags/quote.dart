@@ -5,11 +5,13 @@ import 'package:dart_bbcode_parser/src/token.dart';
 
 /// Quote block. `[quote]`
 class QuoteTag extends CommonTag {
+  // False positive.
+  // ignore: prefer_const_constructor_declarations
   /// Constructor.
-  const QuoteTag({required super.start, required super.end, super.children});
+  QuoteTag({required super.start, required super.end, super.children});
 
   /// Build empty one.
-  static const empty = QuoteTag(start: -1, end: -1);
+  static final empty = QuoteTag(start: -1, end: -1);
 
   @override
   AttributeValidator get attributeValidator => nullAttributeValidator;

@@ -25,7 +25,7 @@ void main() {
             name: tag,
           ),
         ],
-        expectedAST: [const BoldTag(start: 0, end: head.length + content.length + tail.length)],
+        expectedAST: [BoldTag(start: 0, end: head.length + content.length + tail.length)],
         expectedDelta: [
           Operation.insert(content, {BoldTag.empty.quillAttrName: true}),
           Operation.insert('\n'),
@@ -52,7 +52,7 @@ void main() {
           ),
         ],
         expectedAST: [
-          const BoldTag(
+          BoldTag(
             start: 0,
             end: head.length + content.length + tail.length,
             children: [TextContent(start: head.length, end: head.length + content.length, data: content)],
@@ -86,13 +86,9 @@ void main() {
           ),
         ],
         expectedAST: [
-          const TextContent(start: 0, end: head.length, data: head),
-          const TextContent(start: head.length, end: head.length + content.length, data: content),
-          const TextContent(
-            start: head.length + content.length,
-            end: head.length + content.length + tail.length,
-            data: tail,
-          ),
+          TextContent(start: 0, end: head.length, data: head),
+          TextContent(start: head.length, end: head.length + content.length, data: content),
+          TextContent(start: head.length + content.length, end: head.length + content.length + tail.length, data: tail),
         ],
         expectedDelta: [
           Operation.insert(head, {}),

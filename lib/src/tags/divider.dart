@@ -5,11 +5,13 @@ import 'package:dart_bbcode_parser/src/token.dart';
 
 /// Horizontal divider.
 class DividerTag extends EmbedTag {
+  // False positive.
+  // ignore: prefer_const_constructor_declarations
   /// Constructor.
-  const DividerTag({required super.start, required super.end, super.children});
+  DividerTag({required super.start, required super.end, super.children});
 
   /// Build empty one.
-  static const DividerTag empty = DividerTag(start: -1, end: -1);
+  static final DividerTag empty = DividerTag(start: -1, end: -1);
 
   @override
   String get name => 'hr';

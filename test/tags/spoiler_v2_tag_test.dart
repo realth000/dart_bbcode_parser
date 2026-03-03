@@ -24,8 +24,8 @@ void main() {
           const TagTail(start: head.length, end: head.length + tail.length, name: tag),
         ],
         expectedAST: [
-          const SpoilerV2HeaderTag(start: 0, end: head.length, attribute: attr),
-          const SpoilerV2TailTag(start: head.length, end: head.length + tail.length),
+          SpoilerV2HeaderTag(start: 0, end: head.length, attribute: attr),
+          SpoilerV2TailTag(start: head.length, end: head.length + tail.length),
         ],
         expectedDelta: [
           Operation.insert({
@@ -51,8 +51,8 @@ void main() {
           const TagTail(start: head.length, end: head.length + tail.length, name: tag),
         ],
         expectedAST: [
-          const TextContent(start: 0, end: head.length, data: head),
-          const SpoilerV2TailTag(start: head.length, end: head.length + tail.length),
+          TextContent(start: 0, end: head.length, data: head),
+          SpoilerV2TailTag(start: head.length, end: head.length + tail.length),
         ],
         expectedDelta: [
           Operation.insert(head, {}),
@@ -75,8 +75,8 @@ void main() {
           const TagTail(start: head.length, end: head.length + tail.length, name: tag),
         ],
         expectedAST: [
-          const TextContent(start: 0, end: head.length, data: head),
-          const SpoilerV2TailTag(start: head.length, end: head.length + tail.length),
+          TextContent(start: 0, end: head.length, data: head),
+          SpoilerV2TailTag(start: head.length, end: head.length + tail.length),
         ],
         expectedDelta: [
           Operation.insert(head, {}),

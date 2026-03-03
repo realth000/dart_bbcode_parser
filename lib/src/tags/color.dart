@@ -6,11 +6,13 @@ import 'package:dart_bbcode_web_colors/dart_bbcode_web_colors.dart';
 
 /// Tag name.
 class ColorTag extends CommonTag {
+  // False positive.
+  // ignore: prefer_const_constructor_declarations
   /// Constructor.
-  const ColorTag({required super.start, required super.end, required super.attribute, super.children});
+  ColorTag({required super.start, required super.end, required super.attribute, super.children});
 
   /// Build empty one.
-  static const empty = ColorTag(start: -1, end: -1, attribute: null);
+  static final empty = ColorTag(start: -1, end: -1, attribute: null);
 
   @override
   String get name => 'color';

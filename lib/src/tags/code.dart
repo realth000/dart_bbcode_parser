@@ -6,11 +6,13 @@ import 'package:dart_bbcode_parser/src/utils.dart';
 
 /// Raw code block. `[code]`.
 class CodeTag extends CommonTag {
+  // False positive.
+  // ignore: prefer_const_constructor_declarations
   /// Constructor.
-  const CodeTag({required super.start, required super.end, super.children});
+  CodeTag({required super.start, required super.end, super.children});
 
   /// Build empty one.
-  static const empty = CodeTag(start: -1, end: -1);
+  static final empty = CodeTag(start: -1, end: -1);
 
   @override
   AttributeValidator get attributeValidator => nullAttributeValidator;
@@ -33,7 +35,7 @@ class CodeTag extends CommonTag {
   @override
   BBCodeTag fromToken(TagHead? head, TagTail? tail, List<BBCodeTag> children) {
     if (children.isEmpty) {
-      return CodeTag(start: head!.start, end: tail?.end ?? head.end, children: const []);
+      return CodeTag(start: head!.start, end: tail?.end ?? head.end);
     }
 
     var buffer = StringBuffer();

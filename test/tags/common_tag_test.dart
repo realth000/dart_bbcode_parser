@@ -12,9 +12,11 @@ import 'package:test/test.dart';
 import '../utils.dart';
 
 final class FakeCommonParagraphTag extends CommonTag {
-  const FakeCommonParagraphTag();
+  // False positive.
+  // ignore: prefer_const_constructor_declarations
+  FakeCommonParagraphTag();
 
-  static const empty = FakeCommonParagraphTag();
+  static final empty = FakeCommonParagraphTag();
 
   @override
   FakeCommonParagraphTag fromToken(TagHead? head, TagTail? tail, List<BBCodeTag> children) =>
@@ -37,9 +39,9 @@ final class FakeCommonParagraphTag extends CommonTag {
 }
 
 final class FakeEmbedParagraphTag extends EmbedTag {
-  const FakeEmbedParagraphTag() : super(start: -1, end: -1);
+  FakeEmbedParagraphTag() : super(start: -1, end: -1);
 
-  static const empty = FakeEmbedParagraphTag();
+  static final empty = FakeEmbedParagraphTag();
 
   @override
   FakeEmbedParagraphTag fromToken(TagHead? head, TagTail? tail, List<BBCodeTag> children) =>
@@ -113,7 +115,7 @@ void main() {
         );
         expect(tag.runtimeType, equals(FakeEmbedParagraphTag));
         expect(tag.isPlainText, equals(false));
-        final ac = AttrContext()..save(const AlignTag(start: 0, end: 0, attribute: 'center'));
+        final ac = AttrContext()..save(AlignTag(start: 0, end: 0, attribute: 'center'));
         tag.toQuilDelta(ac);
         expect(ac.operation.length, equals(2));
         expect(

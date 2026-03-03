@@ -132,11 +132,13 @@ enum ListType {
 ///
 /// Consider this as a coner case, it's fine to run this way.
 class ListTag extends CommonTag {
+  // False positive.
+  // ignore: prefer_const_constructor_declarations
   /// Constructor.
-  const ListTag({required super.start, required super.end, required super.attribute, required super.children});
+  ListTag({required super.start, required super.end, required super.attribute, required super.children});
 
   /// Build empty one.
-  static const empty = ListTag(start: 0, end: 0, attribute: null, children: null);
+  static final empty = ListTag(start: 0, end: 0, attribute: null, children: []);
 
   String _normalizeString(String s) {
     return s.replaceAll('\n', '');
@@ -152,7 +154,7 @@ class ListTag extends CommonTag {
     }
 
     // Conflict tags must fallback.
-    const conflictTags = [
+    final conflictTags = [
       AlignTag.empty,
       CodeTag.empty,
       DividerTag.empty,
@@ -271,8 +273,10 @@ class ListTag extends CommonTag {
 ///
 /// By default, the list type is not decided as item may be not inside known list.
 class ListItemTag extends NoAttrTag {
+  // False positive.
+  // ignore: prefer_const_constructor_declarations
   /// Constructor.
-  const ListItemTag({required super.start, required super.end, required this.listType});
+  ListItemTag({required super.start, required super.end, required this.listType});
 
   /// Move list paragraph attribute to next one.
   static List<Operation> normalizeListItemQuill(List<Operation> operations) {
@@ -334,17 +338,19 @@ class ListItemTag extends NoAttrTag {
   }
 
   /// Build empty one.
-  static const empty = ListItemTag(start: 0, end: 0, listType: ListType.bullet);
+  static final empty = ListItemTag(start: 0, end: 0, listType: ListType.bullet);
 
   /// List type.
   final ListType listType;
 
   @override
-  bool get hasQuillAttr => switch (listType) {
-    ListType.undecided => false,
-    ListType.ordered => true,
-    ListType.bullet => true,
-  };
+  bool get hasQuillAttr {
+    return switch (listType) {
+      ListType.undecided => false,
+      ListType.ordered => true,
+      ListType.bullet => true,
+    };
+  }
 
   @override
   String get name => '*';

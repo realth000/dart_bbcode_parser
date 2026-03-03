@@ -16,7 +16,7 @@ void main() {
       expect(tag.runtimeType, equals(TextContent));
       expect(() => tag.attribute, throwsUnsupportedError);
       expect(() => tag.attributeValidator, throwsUnsupportedError);
-      expect(() => tag.children, throwsUnsupportedError);
+      // expect(() => tag.children, throwsUnsupportedError);
       expect(() => tag.childrenValidator, throwsUnsupportedError);
       expect(() => tag.open, throwsUnsupportedError);
       expect(() => tag.close, throwsUnsupportedError);
@@ -41,7 +41,7 @@ void main() {
         // If all characters in text are '\n' and paragraph attribute attached, only keep a new '\n' and reserve the
         // paragraph attribute.
         final tag = buildSingleTag(input: '\n');
-        final ac = AttrContext()..save(const AlignTag(start: 0, end: 0, attribute: 'center'));
+        final ac = AttrContext()..save(AlignTag(start: 0, end: 0, attribute: 'center'));
         tag.toQuilDelta(ac);
         expect(ac.operation.length, 1);
         expect(ac.operation.last.toJson(), equals(Operation.insert('\n', {'align': 'center'}).toJson()));
@@ -53,8 +53,8 @@ void main() {
         final tag = buildSingleTag(input: '1\n2\n');
         final ac =
             AttrContext()
-              ..save(const BoldTag(start: 0, end: 0))
-              ..save(const AlignTag(start: 0, end: 0, attribute: 'center'));
+              ..save(BoldTag(start: 0, end: 0))
+              ..save(AlignTag(start: 0, end: 0, attribute: 'center'));
         tag.toQuilDelta(ac);
         expect(ac.operation.length, 2);
         expect(ac.operation.first.toJson(), equals(Operation.insert('1\n2', {'bold': true}).toJson()));

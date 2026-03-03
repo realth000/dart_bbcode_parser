@@ -1,5 +1,6 @@
 import 'package:dart_bbcode_parser/src/lexer.dart';
-import 'package:dart_bbcode_parser/src/parser.dart';
+import 'package:dart_bbcode_parser/src/parser_v1.dart';
+import 'package:dart_bbcode_parser/src/parser_v2.dart';
 import 'package:dart_bbcode_parser/src/quill/delta.dart';
 import 'package:dart_bbcode_parser/src/tags/align.dart';
 import 'package:dart_bbcode_parser/src/tags/backgroud_color.dart';
@@ -23,8 +24,21 @@ import 'package:dart_bbcode_parser/src/tags/url.dart';
 import 'package:dart_bbcode_parser/src/tags/user_mention.dart';
 import 'package:dart_quill_delta/dart_quill_delta.dart';
 
+/// Specify the version of bbcode.
+enum BBCodeParserVersion {
+  /// Version 1.
+  ///
+  /// More handy.
+  v1,
+
+  /// Version 2.
+  ///
+  /// More structured.
+  v2,
+}
+
 /// BBCode tags that are enabled by default.
-const defaultSupportedTags = [
+final defaultSupportedTags = [
   AlignTag.empty,
   BackgroundColorTag.empty,
   BoldTag.empty,
@@ -62,14 +76,21 @@ String convertBBCodeToText(List<BBCodeTag> tags) {
 /// Parse plain [bbcode] to String.
 List<BBCodeTag> parseBBCodeTextToTags(String bbcode) {
   final lexer = Lexer(input: bbcode)..scanAll();
-  final parser = Parser(tokens: lexer.tokens, supportedTags: defaultSupportedTags)..parse();
+  final parser = ParserV1(tokens: lexer.tokens, supportedTags: defaultSupportedTags)..parse();
   return parser.ast;
 }
 
 /// Parse plain [bbcode] text into quill [Delta].
-Delta parseBBCodeTextToDelta(String bbcode) {
+Delta parseBBCodeTextToDelta(String bbcode, {BBCodeParserVersion parserVersion = BBCodeParserVersion.v1}) {
   final lexer = Lexer(input: bbcode)..scanAll();
-  final parser = Parser(tokens: lexer.tokens, supportedTags: defaultSupportedTags)..parse();
+  final parser = switch (parserVersion) {
+    BBCodeParserVersion.v1 => ParserV1(tokens: lexer.tokens, supportedTags: defaultSupportedTags),
+    BBCodeParserVersion.v2 => ParserV2(
+      originalString: bbcode,
+      tokens: lexer.tokens,
+      supportedTags: defaultSupportedTags,
+    ),
+  }..parse();
   final ast = parser.ast;
   final delta = buildDelta(ast);
 

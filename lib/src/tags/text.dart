@@ -5,29 +5,26 @@ import 'package:dart_bbcode_parser/src/tags/tag.dart';
 import 'package:dart_bbcode_parser/src/token.dart';
 import 'package:dart_bbcode_parser/src/utils.dart';
 import 'package:dart_quill_delta/dart_quill_delta.dart';
-import 'package:meta/meta.dart';
 import 'package:string_scanner/string_scanner.dart';
 
 /// Plain text.
-@immutable
 class TextContent implements BBCodeTag {
   /// Constructor.
-  const TextContent({required int start, required int end, required String data})
-    : _data = data,
-      _start = start,
-      _end = end;
+  TextContent({required this.start, required this.end, required this.data});
+
+  /// Build from originanl input text with given ranges index from [start] to [end].
+  factory TextContent.fromOriginalInput({required String originalString, required int start, required int end}) =>
+      TextContent(start: start, end: end, data: originalString.substring(start, end));
 
   /// Build empty one.
-  static const empty = TextContent(start: -1, end: -1, data: '');
+  static final empty = TextContent(start: -1, end: -1, data: '');
 
   /// Data content.
-  final String _data;
+  @override
+  String data;
 
   @override
   bool get isPlainText => true;
-
-  @override
-  String get data => _data;
 
   @override
   String get attribute => throw UnsupportedError('shall not call named tag related method on plain text tag');
@@ -35,9 +32,6 @@ class TextContent implements BBCodeTag {
   @override
   AttributeValidator get attributeValidator =>
       throw UnsupportedError('shall not call attribute related method on plain text tag');
-
-  @override
-  List<BBCodeTag> get children => throw UnsupportedError('shall not call children getter on plain text tag');
 
   @override
   ChildrenValidator get childrenValidator =>
@@ -76,22 +70,18 @@ class TextContent implements BBCodeTag {
   @override
   bool get selfClosedAtTail => throw UnsupportedError('shall not call closing related method on plain text tag');
 
-  final int _start;
+  @override
+  int start;
 
   @override
-  int get start => _start;
-
-  final int _end;
-
-  @override
-  int get end => _end;
+  int end;
 
   @override
   ApplyTarget get target => throw UnsupportedError('text has no apply target');
 
   @override
   StringBuffer toBBCode(StringBuffer buffer) {
-    buffer.write(_data);
+    buffer.write(data);
     return buffer;
   }
 
@@ -143,14 +133,6 @@ class TextContent implements BBCodeTag {
   Map<String, dynamic> toJson() => {'start': start, 'end': end, 'text': data};
 
   @override
-  int get hashCode => Object.hash(start, end, data);
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is TextContent && other.start == start && other.end == end && other.data == data);
-
-  @override
   String toString() => jsonEncode(toJson());
 
   @override
@@ -162,4 +144,20 @@ class TextContent implements BBCodeTag {
 
   @override
   void fallbackToText(StringBuffer buffer) => buffer.write(data);
+
+  @override
+  // We have to override it.
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => Object.hash(start, end, data);
+
+  @override
+  // We have to override it.
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TextContent && other.start == start && other.end == end && other.data == data);
+
+  @override
+  // List<BBCodeTag> children = throw UnsupportedError('shall not call children getter on plain text tag');
+  List<BBCodeTag> children = [];
 }

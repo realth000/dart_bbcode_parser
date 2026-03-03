@@ -12,11 +12,13 @@ import 'package:dart_bbcode_parser/src/utils.dart';
 /// * `[align=center]` align to center.
 /// * `[align=right]` align to right.
 class AlignTag extends CommonTag {
+  // False positive.
+  // ignore: prefer_const_constructor_declarations
   /// Constructor.
-  const AlignTag({required super.start, required super.end, required super.attribute, super.children});
+  AlignTag({required super.start, required super.end, required super.attribute, super.children});
 
   /// Build empty one.
-  static const AlignTag empty = AlignTag(start: -1, end: -1, attribute: '');
+  static final AlignTag empty = AlignTag(start: -1, end: -1, attribute: '');
 
   @override
   String get name => 'align';

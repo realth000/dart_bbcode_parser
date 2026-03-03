@@ -10,7 +10,7 @@ void main() {
     test('from plain text', () {
       final tags = parseBBCodeTextToTags('text');
       expect(tags.length, equals(1));
-      expect(tags.first, equals(const TextContent(start: 0, end: 4, data: 'text')));
+      expect(tags.first, equals(TextContent(start: 0, end: 4, data: 'text')));
     });
 
     test('from simple tag', () {
@@ -18,17 +18,17 @@ void main() {
       expect(tags.length, equals(2));
       expect(
         tags.first,
-        equals(const BoldTag(start: 0, end: 16, children: [TextContent(start: 3, end: 12, data: 'bold_text')])),
+        equals(BoldTag(start: 0, end: 16, children: [TextContent(start: 3, end: 12, data: 'bold_text')])),
       );
-      expect(tags.last, equals(const ItalicTag(start: 17, end: 24, children: [])));
+      expect(tags.last, equals(ItalicTag(start: 17, end: 24)));
     });
 
     test('with unknown tag', () {
       final tags = parseBBCodeTextToTags('[unknown]test[/unknown]');
       expect(tags.length, equals(3));
-      expect(tags[0], equals(const TextContent(start: 0, end: 9, data: '[unknown]')));
-      expect(tags[1], equals(const TextContent(start: 9, end: 13, data: 'test')));
-      expect(tags[2], equals(const TextContent(start: 13, end: 23, data: '[/unknown]')));
+      expect(tags[0], equals(TextContent(start: 0, end: 9, data: '[unknown]')));
+      expect(tags[1], equals(TextContent(start: 9, end: 13, data: 'test')));
+      expect(tags[2], equals(TextContent(start: 13, end: 23, data: '[/unknown]')));
     });
   });
 

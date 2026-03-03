@@ -4,11 +4,13 @@ import 'package:dart_bbcode_parser/src/token.dart';
 
 /// Tag name.
 class BoldTag extends NoAttrTag {
+  // False positive.
+  // ignore: prefer_const_constructor_declarations
   /// Constructor.
-  const BoldTag({required super.start, required super.end, super.children});
+  BoldTag({required super.start, required super.end, super.children});
 
   /// Build empty one.
-  static const BoldTag empty = BoldTag(start: -1, end: -1, children: []);
+  static final BoldTag empty = BoldTag(start: -1, end: -1, children: []);
 
   @override
   String get name => 'b';

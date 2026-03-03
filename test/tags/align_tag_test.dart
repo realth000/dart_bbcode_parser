@@ -26,7 +26,7 @@ void main() {
             name: tag,
           ),
         ],
-        expectedAST: [const AlignTag(start: 0, end: head.length + content.length + tail.length, attribute: attr)],
+        expectedAST: [AlignTag(start: 0, end: head.length + content.length + tail.length, attribute: attr)],
         expectedDelta: [
           Operation.insert('', {}),
           Operation.insert('\n', {AlignTag.empty.quillAttrName: 'center'}),
@@ -54,7 +54,7 @@ void main() {
           ),
         ],
         expectedAST: [
-          const AlignTag(
+          AlignTag(
             start: 0,
             end: head.length + content.length + tail.length,
             attribute: attr,
@@ -88,7 +88,7 @@ void main() {
             name: tag,
           ),
         ],
-        expectedAST: [const AlignTag(start: 0, end: head.length + content.length + tail.length, attribute: attr)],
+        expectedAST: [AlignTag(start: 0, end: head.length + content.length + tail.length, attribute: attr)],
         expectedDelta: [
           Operation.insert('', {}),
           Operation.insert('\n', {AlignTag.empty.quillAttrName: 'left'}),
@@ -116,7 +116,7 @@ void main() {
           ),
         ],
         expectedAST: [
-          const AlignTag(
+          AlignTag(
             start: 0,
             end: head.length + content.length + tail.length,
             attribute: attr,
@@ -150,7 +150,7 @@ void main() {
             name: tag,
           ),
         ],
-        expectedAST: [const AlignTag(start: 0, end: head.length + content.length + tail.length, attribute: 'right')],
+        expectedAST: [AlignTag(start: 0, end: head.length + content.length + tail.length, attribute: 'right')],
         expectedDelta: [
           Operation.insert('', {}),
           Operation.insert('\n', {AlignTag.empty.quillAttrName: 'right'}),
@@ -178,7 +178,7 @@ void main() {
           ),
         ],
         expectedAST: [
-          const AlignTag(
+          AlignTag(
             start: 0,
             end: head.length + content.length + tail.length,
             attribute: attr,
@@ -213,12 +213,8 @@ void main() {
           ),
         ],
         expectedAST: [
-          const TextContent(start: 0, end: head.length + content.length, data: head),
-          const TextContent(
-            start: head.length + content.length,
-            end: head.length + content.length + tail.length,
-            data: tail,
-          ),
+          TextContent(start: 0, end: head.length + content.length, data: head),
+          TextContent(start: head.length + content.length, end: head.length + content.length + tail.length, data: tail),
         ],
         expectedDelta: [Operation.insert(head, {}), Operation.insert(tail, {}), Operation.insert('\n')],
       );
@@ -244,13 +240,9 @@ void main() {
           ),
         ],
         expectedAST: [
-          const TextContent(start: 0, end: head.length, data: head),
-          const TextContent(start: head.length, end: head.length + content.length, data: content),
-          const TextContent(
-            start: head.length + content.length,
-            end: head.length + content.length + tail.length,
-            data: tail,
-          ),
+          TextContent(start: 0, end: head.length, data: head),
+          TextContent(start: head.length, end: head.length + content.length, data: content),
+          TextContent(start: head.length + content.length, end: head.length + content.length + tail.length, data: tail),
         ],
         expectedDelta: [
           Operation.insert(head, {}),

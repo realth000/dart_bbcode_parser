@@ -24,8 +24,8 @@ void main() {
           const TagTail(start: head.length, end: head.length + tail.length, name: tag),
         ],
         expectedAST: [
-          const HideV2HeaderTag(start: 0, end: head.length, attribute: attr),
-          const HideV2TailTag(start: head.length, end: head.length + tail.length),
+          HideV2HeaderTag(start: 0, end: head.length, attribute: attr),
+          HideV2TailTag(start: head.length, end: head.length + tail.length),
         ],
         expectedDelta: [
           Operation.insert({
@@ -57,9 +57,9 @@ void main() {
           ),
         ],
         expectedAST: [
-          const HideV2HeaderTag(start: 0, end: head.length, attribute: attr),
-          const TextContent(start: head.length, end: head.length + content.length, data: content),
-          const HideV2TailTag(start: head.length + content.length, end: head.length + content.length + tail.length),
+          HideV2HeaderTag(start: 0, end: head.length, attribute: attr),
+          TextContent(start: head.length, end: head.length + content.length, data: content),
+          HideV2TailTag(start: head.length + content.length, end: head.length + content.length + tail.length),
         ],
         expectedDelta: [
           Operation.insert({
@@ -85,8 +85,8 @@ void main() {
           const TagTail(start: head.length, end: head.length + tail.length, name: tag),
         ],
         expectedAST: [
-          const HideV2HeaderTag(start: 0, end: head.length, attribute: null),
-          const HideV2TailTag(start: head.length, end: head.length + tail.length),
+          HideV2HeaderTag(start: 0, end: head.length, attribute: null),
+          HideV2TailTag(start: head.length, end: head.length + tail.length),
         ],
         expectedDelta: [
           Operation.insert({
@@ -112,8 +112,8 @@ void main() {
           const TagTail(start: head.length, end: head.length + tail.length, name: tag),
         ],
         expectedAST: [
-          const TextContent(start: 0, end: head.length, data: head),
-          const HideV2TailTag(start: head.length, end: head.length + tail.length),
+          TextContent(start: 0, end: head.length, data: head),
+          HideV2TailTag(start: head.length, end: head.length + tail.length),
         ],
         expectedDelta: [
           Operation.insert(head, {}),

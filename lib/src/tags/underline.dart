@@ -4,11 +4,13 @@ import 'package:dart_bbcode_parser/src/token.dart';
 
 /// Tag name.
 class UnderlineTag extends NoAttrTag {
+  // False positive.
+  // ignore: prefer_const_constructor_declarations
   /// Constructor.
-  const UnderlineTag({required super.start, required super.end, super.children});
+  UnderlineTag({required super.start, required super.end, super.children});
 
   /// Build empty one.
-  static const empty = UnderlineTag(start: -1, end: -1);
+  static final empty = UnderlineTag(start: -1, end: -1);
 
   @override
   String get name => 'u';

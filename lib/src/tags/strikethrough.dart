@@ -4,11 +4,13 @@ import 'package:dart_bbcode_parser/src/token.dart';
 
 /// Tag name.
 class StrikethroughTag extends NoAttrTag {
+  // False positive.
+  // ignore: prefer_const_constructor_declarations
   /// Constructor.
-  const StrikethroughTag({required super.start, required super.end, super.children});
+  StrikethroughTag({required super.start, required super.end, super.children});
 
   /// Build empty one.
-  static const empty = StrikethroughTag(start: -1, end: -1);
+  static final empty = StrikethroughTag(start: -1, end: -1);
 
   @override
   String get name => 's';

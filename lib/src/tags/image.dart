@@ -9,11 +9,13 @@ import 'package:dart_bbcode_parser/src/utils.dart';
 ///
 /// Children shall all be text content.
 class ImageTag extends EmbedTag {
+  // False positive.
+  // ignore: prefer_const_constructor_declarations
   /// Constructor.
-  const ImageTag({required super.start, required super.end, required super.attribute, super.children});
+  ImageTag({required super.start, required super.end, required super.attribute, super.children});
 
   /// Build empty one.
-  static const ImageTag empty = ImageTag(start: -1, end: -1, attribute: '');
+  static final ImageTag empty = ImageTag(start: -1, end: -1, attribute: '');
 
   static final _imageSizeRe = RegExp(r'^(?<width>\d+),(?<height>\d+)$');
 

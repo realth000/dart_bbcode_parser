@@ -32,7 +32,7 @@ void main() {
           ),
         ],
         expectedAST: [
-          const ImageTag(
+          ImageTag(
             start: 0,
             end: head.length + content.length + tail.length,
             attribute: attr,
@@ -69,12 +69,8 @@ void main() {
           ),
         ],
         expectedAST: [
-          const TextContent(start: 0, end: head.length, data: head),
-          const TextContent(
-            start: head.length + content.length,
-            end: head.length + content.length + tail.length,
-            data: tail,
-          ),
+          TextContent(start: 0, end: head.length, data: head),
+          TextContent(start: head.length + content.length, end: head.length + content.length + tail.length, data: tail),
         ],
         expectedDelta: [Operation.insert(head, {}), Operation.insert(tail, {}), Operation.insert('\n')],
       );
@@ -99,12 +95,8 @@ void main() {
           ),
         ],
         expectedAST: [
-          const TextContent(start: 0, end: head.length, data: head),
-          const TextContent(
-            start: head.length + content.length,
-            end: head.length + content.length + tail.length,
-            data: tail,
-          ),
+          TextContent(start: 0, end: head.length, data: head),
+          TextContent(start: head.length + content.length, end: head.length + content.length + tail.length, data: tail),
         ],
         expectedDelta: [Operation.insert(head, {}), Operation.insert(tail, {}), Operation.insert('\n')],
       );
@@ -128,12 +120,8 @@ void main() {
           ),
         ],
         expectedAST: [
-          const TextContent(start: 0, end: head.length, data: head),
-          const TextContent(
-            start: head.length + content.length,
-            end: head.length + content.length + tail.length,
-            data: tail,
-          ),
+          TextContent(start: 0, end: head.length, data: head),
+          TextContent(start: head.length + content.length, end: head.length + content.length + tail.length, data: tail),
         ],
         expectedDelta: [Operation.insert(head, {}), Operation.insert(tail, {}), Operation.insert('\n')],
       );

@@ -8,10 +8,10 @@ import 'package:dart_bbcode_parser/src/token.dart';
 /// Spoiler v2 tag header in bbcode editor.
 class SpoilerV2HeaderTag extends EmbedTag {
   /// Constructor.
-  const SpoilerV2HeaderTag({required super.start, required super.end, required super.attribute});
+  SpoilerV2HeaderTag({required super.start, required super.end, required super.attribute});
 
   /// Build empty one.
-  static const empty = SpoilerV2HeaderTag(start: -1, end: -1, attribute: null);
+  static final empty = SpoilerV2HeaderTag(start: -1, end: -1, attribute: null);
 
   static const _defaultTitle = '展开/收起';
 
@@ -37,11 +37,13 @@ class SpoilerV2HeaderTag extends EmbedTag {
 
 /// Spoiler v2 tag tail in bbcode editor.
 class SpoilerV2TailTag extends EmbedTag {
+  // False positive.
+  // ignore: prefer_const_constructor_declarations
   /// Constructor.
-  const SpoilerV2TailTag({required super.start, required super.end});
+  SpoilerV2TailTag({required super.start, required super.end});
 
   /// Build empty one.
-  static const empty = SpoilerV2TailTag(start: -1, end: -1);
+  static final empty = SpoilerV2TailTag(start: -1, end: -1);
 
   @override
   String get name => 'spoiler';

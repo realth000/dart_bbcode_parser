@@ -7,11 +7,13 @@ import 'package:dart_bbcode_parser/src/token.dart';
 
 /// Free v2 tag header in bbcode editor.
 class FreeV2HeaderTag extends EmbedTag {
+  // False positive.
+  // ignore: prefer_const_constructor_declarations
   /// Constructor.
-  const FreeV2HeaderTag({required super.start, required super.end});
+  FreeV2HeaderTag({required super.start, required super.end});
 
   /// Build empty one.
-  static const empty = FreeV2HeaderTag(start: -1, end: -1);
+  static final empty = FreeV2HeaderTag(start: -1, end: -1);
 
   @override
   String get name => 'free';
@@ -35,11 +37,13 @@ class FreeV2HeaderTag extends EmbedTag {
 
 /// Free v2 tag tail in bbcode editor.
 class FreeV2TailTag extends EmbedTag {
+  // False positive.
+  // ignore: prefer_const_constructor_declarations
   /// Constructor.
-  const FreeV2TailTag({required super.start, required super.end});
+  FreeV2TailTag({required super.start, required super.end});
 
   /// Build empty one.
-  static const empty = FreeV2TailTag(start: -1, end: -1);
+  static final empty = FreeV2TailTag(start: -1, end: -1);
 
   @override
   String get name => 'free';

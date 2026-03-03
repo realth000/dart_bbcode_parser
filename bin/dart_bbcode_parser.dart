@@ -7,12 +7,15 @@ import 'package:args/args.dart';
 import 'package:dart_bbcode_parser/src/dart_bbcode_parser.dart';
 import 'package:dart_bbcode_parser/src/lexer.dart';
 import 'package:dart_bbcode_parser/src/parser.dart';
+import 'package:dart_bbcode_parser/src/parser_v1.dart';
+import 'package:dart_bbcode_parser/src/parser_v2.dart';
 import 'package:dart_bbcode_parser/src/quill/delta.dart';
 import 'package:dart_bbcode_parser/src/tags/list.dart';
 import 'package:dart_quill_delta/dart_quill_delta.dart';
 
 const flagLexOnly = 'lex';
 const flagParseOnly = 'parse';
+const flagUseParserV2 = 'parser-v2';
 
 Future<int> main(List<String> args) async {
   final argParser =
@@ -24,6 +27,7 @@ Future<int> main(List<String> args) async {
         ..addFlag(flagLexOnly, abbr: 'l', help: 'process till lex end and print lexed result (tokens)')
         ..addFlag(flagParseOnly, abbr: 'p', help: 'process till parse end and print parsed result (bbcode)')
         ..addSeparator('Other flags:')
+        ..addFlag(flagUseParserV2, help: 'use the v2 version parser')
         ..addFlag('help', abbr: 'h', help: 'print this help message');
 
   if (args.isEmpty) {
@@ -58,7 +62,16 @@ Future<int> main(List<String> args) async {
       return 0;
     }
 
-    final parser = Parser(tokens: lexer.tokens, supportedTags: defaultSupportedTags)..parse();
+    final Parser parser;
+
+    if (parsedArgs.flag(flagUseParserV2)) {
+      parser = ParserV2(originalString: content, tokens: lexer.tokens, supportedTags: defaultSupportedTags);
+    } else {
+      parser = ParserV1(tokens: lexer.tokens, supportedTags: defaultSupportedTags);
+    }
+
+    parser.parse();
+
     if (parsedArgs.flag(flagParseOnly)) {
       print(encoder.convert(parser.ast));
       return 0;

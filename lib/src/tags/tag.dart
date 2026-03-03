@@ -6,7 +6,6 @@ import 'package:dart_bbcode_parser/src/quill/attr_context.dart';
 import 'package:dart_bbcode_parser/src/quill/convertible.dart';
 import 'package:dart_bbcode_parser/src/token.dart';
 import 'package:dart_bbcode_parser/src/utils.dart';
-import 'package:meta/meta.dart';
 
 /// Attribute apply on what.
 enum ApplyTarget {
@@ -20,19 +19,18 @@ enum ApplyTarget {
 }
 
 /// The basic class describes common feature and shape on all kinds of tags.
-@immutable
 abstract class BBCodeTag implements QuillConvertible {
   /// Constructor.
-  const BBCodeTag({
+  BBCodeTag({
     required this.attributeValidator,
     required this.childrenValidator,
-    int? start,
-    int? end,
-    List<BBCodeTag>? children,
+    this.start = 0,
+    this.end = 0,
     this.attribute,
-  }) : _start = start ?? 0,
-       _end = end ?? 0,
-       children = children ?? const [];
+    List<BBCodeTag> children = const [],
+  }) {
+    this.children = List.from(children);
+  }
 
   /// Is plain text or not.
   bool get isPlainText;
@@ -50,16 +48,10 @@ abstract class BBCodeTag implements QuillConvertible {
   String get close;
 
   /// Start position.
-  final int _start;
-
-  /// Get the start position.
-  int get start => _start;
+  int start;
 
   /// End position.
-  final int _end;
-
-  /// Get the end position.
-  int get end => _end;
+  int end;
 
   /// Whether the tag is self closed.
   ///
@@ -95,7 +87,7 @@ abstract class BBCodeTag implements QuillConvertible {
   // final List<BBCodeTag> disallowedChildren;
 
   /// All childrens
-  final List<BBCodeTag> children;
+  late final List<BBCodeTag> children;
 
   /// Function converts current tag into bbcode text.
   ///
@@ -181,6 +173,8 @@ abstract class BBCodeTag implements QuillConvertible {
   String toString() => jsonEncode(toJson());
 
   @override
+  // We have to override it.
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
     if (identical(this, other)) {
       return true;
@@ -195,5 +189,7 @@ abstract class BBCodeTag implements QuillConvertible {
   }
 
   @override
+  // We have to override it.
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
   int get hashCode => Object.hash(open, close, name, start, end, selfClosed, selfClosedAtTail, target, children);
 }

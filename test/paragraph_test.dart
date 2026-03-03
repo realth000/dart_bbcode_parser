@@ -22,18 +22,8 @@ void main() {
           const Text(start: 49, end: 56, data: 'baz\nquz'),
         ],
         expectedAST: [
-          const AlignTag(
-            start: 0,
-            end: 25,
-            attribute: 'center',
-            children: [TextContent(start: 14, end: 17, data: 'foo')],
-          ),
-          const AlignTag(
-            start: 27,
-            end: 49,
-            attribute: 'left',
-            children: [TextContent(start: 38, end: 41, data: 'bar')],
-          ),
+          AlignTag(start: 0, end: 25, attribute: 'center', children: [TextContent(start: 14, end: 17, data: 'foo')]),
+          AlignTag(start: 27, end: 49, attribute: 'left', children: [TextContent(start: 38, end: 41, data: 'bar')]),
           TextContent(start: 49, end: 56, data: 'baz\nquz'),
         ],
         expectedDelta: [
@@ -61,18 +51,8 @@ void main() {
           const Text(start: 48, end: 55, data: 'baz\nquz'),
         ],
         expectedAST: [
-          const AlignTag(
-            start: 0,
-            end: 25,
-            attribute: 'center',
-            children: [TextContent(start: 14, end: 17, data: 'foo')],
-          ),
-          const AlignTag(
-            start: 25,
-            end: 48,
-            attribute: 'left',
-            children: [TextContent(start: 37, end: 40, data: 'bar')],
-          ),
+          AlignTag(start: 0, end: 25, attribute: 'center', children: [TextContent(start: 14, end: 17, data: 'foo')]),
+          AlignTag(start: 25, end: 48, attribute: 'left', children: [TextContent(start: 37, end: 40, data: 'bar')]),
           TextContent(start: 48, end: 55, data: 'baz\nquz'),
         ],
         expectedDelta: [
