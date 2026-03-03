@@ -10,7 +10,7 @@ import 'package:string_scanner/string_scanner.dart';
 /// Plain text.
 class TextContent implements BBCodeTag {
   /// Constructor.
-  TextContent({required this.start, required this.end, required this.data});
+  TextContent({required this.start, required this.end, required this.data, this.isIgnored = false});
 
   /// Build from originanl input text with given ranges index from [start] to [end].
   factory TextContent.fromOriginalInput({required String originalString, required int start, required int end}) =>
@@ -18,6 +18,14 @@ class TextContent implements BBCodeTag {
 
   /// Build empty one.
   static final empty = TextContent(start: -1, end: -1, data: '');
+
+  /// Flag indicating the text is ignored in parsing or not.
+  ///
+  /// When text is ignored, it only lives in BBCode parsing stage. When convert to other formats, these
+  /// text are ignored. e.g. not produce Operations in Quill Delta.
+  ///
+  /// It's useful to "restore" ignored text back to plain text if process is fallbacking.
+  bool isIgnored;
 
   /// Data content.
   @override
@@ -90,7 +98,7 @@ class TextContent implements BBCodeTag {
 
   @override
   AttrContext toQuilDelta(AttrContext attrContext) {
-    if (data.isEmpty) {
+    if (data.isEmpty || isIgnored) {
       return attrContext;
     }
     const lf = 0x0a;
@@ -133,7 +141,7 @@ class TextContent implements BBCodeTag {
   }
 
   @override
-  Map<String, dynamic> toJson() => {'start': start, 'end': end, 'text': data};
+  Map<String, dynamic> toJson() => {'start': start, 'end': end, 'text': data, if (isIgnored) 'isIgnored': true};
 
   @override
   String toString() => jsonEncode(toJson());
@@ -151,14 +159,18 @@ class TextContent implements BBCodeTag {
   @override
   // We have to override it.
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => Object.hash(start, end, data);
+  int get hashCode => Object.hash(start, end, data, isIgnored);
 
   @override
   // We have to override it.
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is TextContent && other.start == start && other.end == end && other.data == data);
+      (other is TextContent &&
+          other.start == start &&
+          other.end == end &&
+          other.data == data &&
+          other.isIgnored == isIgnored);
 
   @override
   // List<BBCodeTag> children = throw UnsupportedError('shall not call children getter on plain text tag');

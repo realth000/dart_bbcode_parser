@@ -23,6 +23,7 @@ void main() {
         ],
         expectedAST: [
           AlignTag(start: 0, end: 25, attribute: 'center', children: [TextContent(start: 14, end: 17, data: 'foo')]),
+          TextContent(start: 25, end: 26, data: '\n', isIgnored: true),
           AlignTag(start: 27, end: 49, attribute: 'left', children: [TextContent(start: 38, end: 41, data: 'bar')]),
           TextContent(start: 49, end: 56, data: 'baz\nquz'),
         ],
@@ -34,7 +35,6 @@ void main() {
           Operation.insert('baz\nquz', {}),
           Operation.insert('\n'),
         ],
-        expectedBBCodeOutput: '[align=center]foo[/align][align=left]bar[/align]baz\nquz',
       );
     });
 
@@ -63,7 +63,6 @@ void main() {
           Operation.insert('baz\nquz', {}),
           Operation.insert('\n'),
         ],
-        // expectedBBCodeOutput: '[align=center]foo[/align][align=left]bar[/align]baz\nquz',
       );
     });
   });

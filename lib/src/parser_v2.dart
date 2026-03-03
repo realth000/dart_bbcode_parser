@@ -139,22 +139,19 @@ final class ParserV2 implements Parser {
 
   /// Handles text tokens and the special [_ignoreNextLineFeed] logic.
   void _handleTextContent(Text text) {
-    var data = text.data;
-    var end = text.end;
-
-    if (_ignoreNextLineFeed && data.endsWith('\n')) {
+    if (_ignoreNextLineFeed && text.data.endsWith('\n')) {
       _ignoreNextLineFeed = false;
-      if (data == '\n') {
+      if (text.data == '\n') {
+        _saveText(TextContent(start: text.end - 1, end: text.end, data: '\n', isIgnored: true));
         return;
       }
 
-      data = data.substring(0, data.length - 1);
-      // Do NOT modify `end` here as we are ignore the LF in quill delta, still keep it
-      // in bbcode.
-      end -= 1;
+      _saveText(TextContent(start: text.start, end: text.end - 1, data: text.data.substring(0, text.data.length - 1)));
+      _saveText(TextContent(start: text.end - 1, end: text.end, data: '\n', isIgnored: true));
+      return;
     }
 
-    _saveText(TextContent(start: text.start, end: end, data: data));
+    _saveText(TextContent(start: text.start, end: text.end, data: text.data));
   }
 
   /// Replaces a [BBCodeTag] in the current tree with its text fallback and flattens its children.
@@ -182,6 +179,9 @@ final class ParserV2 implements Parser {
             index + 1,
             TextContent.fromOriginalInput(originalString: _originalString, start: child.start, end: child.end),
           );
+        } else if (child is TextContent && child.isIgnored) {
+          // Fallback to not ignored state.
+          list.insert(index + 1, TextContent(start: child.start, end: child.end, data: child.data));
         } else {
           list.insert(index + 1, child);
         }

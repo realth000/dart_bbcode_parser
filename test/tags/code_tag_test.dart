@@ -233,13 +233,7 @@ void main() {
           CodeTag(
             start: 0,
             end: head.length + content.length + tail.length,
-            children: [
-              TextContent(
-                start: head.length,
-                end: head.length + content.length - 1 /* ParserV2 needs this, figure it out later*/,
-                data: contentTrimmed,
-              ),
-            ],
+            children: [TextContent(start: head.length, end: head.length + content.length, data: contentTrimmed)],
           ),
         ],
         expectedDelta: [
