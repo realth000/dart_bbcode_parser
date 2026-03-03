@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:collection/collection.dart';
 import 'package:dart_bbcode_parser/src/parser.dart';
 import 'package:dart_bbcode_parser/src/tags/tag.dart';
@@ -58,6 +60,11 @@ final class ParserV2 implements Parser {
           // Tag attribute invalid, fallback to text and save.
           _saveText(_buildOriginalTokenText(token));
           continue;
+        }
+
+        if (tagType.target == ApplyTarget.paragraph) {
+          // Logic from V1: Manage paragraph-level line feed.
+          _ignoreNextLineFeed = true;
         }
 
         // Logic from V1: Support self-closed tags that trigger at Head.
@@ -135,19 +142,18 @@ final class ParserV2 implements Parser {
   /// Handles text tokens and the special [_ignoreNextLineFeed] logic.
   void _handleTextContent(Text token) {
     var data = token.data;
-    var start = token.start;
+    final start = token.start;
+    var end = token.end;
 
-    if (_ignoreNextLineFeed && data.startsWith('\n')) {
-      if (data == '\n') {
-        _ignoreNextLineFeed = false;
-        return;
-      }
-      data = data.substring(1);
-      start += 1;
+    if (_ignoreNextLineFeed && data.endsWith('\n')) {
       _ignoreNextLineFeed = false;
+      if (data == '\n') return;
+
+      data = data.substring(0, data.length - 1);
+      end -= 1;
     }
 
-    _saveText(TextContent(start: start, end: token.end, data: data));
+    _saveText(TextContent(start: start, end: end, data: data));
   }
 
   /// Replaces a [BBCodeTag] in the current tree with its text fallback and flattens its children.
@@ -207,4 +213,8 @@ final class ParserV2 implements Parser {
       _currentPathTags.last.children.add(textContent);
     }
   }
+
+  @override
+  String toString() =>
+      '{"stage": "parser", "tokens": ${_tokens.map((e) => e.toJson()).toList()}, "ast":${_topTags.map((e) => jsonEncode(e.toJson())).toList()}}';
 }

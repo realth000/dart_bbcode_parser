@@ -22,36 +22,36 @@ void main() {
         // [/b]
         final parser = switch (parserVersion) {
           BBCodeParserVersion.v1 => ParserV1(
-            tokens: [const TagTail(start: 0, end: 1, name: 'b')],
+            tokens: [const TagTail(start: 0, end: 4, name: 'b')],
             supportedTags: defaultSupportedTags,
           ),
           BBCodeParserVersion.v2 => ParserV2(
             originalString: '[/b]',
-            tokens: [const TagTail(start: 0, end: 1, name: 'b')],
+            tokens: [const TagTail(start: 0, end: 4, name: 'b')],
             supportedTags: defaultSupportedTags,
           ),
         }..parse();
 
         expect(parser.ast.length, equals(1));
-        expect(parser.ast[0], equals(TextContent(start: 0, end: 1, data: '[/b]')));
+        expect(parser.ast[0], equals(TextContent(start: 0, end: 4, data: '[/b]')));
       }
 
       {
         // [b]
         final parser = switch (parserVersion) {
           BBCodeParserVersion.v1 => ParserV1(
-            tokens: [const TagHead(start: 0, end: 1, name: 'b', attribute: null)],
+            tokens: [const TagHead(start: 0, end: 3, name: 'b', attribute: null)],
             supportedTags: defaultSupportedTags,
           ),
           BBCodeParserVersion.v2 => ParserV2(
             originalString: '[b]',
-            tokens: [const TagHead(start: 0, end: 1, name: 'b', attribute: null)],
+            tokens: [const TagHead(start: 0, end: 3, name: 'b', attribute: null)],
             supportedTags: defaultSupportedTags,
           ),
         }..parse();
 
         expect(parser.ast.length, equals(1));
-        expect(parser.ast[0], equals(TextContent(start: 0, end: 1, data: '[b]')));
+        expect(parser.ast[0], equals(TextContent(start: 0, end: 3, data: '[b]')));
       }
 
       {
