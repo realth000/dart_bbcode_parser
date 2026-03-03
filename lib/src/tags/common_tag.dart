@@ -17,6 +17,7 @@ abstract class CommonTag extends BBCodeTag {
     super.children,
     super.attributeValidator,
     super.childrenValidator,
+    super.parentValidator,
   });
 
   @override
@@ -109,6 +110,7 @@ abstract class EmbedTag extends BBCodeTag {
     super.children,
     super.attributeValidator,
     super.childrenValidator,
+    super.parentValidator,
   });
 
   @override

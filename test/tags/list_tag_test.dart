@@ -257,4 +257,59 @@ void main() {
     final output = convertBBCodeToText(tags);
     expect(output, equals(input));
   });
+  test('standalone list item should fallback to text', () {
+    {
+      const input = '[*]foo';
+      final tags = parseBBCodeTextToTags(input);
+      final output = convertBBCodeToText(tags);
+      expect(output, equals(input));
+    }
+
+    {
+      const input = '''
+1
+[*]foo
+[*]bar
+2
+''';
+      final tags = parseBBCodeTextToTags(input);
+      final output = convertBBCodeToText(tags);
+      expect(output, equals(input));
+    }
+  });
+
+  test('fallback list and list item on broken input', () {
+    const inputList = [
+      '''
+[listInvalid]
+[*]foo1
+[*]bar1
+''',
+
+      // TODO: Handle fallback on inner ignored text when tail tag is invalid.
+      //       '''
+      // [list]
+      // [*]foo2
+      // [*]bar2
+      // [/listINVALID]
+      // ''',
+      //       '''
+      // [list=1]
+      // [*]foo3
+      // [*]bar3
+      // ''',
+      //       '''
+      // [list=1]
+      // [*]foo4
+      // [*]bar4
+      // [/list]
+      // ''',
+    ];
+
+    for (final input in inputList) {
+      final tags = parseBBCodeTextToTags(input);
+      final output = convertBBCodeToText(tags);
+      expect(output, equals(input));
+    }
+  });
 }

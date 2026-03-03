@@ -56,7 +56,9 @@ final class ParserV2 implements Parser {
           continue;
         }
 
-        if (tagType.attributeValidator != null && !tagType.attributeValidator!.call(token.attribute)) {
+        // Validate attribute and parent.
+        if ((tagType.attributeValidator != null && !tagType.attributeValidator!.call(token.attribute)) ||
+            (tagType.parentValidator != null && !tagType.parentValidator!.call(_currentPathTags.lastOrNull))) {
           // Tag attribute invalid, fallback to text and save.
           _saveText(_buildOriginalTokenText(token));
           continue;
@@ -91,8 +93,9 @@ final class ParserV2 implements Parser {
         if (_currentPathTags.isNotEmpty && _currentPathTags.last.name == token.name) {
           final currentTag = _currentPathTags.last;
 
-          // Enhanced: Check childrenValidator before rebuilding.
-          if (currentTag.childrenValidator != null && !currentTag.childrenValidator!.call(currentTag.children)) {
+          // Validate children and parent.
+          if ((currentTag.childrenValidator != null && !currentTag.childrenValidator!.call(currentTag.children)) ||
+              (tagType != null && tagType.parentValidator != null && !tagType.parentValidator!.call(currentTag))) {
             // If invalid, fallback the Head to text and move children up.
             _fallbackTagHead(currentTag);
             _saveText(_buildOriginalTokenText(token));
@@ -137,7 +140,6 @@ final class ParserV2 implements Parser {
   /// Handles text tokens and the special [_ignoreNextLineFeed] logic.
   void _handleTextContent(Text text) {
     var data = text.data;
-    final start = text.start;
     var end = text.end;
 
     if (_ignoreNextLineFeed && data.endsWith('\n')) {
@@ -147,14 +149,18 @@ final class ParserV2 implements Parser {
       }
 
       data = data.substring(0, data.length - 1);
+      // Do NOT modify `end` here as we are ignore the LF in quill delta, still keep it
+      // in bbcode.
       end -= 1;
     }
 
-    _saveText(TextContent(start: start, end: end, data: data));
+    _saveText(TextContent(start: text.start, end: end, data: data));
   }
 
   /// Replaces a [BBCodeTag] in the current tree with its text fallback and flattens its children.
   void _fallbackTagHead(BBCodeTag tag) {
+    final idx = _currentPathTags.indexOf(tag);
+
     _currentPathTags.remove(tag);
     final fallbackText = _buildOriginalTokenText(
       TagHead(name: tag.name, start: tag.start, end: tag.end, attribute: tag.attribute),
@@ -165,9 +171,21 @@ final class ParserV2 implements Parser {
     if (index != -1) {
       list
         ..removeAt(index)
-        ..insert(index, fallbackText)
-        // Logic from V1 fallback: Insert children after the fallback text.
-        ..insertAll(index + 1, tag.children);
+        ..insert(index, fallbackText);
+    }
+
+    // After fallback the head, validate children again.
+    if (idx != -1) {
+      for (final child in tag.children.reversed) {
+        if (!child.isPlainText && child.parentValidator != null && !child.parentValidator!.call(fallbackText)) {
+          list.insert(
+            index + 1,
+            TextContent.fromOriginalInput(originalString: _originalString, start: child.start, end: child.end),
+          );
+        } else {
+          list.insert(index + 1, child);
+        }
+      }
     }
   }
 

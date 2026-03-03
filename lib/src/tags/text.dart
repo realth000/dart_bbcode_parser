@@ -38,6 +38,9 @@ class TextContent implements BBCodeTag {
       throw UnsupportedError('shall not call children validator on plain text tag');
 
   @override
+  ParentValidator? get parentValidator => throw UnsupportedError('shall not call parent validator on plain text tag');
+
+  @override
   String get open => throw UnsupportedError('shall not call open getter on plain text tag');
 
   @override

@@ -24,6 +24,7 @@ abstract class BBCodeTag implements QuillConvertible {
   BBCodeTag({
     required this.attributeValidator,
     required this.childrenValidator,
+    required this.parentValidator,
     this.start = 0,
     this.end = 0,
     this.attribute,
@@ -82,6 +83,14 @@ abstract class BBCodeTag implements QuillConvertible {
   /// Return true if children format is valid, or false if children is invalid.
   /// Returning a false value will cause the tag breaks into raw text, instead of tag.
   final ChildrenValidator? childrenValidator;
+
+  /// Optional validator on parent tag.
+  ///
+  /// If a tag should only exists when some tags are its direct parent node, use this function to validate it.
+  ///
+  /// Return true if parent is valid.
+  /// Return false if parent is invalid.
+  final ParentValidator? parentValidator;
 
   // /// Contains a list of tags that are not allowed in children context.
   // final List<BBCodeTag> disallowedChildren;

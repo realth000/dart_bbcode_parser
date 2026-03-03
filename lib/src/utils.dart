@@ -8,3 +8,8 @@ bool nullAttributeValidator(String? attr) => attr == null;
 
 /// Function validating tag children contents.
 typedef ChildrenValidator = bool Function(List<BBCodeTag> input);
+
+/// Function validating tag's parent.
+///
+/// Return `true` if parent is valid, or `false` if parent is invalid.
+typedef ParentValidator = bool Function(BBCodeTag? parent);

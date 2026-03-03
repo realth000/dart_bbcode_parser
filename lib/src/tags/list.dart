@@ -9,6 +9,7 @@ import 'package:dart_bbcode_parser/src/tags/spoiler_v2.dart';
 import 'package:dart_bbcode_parser/src/tags/tag.dart';
 import 'package:dart_bbcode_parser/src/tags/text.dart';
 import 'package:dart_bbcode_parser/src/token.dart';
+import 'package:dart_bbcode_parser/src/utils.dart';
 import 'package:dart_quill_delta/dart_quill_delta.dart';
 
 extension _UpdateOperationListAttr on Operation {
@@ -372,6 +373,11 @@ class ListItemTag extends NoAttrTag {
 
   @override
   ApplyTarget get target => ApplyTarget.paragraph;
+
+  /// Parent validator for list item: `[*]` should be the direct child of `list` tag.
+  @override
+  ParentValidator? get parentValidator =>
+      (parent) => parent != null && !parent.isPlainText && parent.name == ListTag.empty.name;
 
   @override
   StringBuffer toBBCode(StringBuffer buffer) {
